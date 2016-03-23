@@ -59,10 +59,13 @@
 /* Old UCLIBC not have <option> type in <getopt.h> */
 struct option
 {
-    const char *name;
-    int         has_arg;
-    int        *flag;
-    int         val;
+	const char *name;
+
+	int         has_arg;
+
+	int        *flag;
+
+	int         val;
 };
 
 

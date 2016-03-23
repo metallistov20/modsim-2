@@ -27,6 +27,8 @@ ifeq ($(strip $(platform)),PC)
 
 	OBJS= modsim.o datastruct.o hal_x86.o
 	GRBG=*.o *~ m
+
+	EXTRA=
 else
 	ifeq ($(strip $(platform)),DRAGONBALL)
 		# Prefix for UCLIBC crosscompiler
@@ -35,6 +37,8 @@ else
 
 		OBJS= modsim.o datastruct.o hal_m68k.o port_d.o
 		GRBG=*.o *~ *.coff m
+
+		EXTRA=cp ./m /home/ez
 	endif
 endif
 
@@ -48,6 +52,12 @@ LD=$(PREFIX)ld
 # Checking Data-IN (backward data stream on D-); expected to be same as X(CH2) in raw data (CSV file) 
 # CFLAGS+= -DDIN_FEEDBACK
 
+# Endless curve on oscilloscope ( all the four bits UP, then wait 10 ms, then DOWN, and again )
+# CFLAGS+= -DHW_PORTD_TEST
+
+# Basic diagnisis of Converter. Elnless loop, either.
+CFLAGS+= -DHW_AD53_TEST
+
 .o: .s
 	$(CC) $(ASMFLAGS)   -o $@ -c $< 
 
@@ -59,6 +69,7 @@ all:	m
 
 m: $(OBJS)
 	$(CC) $(CFLAGS)  -o m $(OBJS)
+	$(EXTRA)
 
 clean:
 	rm $(GRBG)

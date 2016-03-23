@@ -31,10 +31,20 @@
 /* Own interface, definitions */
 #include "port_d.h"
 
-#define SS_PIN		PD1 /* PB4 */
-#define SCK_PIN		PD2 /* PB5 */
-#define MOSI_PIN	PD3 /* PB3 */
 
+/* Not connected to AD5300. Leg (-1) of AD5300. (White) */
+#define NIX		PD0
+
+/* ~Synchronization. Leg 5 of AD5300. (Orange) */
+#define SS_PIN		PD1
+
+/* Clocking. Leg 6 of AD5300. (Yellow) */
+#define SCK_PIN		PD2
+
+/* Data output. Leg 7 of AD5300. (Green) */
+#define MOSI_PIN	PD3
+
+/* Port to write Data to*/
 #define SPI_PORT	PDDATA /* PORTB */
 
 #if defined (AVRCODE)
@@ -46,7 +56,7 @@
 	#define AD5300_DEACTIVATE	SPI_PORT |= _BV(SS_PIN)
 #else
 	#define ConverterActivate 	PortD_Down(SS_PIN)
-	#define ConverterDeactivate	PortD_Toggle(SS_PIN)
+	#define ConverterDeactivate	PortD_Up(SS_PIN)
 #endif /* defined (AVRCODE) */
 
 #if defined (AVRCODE)
@@ -57,10 +67,10 @@
 	#define MOSI_HI		SPI_PORT |= _BV(MOSI_PIN)
 #else
 	#define SCK_LO		PortD_Down(SCK_PIN)
-	#define SCK_HI		PortD_Toggle(SCK_PIN)
+	#define SCK_HI		PortD_Up(SCK_PIN)
 
 	#define MOSI_LO		PortD_Down(MOSI_PIN)
-	#define MOSI_HI		PortD_Toggle(MOSI_PIN)
+	#define MOSI_HI		PortD_Up(MOSI_PIN)
 #endif /* defined (AVRCODE) */
 
 #define AD5300_DATA_LEN		16
@@ -79,7 +89,7 @@ void PortD_Prepare()
 	printf ("Bits <%08bb> <%08bb> of Port D initialized as OUT\n", (unsigned char)PD0, (unsigned char)PD1);
 #else
 
-#if 0
+#if 0 //TODO: remove
     	SPIMCONT = 0x0277;  // SPIMCONT = PUT_FIELD(SPIMCONT_DATA_RATE, 2) | SPIMCONT_PHA | PUTFIELD(SPIMCONT_BIT_COUNT, 15);
     	SPIMCONT = PUT_FIELD(SPIMCONT_DATA_RATE, 2) | SPIMCONT_PHA | PUTFIELD(SPIMCONT_BIT_COUNT, 15);
 #else
@@ -164,15 +174,17 @@ int PortD_CheckL1( unsigned char uchBit )
 #endif /* (defined(DIN_FEEDBACK)) */ 
 
 
-void ConverterWrite(const u_int8_t data)
+void ConverterWrite(/* u_int8_t data */ unsigned short data)
 {
-u_int16_t tmp = data << AD5300_DONTCARE_LEN;
+//u_int16_t tmp = data << AD5300_DONTCARE_LEN;
+unsigned short tmp = (unsigned short) ( data << AD5300_DONTCARE_LEN ) ;
 
-u_int8_t i, _i;
+//u_int8_t i, _i;
+unsigned char i, _i;
 
 	ConverterActivate;
 
-	for (i = 0; i < AD5300_DATA_LEN; i++)
+	for (i = 0; i < /* AD5300_DATA_LEN*/16; i++)
 	{
 		_i = 15 - i;
 
@@ -180,6 +192,13 @@ u_int8_t i, _i;
 #if defined (AVRCODE)
 		(tmp & _BV(_i)) ? (MOSI_HI) : (MOSI_LO);
 #else
+		//(tmp & (u_int16_t)(1U<<_i)) ? (MOSI_HI) : (MOSI_LO);
+
+
+		//(tmp & (unsigned short)(1U<<_i)) ? (MOSI_HI) : (MOSI_LO);
+		//(_i % 2 )  ? (MOSI_HI) : (MOSI_LO);
+		//MOSI_HI;		
+		//MOSI_LO;// can see it on Vout 
 		(tmp & (u_int16_t)(1U<<_i)) ? (MOSI_HI) : (MOSI_LO);
 #endif /* defined (AVRCODE) */
 
@@ -197,14 +216,40 @@ void ConverterInit(void)
 	SPI_DD |= _BV(SS_PIN) | _BV(SCK_PIN) | _BV(MOSI_PIN);
 #else
 	PDSEL = PD1 | PD2 | PD3;
+
 	PDDIR = PD1 | PD2 | PD3;
 #endif /* defined (AVRCODE) */
 
-	ConverterDeactivate;
+	ConverterDeactivate;	
 
 	SCK_LO;
 
 	MOSI_LO;
 
 	ConverterWrite(0);
+}
+
+void a()
+{
+int iCnt = 0;
+
+	PDSEL = PD1 | PD2 | PD3;
+
+	PDDIR = PD1 | PD2 | PD3;
+//-
+	ConverterDeactivate;	
+
+	SCK_LO;
+
+	MOSI_LO;
+
+//---	ConverterWrite(0);
+
+//while (1) { ConverterDeactivate;  SCK_LO;  MOSI_LO;  usleep(20); ConverterActivate; SCK_HI;  MOSI_HI;  usleep(20); }
+//CAN SEE ON Vout; while(1) { ConverterInit(); usleep(1); ConverterWrite(0x1); usleep(5); }
+// BAD! while(1) { ConverterInit(); usleep(1); ConverterWrite(0x1); usleep(5); }
+//CAN SEE ON Vout; while(1) { ConverterInit(); ConverterWrite( (iCnt++%256) ); }
+//CAN SEE ON Vout;while(1) { ConverterWrite( (iCnt++%256) ); }
+while(1) { ConverterWrite( 1) ; ConverterWrite( 255); }
+
 }

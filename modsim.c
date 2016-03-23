@@ -62,10 +62,10 @@ int iOldSec;
 static struct option long_options[] =
 {
 	/* USB 1.1 on CPE#0 Gate */
-	{"USB1.1",  no_argument, 		0,'1'},
+	{"USB1",  no_argument, 		0,'1'},
 
 	/* USB 2.0 on CPE#1 Gate */
-	{"USB2.0",  no_argument, 		0,'2'},
+	{"USB2",  no_argument, 		0,'2'},
 
 	/* End of array */
 	{0, 0, 0, 0}
@@ -89,9 +89,19 @@ int iOptionIdx = 0;
 
 char cArg0[LARGE_BUF_SZ];
 
-#if defined(HW_DUMB_TEST)
+#if defined(HW_PORTD_TEST)
 PortD_Prepare( );
 while (1) { PortD_Toggle(0xF0 ); usleep(10) ; }
+#endif /* (defined(HW_DUMB_TEST) ) */
+
+#if defined(HW_AD53_TEST)
+//PortD_Prepare( );
+//ConverterInit();
+a();
+
+//-------------
+while (1) { ConverterWrite(); usleep(10); /* ConverterWrite(200); usleep(50); */ }
+//while (1) { usleep(10); }
 #endif /* (defined(HW_DUMB_TEST) ) */
 
 	/* Avoid dafault 0 value */
@@ -111,22 +121,23 @@ while (1) { PortD_Toggle(0xF0 ); usleep(10) ; }
 
 		/* End of the options reached? */
 		if (-1 == iOption)
-
+		{
 			/* Then break the parsing cycle */
 			break;
+		}
 
 		/* Parce each parameter */
 		switch (iOption)
 		{
 			/* Single: open site */
 			case '1':
-				printf("%s: option -%c\n", cArg0, iOption);
+				printf("%s: OK. option is  <%c>\n", cArg0, iOption);
 				iOperation = DO_GATE0_OP;
 				break;
 
 			/* Single: close site */
 			case '2':
-				printf("%s: option -%c\n", cArg0, iOption);
+				printf("%s: OK. option is  <%c>\n", cArg0, iOption);
 				iOperation = DO_GATE1_OP;
 				break;
 
@@ -243,3 +254,5 @@ if (0 == qfltTM.power) if (iOldSec!= qfltTM.integer){iOldSec=qfltTM.integer; pri
 
 	return P_SUCCESS;
 }
+
+

@@ -78,7 +78,6 @@ void abort()
 {
 	exit (-1);
 }
-#define SWAP16(x) 	((unsigned short)	((x&0xFF00)>>8)	|	((x&0x00FF)<<8)			)
 #endif /* (defined(UCSIMM) ) */
 
 int main (int argc, char **argv)
@@ -92,68 +91,21 @@ char cArg0[LARGE_BUF_SZ];
 
 #if defined(HW_PORTD_TEST)
 
-/* Set digital PIOs 1-4 as outputs */
-PortD_Prepare( );
+	/* Set digital PIOs 1-4 as outputs */
+	PortD_Prepare( );
 
-/* Set up and set down, eternally */
-//while (1) { PortD_Toggle(0xF0 ); usleep(10) ; }
-// PRIOD: 24.8 us, Freq: 40 kHz   while (1) { PortD_Toggle(0xF0 );  }
-// PRIOD: 560.0 us, Freq: 1.8 kHz  <== iHundred = 25;
-// PRIOD: 146.0 us, Freq:   <== iHundred = 5;
-// PRIOD: 64.0 us, Freq: 15kHz  <== iHundred = 1;
-//while (1) {
-//volatile int iHundred;
-//volatile int iAlfa;
-//iHundred = 1; while (iHundred--) {iAlfa += 1;} PortD_Toggle(0xF0 );
-//}
+	/* Set up and set down, eternally */
+	while (1) { PortD_Toggle(0xF0 ); usleep(10) ; }
 
-
-// PRIOD: 40.0 us, Freq: 25 kHz  <== iHundred = 1;
-while (1) {
-volatile int iHundred=1;
-//do {;} while (iHundred--);  PortD_Toggle(0xF0 );
-iHundred--;  PortD_Toggle(0xF0 );
-}
-// while (1) {volatile int iHundred=1; iHundred--; }
-
-#endif /* (defined(HW_DUMB_TEST) ) */
+	#endif /* (defined(HW_DUMB_TEST) ) */
 
 #if defined(HW_AD53_TEST)
 
-/* Also it prepares PIOs, theres no need to do <PortD_Prepare()> */
-ConverterInit();
+	/* Besides all, it prepares PIOs, so theres no need to do <PortD_Prepare()> */
+	ConverterInit();
 
-/* Checking on values close to limit, on limits, in the middle, and at random valuoes from range  */
-//while (1) { ConverterWrite( 0 ) ; ConverterWrite( 255);  }
-//while (1) {volatile int iHundred = 100; ConverterWrite0FF0( 0 ) ; while (iHundred--) {iHundred += 0;}   }
-//while (1) {volatile int iHundred = 25; ConverterWrite0000( 0 ) ; while (iHundred--) {iHundred += 0;}    }
-
-while (1) {
-volatile int iHundred;
-volatile int iAlfa;
-
-iHundred = 150*3; while (iHundred--) {iAlfa += 1;}
-	ConverterWrite( 0 );// ConverterWrite0000( 0 );
-	iHundred = 150; while (iHundred--) {iAlfa += 1;}
-	ConverterWrite(0x11);//ConverterWrite0110( 0 );
-	iHundred = 150; while (iHundred--) {iAlfa += 1;}
-	ConverterWrite(0xAA);//ConverterWrite0AA0( 0 ) ;
-	iHundred = 150; while (iHundred--) {iAlfa += 1;}
-
-	ConverterWrite(0xFF);//ConverterWrite0FF0( 0 ) ;
-	iHundred = 150; while (iHundred--) {iAlfa += 1;}
-
-iHundred = 150*3; while (iHundred--) {iAlfa += 1;}
-	ConverterWrite0000( 0 );
-	iHundred = 150; while (iHundred--) {iAlfa += 1;}
-	ConverterWrite0110( 0 );
-	iHundred = 150; while (iHundred--) {iAlfa += 1;}
-	ConverterWrite0AA0( 0 ) ;
-	iHundred = 150; while (iHundred--) {iAlfa += 1;}
-	ConverterWrite0FF0( 0 ) ;
-	iHundred = 150; while (iHundred--) {iAlfa += 1;}
-
-}
+	/* Checking on values close to limit, on limits, in the middle, and at random valuoes from range, ..  */
+	while (1) { ConverterWrite( 0 );ConverterWrite(0x11);ConverterWrite(0xAA); ConverterWrite(0xFF); }
 
 #endif /* (defined(HW_DUMB_TEST) ) */
 

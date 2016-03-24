@@ -774,15 +774,17 @@ void ConverterWrite(unsigned char data)
 {
 //u_int16_t tmp = data << AD5300_DONTCARE_LEN;
 //unsigned short tmp = (unsigned short) ( data << AD5300_DONTCARE_LEN ) ;
-unsigned short tmp;
+unsigned short tmp=0;
 
 //u_int8_t i, _i;
 unsigned char i, _i;
 
-	tmp = _SWAP16(data);
+	//tmp = _SWAP16(data);
+	tmp =  data;
 	tmp <<= 4;
 
 	ConverterActivate;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
 
 	for (i = 0; i < AD5300_DATA_LEN; i++)
 	{
@@ -794,17 +796,19 @@ unsigned char i, _i;
 #else
 		//(tmp & (u_int16_t)(1U<<_i)) ? (MOSI_HI) : (MOSI_LO);
 		//(tmp & (unsigned short)( _SWAP16 (1U<<i) ) ) ? (MOSI_HI) : (MOSI_LO);
-		//if (255 == data) MOSI_HI ; else MOSI_LO;
-		MOSI_LO;
+
+		(tmp & (unsigned short)( 1U<<_i ) ) ? (MOSI_HI) : (MOSI_LO);
+
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
 #endif /* defined (AVRCODE) */
 		
 
 		SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
 	}
 
-	MOSI_LO;
-
 	ConverterDeactivate;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
 } /* void ConverterWrite(unsigned short data) */
 
 void ConverterInit(void)

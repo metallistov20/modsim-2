@@ -132,6 +132,18 @@ while (1) {
 volatile int iHundred;
 volatile int iAlfa;
 
+iHundred = 150*3; while (iHundred--) {iAlfa += 1;}
+	ConverterWrite( 0 );// ConverterWrite0000( 0 );
+	iHundred = 150; while (iHundred--) {iAlfa += 1;}
+	ConverterWrite(0x11);//ConverterWrite0110( 0 );
+	iHundred = 150; while (iHundred--) {iAlfa += 1;}
+	ConverterWrite(0xAA);//ConverterWrite0AA0( 0 ) ;
+	iHundred = 150; while (iHundred--) {iAlfa += 1;}
+
+	ConverterWrite(0xFF);//ConverterWrite0FF0( 0 ) ;
+	iHundred = 150; while (iHundred--) {iAlfa += 1;}
+
+iHundred = 150*3; while (iHundred--) {iAlfa += 1;}
 	ConverterWrite0000( 0 );
 	iHundred = 150; while (iHundred--) {iAlfa += 1;}
 	ConverterWrite0110( 0 );
@@ -142,8 +154,6 @@ volatile int iAlfa;
 	iHundred = 150; while (iHundred--) {iAlfa += 1;}
 
 }
-
-//while (1) { ConverterWrite( SWAP16(1) ) ; ConverterWrite( SWAP16(255)  );  }
 
 #endif /* (defined(HW_DUMB_TEST) ) */
 

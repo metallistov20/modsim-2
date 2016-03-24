@@ -36,10 +36,10 @@
 #define NIX		PD0
 
 /* ~Synchronization. Leg 5 of AD5300. (Orange) */
-#define SS_PIN		PD1
+#define SYNC_PIN	PD1
 
 /* Clocking. Leg 6 of AD5300. (Yellow) */
-#define SCK_PIN		PD2
+#define SCLK_PIN	PD2
 
 /* Data output. Leg 7 of AD5300. (Green) */
 #define MOSI_PIN	PD3
@@ -55,19 +55,19 @@
 	#define AD5300_ACTIVATE		SPI_PORT &= (u_int8_t) ~_BV(SS_PIN)//TODO: remove
 	#define AD5300_DEACTIVATE	SPI_PORT |= _BV(SS_PIN)
 #else
-	#define ConverterActivate 	PortD_Down(SS_PIN)
-	#define ConverterDeactivate	PortD_Up(SS_PIN)
+	#define ConverterActivate 	PortD_Down(SYNC_PIN)
+	#define ConverterDeactivate	PortD_Up(SYNC_PIN)
 #endif /* defined (AVRCODE) */
 
 #if defined (AVRCODE)
-	#define SCK_LO		SPI_PORT &= (u_int8_t) ~_BV(SCK_PIN) //TODO: remove
-	#define SCK_HI		SPI_PORT |= _BV(SCK_PIN)
+	#define SCLK_LO		SPI_PORT &= (u_int8_t) ~_BV(SCK_PIN) //TODO: remove
+	#define SCLK_HI		SPI_PORT |= _BV(SCK_PIN)
 
 	#define MOSI_LO		SPI_PORT &= (u_int8_t) ~_BV(MOSI_PIN)
 	#define MOSI_HI		SPI_PORT |= _BV(MOSI_PIN)
 #else
-	#define SCK_LO		PortD_Down(SCK_PIN)
-	#define SCK_HI		PortD_Up(SCK_PIN)
+	#define SCLK_LO		PortD_Down(SCLK_PIN)
+	#define SCLK_HI		PortD_Up(SCLK_PIN)
 
 	#define MOSI_LO		PortD_Down(MOSI_PIN)
 	#define MOSI_HI		PortD_Up(MOSI_PIN)
@@ -174,41 +174,638 @@ int PortD_CheckL1( unsigned char uchBit )
 #endif /* (defined(DIN_FEEDBACK)) */ 
 
 
-void ConverterWrite(/* u_int8_t data */ unsigned short data)
+#define _SWAP16(x) 	((unsigned short)	((x&0xFF00)>>8)	|	((x&0x00FF)<<8)			)
+void ConverterWrite0AA0(unsigned char data)
+{
+ConverterActivate;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; // 1
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; // 2
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; //MOSI_HI; //MOSI_LO; //MOSI_HI; // 3
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; //MOSI_LO; //MOSI_HI; //MOSI_HI; // 4
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+
+
+	SCLK_HI;
+	 MOSI_HI; // 5
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; // 6
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	 MOSI_HI; // 7
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; // 8
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	 MOSI_HI; // 9
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; // 10
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	 MOSI_HI; // 11
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; // 12
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+
+
+
+	SCLK_HI;
+	MOSI_LO; // 13
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; // 14
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; // 15
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; // 16
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+
+ConverterDeactivate;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+}
+
+
+void ConverterWrite0000(unsigned char data)
+{
+ConverterActivate;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; // 1
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; // 2
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; //MOSI_HI; //MOSI_LO; //MOSI_HI; // 3
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; //MOSI_LO; //MOSI_HI; //MOSI_HI; // 4
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+
+
+	SCLK_HI;
+	MOSI_LO; // 5
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; // 6
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; // 7
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; // 8
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; // 9
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; // 10
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; // 11
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; // 12
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+
+
+
+	SCLK_HI;
+	MOSI_LO; // 13
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; // 14
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; // 15
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; // 16
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+
+ConverterDeactivate;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+}
+
+void ConverterWrite0FF0(unsigned char data)
+{
+ConverterActivate;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; // 1
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; // 2
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; //MOSI_HI; //MOSI_LO; //MOSI_HI; // 3
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; //MOSI_LO; //MOSI_HI; //MOSI_HI; // 4
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+
+
+	SCLK_HI;
+	MOSI_HI; // 5
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_HI; // 6
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_HI; // 7
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_HI; // 8
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_HI; // 9
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_HI; // 10
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_HI; // 11
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_HI; // 12
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+
+
+
+	SCLK_HI;
+	MOSI_LO; // 13
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; // 14
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; // 15
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; // 16
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+
+ConverterDeactivate;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+}
+
+
+
+void ConverterWrite0110(unsigned char data)
+{
+ConverterActivate;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; // 1
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; // 2
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; //MOSI_HI; //MOSI_LO; //MOSI_HI; // 3
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; //MOSI_LO; //MOSI_HI; //MOSI_HI; // 4
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+
+
+	SCLK_HI;
+	MOSI_LO; // 5
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; // 6
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; // 7
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	 MOSI_HI; // 8
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; // 9
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; // 10
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; // 11
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	 MOSI_HI; // 12
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+
+
+
+	SCLK_HI;
+	MOSI_LO; // 13
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; // 14
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; // 15
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+	SCLK_HI;
+	MOSI_LO; // 16
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+	SCLK_LO;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+
+
+ConverterDeactivate;
+{volatile int iHundred = 5; while (iHundred--) {iHundred += 0;}   }
+}
+
+void ConverterWrite00F0(unsigned char data)
+{
+ConverterActivate;
+	SCLK_HI;
+	MOSI_LO; // 1
+	SCLK_LO;
+
+	SCLK_HI;
+	MOSI_LO; // 2
+	SCLK_LO;
+
+	SCLK_HI;
+	MOSI_LO; // 3
+	SCLK_LO;
+
+	SCLK_HI;
+	MOSI_LO; // 4
+	SCLK_LO;
+
+	SCLK_HI;
+	MOSI_LO; // 5
+	SCLK_LO;
+
+	SCLK_HI;
+	MOSI_LO; // 6
+	SCLK_LO;
+
+	SCLK_HI;
+	MOSI_LO; // 7
+	SCLK_LO;
+
+	SCLK_HI;
+	MOSI_LO; // 8
+	SCLK_LO;
+
+	SCLK_HI;
+	MOSI_HI; // 9
+	SCLK_LO;
+
+	SCLK_HI;
+	MOSI_HI; // 10
+	SCLK_LO;
+
+	SCLK_HI;
+	MOSI_HI; // 11
+	SCLK_LO;
+
+	SCLK_HI;
+	MOSI_HI; // 12
+	SCLK_LO;
+
+	SCLK_HI;
+	MOSI_LO; // 13
+	SCLK_LO;
+
+	SCLK_HI;
+	MOSI_LO; // 14
+	SCLK_LO;
+
+	SCLK_HI;
+	MOSI_LO; // 15
+	SCLK_LO;
+
+	SCLK_HI;
+	MOSI_LO; // 16
+	SCLK_LO;
+
+	MOSI_LO;
+
+ConverterDeactivate;
+}
+
+
+void ConverterWrite0F00(unsigned char data)
+{
+ConverterActivate;
+	SCLK_HI;
+	MOSI_LO; // 1
+	SCLK_LO;
+
+	SCLK_HI;
+	MOSI_LO; // 2
+	SCLK_LO;
+
+	SCLK_HI;
+	MOSI_LO; // 3
+	SCLK_LO;
+
+	SCLK_HI;
+	MOSI_LO; // 4
+	SCLK_LO;
+
+	SCLK_HI;
+	MOSI_HI; // 5
+	SCLK_LO;
+
+	SCLK_HI;
+	MOSI_HI; // 6
+	SCLK_LO;
+
+	SCLK_HI;
+	MOSI_HI; // 7
+	SCLK_LO;
+
+	SCLK_HI;
+	MOSI_HI; // 8
+	SCLK_LO;
+
+	SCLK_HI;
+	MOSI_LO; // 9
+	SCLK_LO;
+
+	SCLK_HI;
+	MOSI_LO; // 10
+	SCLK_LO;
+
+	SCLK_HI;
+	MOSI_LO; // 11
+	SCLK_LO;
+
+	SCLK_HI;
+	MOSI_LO; // 12
+	SCLK_LO;
+
+	SCLK_HI;
+	MOSI_LO; // 13
+	SCLK_LO;
+
+	SCLK_HI;
+	MOSI_LO; // 14
+	SCLK_LO;
+
+	SCLK_HI;
+	MOSI_LO; // 15
+	SCLK_LO;
+
+	SCLK_HI;
+	MOSI_LO; // 16
+	SCLK_LO;
+
+	MOSI_LO;
+
+ConverterDeactivate;
+}
+
+
+
+//void ConverterWrite(unsigned short data)
+void ConverterWrite(unsigned char data)
 {
 //u_int16_t tmp = data << AD5300_DONTCARE_LEN;
-unsigned short tmp = (unsigned short) ( data << AD5300_DONTCARE_LEN ) ;
+//unsigned short tmp = (unsigned short) ( data << AD5300_DONTCARE_LEN ) ;
+unsigned short tmp;
 
 //u_int8_t i, _i;
 unsigned char i, _i;
 
+	tmp = _SWAP16(data);
+	tmp <<= 4;
+
 	ConverterActivate;
 
-	for (i = 0; i < /* AD5300_DATA_LEN*/16; i++)
+	for (i = 0; i < AD5300_DATA_LEN; i++)
 	{
 		_i = 15 - i;
 
-		SCK_HI;
+		SCLK_HI;
 #if defined (AVRCODE)
 		(tmp & _BV(_i)) ? (MOSI_HI) : (MOSI_LO);
 #else
 		//(tmp & (u_int16_t)(1U<<_i)) ? (MOSI_HI) : (MOSI_LO);
-
-
-		//(tmp & (unsigned short)(1U<<_i)) ? (MOSI_HI) : (MOSI_LO);
-		//(_i % 2 )  ? (MOSI_HI) : (MOSI_LO);
-		//MOSI_HI;		
-		//MOSI_LO;// can see it on Vout 
-		(tmp & (u_int16_t)(1U<<_i)) ? (MOSI_HI) : (MOSI_LO);
+		//(tmp & (unsigned short)( _SWAP16 (1U<<i) ) ) ? (MOSI_HI) : (MOSI_LO);
+		//if (255 == data) MOSI_HI ; else MOSI_LO;
+		MOSI_LO;
 #endif /* defined (AVRCODE) */
+		
 
-		SCK_LO;
+		SCLK_LO;
 	}
 
 	MOSI_LO;
 
 	ConverterDeactivate;
-}
+} /* void ConverterWrite(unsigned short data) */
 
 void ConverterInit(void)
 {
@@ -222,34 +819,9 @@ void ConverterInit(void)
 
 	ConverterDeactivate;	
 
-	SCK_LO;
-
+	SCLK_LO;
 	MOSI_LO;
 
 	ConverterWrite(0);
-}
 
-void a()
-{
-int iCnt = 0;
-
-	PDSEL = PD1 | PD2 | PD3;
-
-	PDDIR = PD1 | PD2 | PD3;
-//-
-	ConverterDeactivate;	
-
-	SCK_LO;
-
-	MOSI_LO;
-
-//---	ConverterWrite(0);
-
-//while (1) { ConverterDeactivate;  SCK_LO;  MOSI_LO;  usleep(20); ConverterActivate; SCK_HI;  MOSI_HI;  usleep(20); }
-//CAN SEE ON Vout; while(1) { ConverterInit(); usleep(1); ConverterWrite(0x1); usleep(5); }
-// BAD! while(1) { ConverterInit(); usleep(1); ConverterWrite(0x1); usleep(5); }
-//CAN SEE ON Vout; while(1) { ConverterInit(); ConverterWrite( (iCnt++%256) ); }
-//CAN SEE ON Vout;while(1) { ConverterWrite( (iCnt++%256) ); }
-while(1) { ConverterWrite( 1) ; ConverterWrite( 255); }
-
-}
+} /* void ConverterInit(void) */

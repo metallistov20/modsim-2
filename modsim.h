@@ -74,4 +74,7 @@ struct option
 
 #endif /* (defined(UCSIMM) ) */
 
+/* Exposed to term_Down() and Term_Up() */
+extern int iOperation;
+
 #endif /* _MODSIM_H_ */

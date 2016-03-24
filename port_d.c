@@ -31,8 +31,11 @@
 /* Own interface, definitions */
 #include "port_d.h"
 
+/* iOperatoin */
+#include "modsim.h"
 
-/* Not connected to AD5300. Leg (-1) of AD5300. (White) */
+
+/* Not connected to AD5300. Leg 1 of USB#1. (White) */
 #define NIX		PD0
 
 /* ~Synchronization. Leg 5 of AD5300. (Orange) */
@@ -106,6 +109,55 @@ void PortD_Up(unsigned char uchBit)
 {
 #if defined(UCSIMM)
 	PDDATA |= uchBit;
+#endif /* (UCSIMM) */
+}
+
+/* More than 3.2 and less than 4.5. Must be recomputed each 20-30 seconds. */
+#define CALIBRATED_VDD	( 4 )
+
+/* Switch off <Din> wire on either USB#0, or USB#1 */
+void Term_Down()
+{
+#if defined(UCSIMM)
+	switch (iOperation)
+	{
+		case DO_GATE0_OP:
+			PortD_Down(PD0);
+			//printf("%s: _ 3 \n", cArg0);
+			break;
+
+		case DO_GATE1_OP:
+			ConverterWrite( ( LOGIC_0_CURR * 256) / CALIBRATED_VDD  )  ;
+			//printf("%s: _ 4 \n", cArg0);
+			break;
+
+		default:
+			printf("__s: bad kind of operatoin (while DOWN), restart the program\n");
+			abort ();
+	}
+#endif /* (UCSIMM) */
+}
+
+/* Switch on <Din> wite on either USB#0, or USB#1 */
+void Term_Up()
+{
+#if defined(UCSIMM)
+	switch (iOperation)
+	{
+		case DO_GATE0_OP:
+			PortD_Up(PD0);
+			//printf("%s: _ 1 \n", cArg0);
+			break;
+
+		case DO_GATE1_OP:
+			ConverterWrite( (  LOGIC_1_CURR * 256) / CALIBRATED_VDD  )  ;
+			//printf("%s: _ 2 \n", cArg0);
+			break;
+
+		default:
+			printf("__s: bad kind of operatoin (while UP), restart the program\n");
+			abort ();
+	}
 #endif /* (UCSIMM) */
 }
 
@@ -189,3 +241,30 @@ void ConverterInit(void)
 	MOSI_LO;// TODO: check if necessary 
 
 } /* void ConverterInit(void) */
+
+
+/* Initialize Port 'D' and, once needed, converter arrached to it */
+void PeriphInit(void)
+{
+#if defined(UCSIMM)
+	switch (iOperation)
+	{
+		case DO_GATE0_OP:
+			/* Set digital PIOs 1-4 as outputs */
+			PortD_Prepare( );
+			//printf("%s: _ A \n", cArg0);
+			break;
+
+		case DO_GATE1_OP:
+			/* Besides all, it prepares PIOs, so theres no need to do <PortD_Prepare()> */
+			ConverterInit();
+			//printf("%s: _ B \n", cArg0);
+			break;
+
+		default:
+			printf("__s: bad kind of operatoin (while PERIPH. INIT), restart the program\n");
+			abort ();
+	}
+#endif /* (UCSIMM) */
+}
+

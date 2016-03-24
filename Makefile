@@ -56,7 +56,7 @@ LD=$(PREFIX)ld
 # CFLAGS+= -DHW_PORTD_TEST
 
 # Basic diagnisis of Converter. Elnless loop, either.
-CFLAGS+= -DHW_AD53_TEST
+# CFLAGS+= -DHW_AD53_TEST
 
 .o: .s
 	$(CC) $(ASMFLAGS)   -o $@ -c $< 

@@ -80,9 +80,11 @@ void abort()
 }
 #endif /* (defined(UCSIMM) ) */
 
+int iOperation;
+
 int main (int argc, char **argv)
 {
-int iOperation, iOption;
+int iOption;
 
 /* Index of the option */
 int iOptionIdx = 0;
@@ -91,15 +93,20 @@ char cArg0[LARGE_BUF_SZ];
 
 #if defined(HW_PORTD_TEST)
 
+	printf("[%s] %s: NOTIFICATION: doing test of Port 'D' of MC68EZ328 controller. Will hang in this test. \n", __FILE__, __func__);
+
 	/* Set digital PIOs 1-4 as outputs */
 	PortD_Prepare( );
 
 	/* Set up and set down, eternally */
 	while (1) { PortD_Toggle(0xF0 ); usleep(10) ; }
 
-	#endif /* (defined(HW_DUMB_TEST) ) */
+#endif /* (defined(HW_DUMB_TEST) ) */
+
 
 #if defined(HW_AD53_TEST)
+
+	printf("[%s] %s: NOTIFICATION: doing test of AD53xx controller. Will hang in this test. \n", __FILE__, __func__ );
 
 	/* Besides all, it prepares PIOs, so theres no need to do <PortD_Prepare()> */
 	ConverterInit();
@@ -108,6 +115,8 @@ char cArg0[LARGE_BUF_SZ];
 	while (1) { ConverterWrite( 0 );ConverterWrite(0x11);ConverterWrite(0xAA); ConverterWrite(0xFF); }
 
 #endif /* (defined(HW_DUMB_TEST) ) */
+
+
 
 	/* Avoid dafault 0 value */
 	iOperation=DO_NO_OP;
@@ -134,20 +143,14 @@ char cArg0[LARGE_BUF_SZ];
 		/* Parce each parameter */
 		switch (iOption)
 		{
-			/* Single: open site */
 			case '1':
 				printf("%s: OK. option is  <%c>\n", cArg0, iOption);
 				iOperation = DO_GATE0_OP;
 				break;
 
-			/* Single: close site */
 			case '2':
 				printf("%s: OK. option is  <%c>\n", cArg0, iOption);
 				iOperation = DO_GATE1_OP;
-				break;
-
-			case '?':
-				/* getopt_long prints error message, we don't */
 				break;
 
 			default:
@@ -155,6 +158,8 @@ char cArg0[LARGE_BUF_SZ];
 				abort ();
 		}
 	} /* Command line arguments were parsed */
+
+	printf("[%s] %s: NOTIFICATION: assuming that CPE is attached to [%s] gate, works according to [%s] protocol.\n", __FILE__, __func__, (DO_GATE0_OP==iOperation)?"USB#0":"USB#1", (DO_GATE0_OP==iOperation)?"USB1.1":"USB2.0"   );
 
 	/* Try to open Raw Data file at place defined by 'FILE_NAME' */
 	if ( NULL == (fp = fopen (FILE_NAME, "r") ) )
@@ -240,12 +245,10 @@ if (0 == qfltTM.power) if (iOldSec!= qfltTM.integer){iOldSec=qfltTM.integer; pri
 	/* Dispose pointer to Raw Data file */
 	fclose(fp);
 
-	printf("\n[%s] %s: issuing USB-curve-data on Pin #0 Port 'D'\n", __FILE__, __func__);
+	/* Initialize on-board peripherals */
+	PeriphInit();
 
-#if defined(UCSIMM) 
-	/* Set pins of Port D as inputs/outputs, sets rest platform registers */
-	PortD_Prepare( );
-#endif /* (defined(UCSIMM) ) */
+	printf("\n[%s] %s: issuing USB-curve-data on Pin #0 Port 'D'\n", __FILE__, __func__);
 
 	/* Process data stored in dynamic structure pointed by 'pTimeChain' */
 	ProcessPoints(pTimeChain);

@@ -162,18 +162,22 @@ qfltJiffy.fraction = 1;
 		/* USB 1.0 levels. Logical '1'.  LOGIC_1_CURR */
 		if ( iChkUsb10Lg1(pTimepoint->qfltXval) )
 
-			PortD_Up( PD0 );
+			/* Pull terminal USB#0/USB#1 <dIN> line up. */
+			Term_Up( PD0 );
 
 		else
 			/* USB 1.0 levels. Logical '0'. LOGIC_0_CURR */
 			if ( iChkUsb10Lg0(pTimepoint->qfltXval) )
 
-				PortD_Down( PD0 );
+				/* Pull terminal USB#0/USB#1 <dIN> line down. */
+				Term_Down( PD0 );
+#if 0
 			else
-				/* TODO: REWORK! A lot of logical zeroes will come with negative power of 10 (i.e. 'sgn' is '-'). */
-				PortD_Down( PD0 );/* TODO: REWORK! */
+				/* TODO: REWORK! A lot of _logical_ zeroes (or sort of that ) will come with negative power of 10 (i.e. 'sgn' is '-'). */
+				PortD_Down( PD0 );
 
 			/* Attention: overvoltage, U = 3.6++ Volts will be processed as logical zero, too. */
+#endif /* (0) */
 
 #if defined(DIN_FEEDBACK)
 	;

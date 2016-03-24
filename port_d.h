@@ -64,11 +64,23 @@ ground, or 90 Ω differential to match the data cable impedance. */
 
 #endif /* (#if !defined(USB20)) */
 
-/* Switch on bits defined by bitmask 'uchBit' in Port D */
+/* Switch on bits defined by bitmask 'uchBit' in Port D. Exposed to main() [HW_PORTD_TEST] */
 void PortD_Toggle(unsigned char uchBit);
 
-/* Switch off bits defined by bitmask 'uchBit' in Port D */
-void PortD_Down(unsigned char uchBit);
+/* Switch on <Din> wire on either USB#0, or USB#1. Exposed to <ProcessPoint()> */
+void Term_Up();
+
+/* Switch off <Din> wire on either USB#0, or USB#1. Exposed to <ProcessPoint()> */
+void Term_Down();
+
+/* Exposed to main() [HW_AD53_TEST] */
+void ConverterWrite(unsigned char data);
+
+/* Exposed to main() [HW_AD53_TEST] */
+void ConverterInit(void);
+
+/* Initialize Port 'D' and, once needed, converter arrached to it. Exposed to main() */
+void PeriphInit(void);
 
 
 #endif /* _PORT_D_H_ */

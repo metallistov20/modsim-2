@@ -159,6 +159,12 @@ char cArg0[LARGE_BUF_SZ];
 		}
 	} /* Command line arguments were parsed */
 
+	if ( DO_GATE0_OP != iOperation && DO_GATE1_OP != iOperation )
+	{
+		printf("%s: bad usage; must be either <./%s -1> ether <./%s -2>; exiting.\n", cArg0, cArg0);
+		abort ();
+	}
+
 	printf("[%s] %s: NOTIFICATION: assuming that CPE is attached to [%s] gate, works according to [%s] protocol.\n", __FILE__, __func__, (DO_GATE0_OP==iOperation)?"USB#0":"USB#1", (DO_GATE0_OP==iOperation)?"USB1.1":"USB2.0"   );
 
 	/* Try to open Raw Data file at place defined by 'FILE_NAME' */
@@ -229,6 +235,10 @@ sscanf(cBuf, "%d.%d %d.%d %d.%d",
 					qfltDOut.integer,qfltDOut.fraction   );
 #endif /* !defined(QUASIFLOAT) */
 #endif /* (DEBUG_DATA) */
+
+			if (iOldSec!= qfltTM.integer)
+				{iOldSec=qfltTM.integer; printf("sec: %d; ", iOldSec); fflush(stdout); }
+
 
 #if !defined(QUASIFLOAT) 
 			/* Attach just scanned data (three floats) to tail of dynamic structure */

@@ -59,7 +59,7 @@ CFLAGS+=-DDEBUG_DATA
 # CFLAGS+= -DHW_AD53_TEST
 
 # Slow output of processed data on UCSIMM which spoil realtime process of data being isseued
-CFLAGS += -DFAST_UCSIMM
+# CFLAGS += -DFAST_UCSIMM
 
 .o: .s
 	$(CC) $(ASMFLAGS)   -o $@ -c $< 

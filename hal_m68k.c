@@ -29,7 +29,7 @@
 /* Basic project definitions  */
 #include "modsim.h"
 
-/* Type 'pTimepointType' definition */
+/* Type 'pTimepointType' definition, <iFIRST> integer */
 #include "datastruct.h"
 
 /* PortD_Up(), PortD_Down(), PD0, PD1 */
@@ -104,7 +104,7 @@ int iChkUsb20Lg1(QuasiFloatType qfltVal)
 	if (
 		(  (USB20_LOGIC_1_LO_CURR_INTGR == qfltVal.integer) && (USB20_LOGIC_1_LO_CURR_FRACT <= qfltVal.fraction)   ) 
 		&& 
-		(  (USB20_LOGIC_1_UP_CURR_INTGR == qfltVal.integer) && (USB20_LOGIC_1_LO_CURR_FRACT >= qfltVal.fraction)   ) 
+		(  (USB20_LOGIC_1_UP_CURR_INTGR == qfltVal.integer) && (USB20_LOGIC_1_UP_CURR_FRACT >= qfltVal.fraction)   ) 
 
 	) return 1;
 
@@ -137,7 +137,6 @@ int iChkUsbLg1(QuasiFloatType qfltVal)
 		return iChkUsb20Lg1(qfltVal);
 }
 
-
 int ProcessPoint( pTimepointType pTimepoint )
 {
 
@@ -146,25 +145,39 @@ int _left, _right;
 QuasiFloatType qfltJiffy; 
 qfltJiffy.fraction = 1;
 
+#if 0
+OBSOLETE
+	/* Put marquee 'secPRC: xxx;' on the screen, so we are sure platform is still not hanged */
+	if (0 == pTimepoint->qfltAbsTime.power)
+#endif
+		if (iOldSecPRC!= pTimepoint->qfltAbsTime.integer)
+
+			{iOldSecPRC=pTimepoint->qfltAbsTime.integer; printf("secPRC: %d; ", iOldSecPRC); fflush(stdout); }
+
+
+
+//printf("[%s] :  qfltAbsTime.integer = %d , qfltAbsTime.fraction = %d \n", __FILE__,pTimepoint->qfltAbsTime.integer, pTimepoint->qfltAbsTime.fraction );
+
 	pTimepoint->qfltAbsTime.integer = (pTimepoint->qfltAbsTime.integer < 0)?
-		(pTimepoint->qfltAbsTime.integer * 1000000) - (pTimepoint->qfltAbsTime.fraction / 10):
-		(pTimepoint->qfltAbsTime.integer * 1000000) + (pTimepoint->qfltAbsTime.fraction / 10);
+		(pTimepoint->qfltAbsTime.integer * 1000000) - (pTimepoint->qfltAbsTime.fraction):
+		(pTimepoint->qfltAbsTime.integer * 1000000) + (pTimepoint->qfltAbsTime.fraction);
+
+//printf("[%s] :  qfltAbsTime.integer = %d (PR) ,  \n", __FILE__,	pTimepoint->qfltAbsTime.integer );
 
 	/* Take current time */
 	gettimeofday(&endtimePROC,0);
 
 	/* Compute time elapsed since head of list processing till now */
-	qfltRelTime.integer = 1000000*(endtimePROC.tv_sec - starttimePROC.tv_sec - 6.0) 
-		+ endtimePROC.tv_usec - starttimePROC.tv_usec;
+	qfltRelTime.integer = 1000000*(endtimePROC.tv_sec - starttimePROC.tv_sec) 
+		+ endtimePROC.tv_usec - starttimePROC.tv_usec - iFIRST;
 
+//printf("[%s] :  qfltRelTime.integer = %d \n\n", __FILE__,qfltRelTime.integer );
 
 #if defined(FAST_UCSIMM)
 	printf("[%s] : <BEFORE TIME SHIFTING> real tm.: %d, shiftable tm.: %d \n", __FILE__,
 		pTimepoint->qfltAbsTime.integer,	qfltRelTime.integer );
 #else
 #endif /* defined(FAST_UCSIMM) */
-
-	/* TODO: resolve bug. On (-1.0 .. 1.0) comparing <qfltRelTime.integer> against 0 is not sufficient. */
 
 	/* If relative time stays on the left from 0 */
 	if (qfltRelTime.integer < 0)
@@ -176,7 +189,7 @@ qfltJiffy.fraction = 1;
 	else
 		/* then '_right' is real time, '_left' is relative time */
 		_left = qfltRelTime.integer, _right = pTimepoint->qfltAbsTime.integer;
-
+#if 0
 	if (0 == pTimepoint->qfltAbsTime.integer) return;
 
 	/* TODO: make <do-while> instead of <while-do>, thus avoid a code duplication */
@@ -189,9 +202,9 @@ qfltJiffy.fraction = 1;
 		gettimeofday(&endtimePROC,0);
 
 		/* Compute how much time elapsed since head of list processing till now */
-		qfltRelTime.integer = 1000000*(endtimePROC.tv_sec - starttimePROC.tv_sec - 6.0) 
+		qfltRelTime.integer = 1000000*(endtimePROC.tv_sec - starttimePROC.tv_sec) 
 
-			+ endtimePROC.tv_usec - starttimePROC.tv_usec;
+			+ endtimePROC.tv_usec - starttimePROC.tv_usec  - iFIRST;
 
 		/* If relative time stays on the left from 0 */
 		if (qfltRelTime.integer < 0)
@@ -211,6 +224,7 @@ qfltJiffy.fraction = 1;
 #else
 #endif /* defined(FAST_UCSIMM) */
 	}
+#endif /* (0) */
 
 #if defined(FAST_UCSIMM)
 	/* Now they're equal or least 'relative tm' is not less than 'real tm' */
@@ -220,30 +234,19 @@ qfltJiffy.fraction = 1;
 #else
 #endif /* defined(FAST_UCSIMM) */
 
-#if 0
-OBSOLETE
-
-		/* Put marquee 'secPRC: xxx;' on the screen, so we are sure platform is still not hanged */
-		if (0 == pTimepoint->qfltAbsTime.power)
-
-			if (iOldSecPRC!= pTimepoint->qfltAbsTime.integer)
-
-				{iOldSecPRC=pTimepoint->qfltAbsTime.integer; printf("secPRC: %d; ", iOldSecPRC); fflush(stdout); }
-#endif
-
-
 		/* Logical '1'.  LOGIC_1_CURR */
-		if ( iChkUsbLg1(pTimepoint->qfltXval) )
+		if ( iChkUsbLg1(pTimepoint->qfltYval) )
 
 			/* Pull terminal USB#0/USB#1 <dIN> line up. */
-			Term_Up( PD0 );
+			Term_Up( );
 
 		else
 			/* Logical '0'. LOGIC_0_CURR */
-			if ( iChkUsbLg0(pTimepoint->qfltXval) )
+			if ( iChkUsbLg0(pTimepoint->qfltYval) )
 
 				/* Pull terminal USB#0/USB#1 <dIN> line down. */
-				Term_Down( PD0 );
+				Term_Down( );
+#if 0
 			else
 			{
 				/* Over-voltages, under-voltages, some middle values and rest are marked as <not processed> */
@@ -257,6 +260,9 @@ OBSOLETE
 #endif /* (0) */
 				strcpy( pTimepoint->pcMarquee, UNPROC);
 			}
+#endif /* (0) */
+
+
 #if defined(DIN_FEEDBACK)
 	;
 #endif /* (DIN_FEEDBACK) */

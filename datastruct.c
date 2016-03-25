@@ -41,6 +41,9 @@
 /* Time measurement variable to define begin of time scale */
 struct timeval starttimePROC;
 
+/* First time, will be subtracted in HAL */
+int iFIRST;
+
 /* Attach 3 floats to tail of dynamic structure 'pTimepointType' */
 int _EnrollPoint(const char * caller, pTimepointType * ppThisPointChain, 
 #if !defined(QUASIFLOAT) 
@@ -86,6 +89,11 @@ pTimepointType pChild, pTempPointChain;
 		(*ppThisPointChain)->pcMarquee = calloc (1, strlen (pcMrq) +1 );
 		strcpy( (*ppThisPointChain)->pcMarquee, pcMrq);
 
+		if ( 0 > (*ppThisPointChain)->qfltAbsTime.integer*1000000 )
+			iFIRST = (*ppThisPointChain)->qfltAbsTime.integer*1000000 - (*ppThisPointChain)->qfltAbsTime.fraction;
+		else
+			iFIRST = (*ppThisPointChain)->qfltAbsTime.integer*1000000 + (*ppThisPointChain)->qfltAbsTime.fraction;
+
 #if defined(DEBUG_DATA_)
 #if !defined(QUASIFLOAT)
 		printf("[%s] %s:%s : FIRST <%f> <%f> <%f> <%s> \n", __FILE__, caller, __func__,
@@ -95,17 +103,11 @@ pTimepointType pChild, pTempPointChain;
 			(*ppThisPointChain)->pcMarquee
 		);
 #else
-		printf("[%s] %s:%s : FIRST <%d.%dE%c0%d> <%d.%dE%c0%d> <%d.%dE%c0%d> <%s> \n", __FILE__, caller, __func__,
+		printf("[%s] %s:%s : FIRST <%d.%d> <%d.%d> <%d.%d> <%s> \n", __FILE__, caller, __func__,
 
 			(*ppThisPointChain)->qfltAbsTime.integer,(*ppThisPointChain)->qfltAbsTime.fraction,
-			(*ppThisPointChain)->qfltAbsTime.sgn,(*ppThisPointChain)->qfltAbsTime.power,
-
 			(*ppThisPointChain)->qfltXval.integer,(*ppThisPointChain)->qfltXval.fraction,
-			(*ppThisPointChain)->qfltXval.sgn,(*ppThisPointChain)->qfltXval.power,
-
 			(*ppThisPointChain)->qfltYval.integer,(*ppThisPointChain)->qfltYval.fraction,
-			(*ppThisPointChain)->qfltYval.sgn,(*ppThisPointChain)->qfltYval.power,
-
 			(*ppThisPointChain)->pcMarquee
 		);
 #endif /* !defined(QUASIFLOAT) */
@@ -146,7 +148,7 @@ pTimepointType pChild, pTempPointChain;
 		pTempPointChain->pcMarquee = calloc (1, strlen (pcMrq) +1 );
 		strcpy( pTempPointChain->pcMarquee, pcMrq);
 
-#if defined(DEBUG_DATA_)
+#if defined(DEBUG_DATA)
 #if !defined(QUASIFLOAT)
 		printf("[%s] %s:%s : NEXT <%f> <%f> <%f> <%s> \n", __FILE__, caller, __func__,
 			pTempPointChain->fltAbsTime,
@@ -155,19 +157,15 @@ pTimepointType pChild, pTempPointChain;
 			pTempPointChain->pcMarquee
 		);
 #else
-		printf("[%s] %s:%s : NEXT <%d.%dE%c0%d> <%d.%dE%c0%d> <%d.%dE%c0%d> <%s> \n", __FILE__, caller, __func__,
+/*
+		printf("[%s] %s:%s : NEXT <%d.%d> <%d.%d> <%d.%d> <%s> \n", __FILE__, caller, __func__,
 
 			pTempPointChain->qfltAbsTime.integer,pTempPointChain->qfltAbsTime.fraction,
-			pTempPointChain->qfltAbsTime.sgn,pTempPointChain->qfltAbsTime.power,
-
 			pTempPointChain->qfltXval.integer,pTempPointChain->qfltXval.fraction,
-			pTempPointChain->qfltXval.sgn,pTempPointChain->qfltXval.power,
-
 			pTempPointChain->qfltYval.integer,pTempPointChain->qfltYval.fraction,
-			pTempPointChain->qfltYval.sgn,pTempPointChain->qfltYval.power,
-
 			pTempPointChain->pcMarquee
 		);
+*/
 #endif /* !defined(QUASIFLOAT) */
 #endif /* (DEBUG_DATA) */
 
@@ -203,7 +201,7 @@ double timeusePROC;
 	/* Process each entry of chain */
 	while (NULL != pPointChain)
 	{
-#if DEBUG_DATA
+#if DEBUG_DATA_
 #if !defined(QUASIFLOAT)
 		printf("[%s] %s:%s : <%f> <%f> <%f> <%s> \n", __FILE__, caller, __func__,
 			pPointChain->fltAbsTime,

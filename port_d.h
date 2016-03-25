@@ -33,9 +33,6 @@ LD3		27
 #define PD2 0x20
 #define PD3 0x10
 
-#define PD0orPD1 (PD0 | PD1)
-
-
 /* RUNET: TTL levels "logical 0" 0.4V and "logical 1" 2.4V, more precise: less than 0.4 and more
 than 2.4 correspondingly. Current on DIn, DOut shuld not exceet 3.6 V. */
 
@@ -67,10 +64,13 @@ ground, or 90 Ω differential to match the data cable impedance. */
 
 /* Anything from range −10 mV .. +10 mV is regarded to be <logical 0> for USB 2.0 */
 #define USB20_LOGIC_0_LO_CURR	(-0.01)		// TODO: not used, clean out
+//f.o.#define USB20_LOGIC_0_LO_CURR		(-0.001)
 #define USB20_LOGIC_0_UP_CURR	0.01 		// TODO: not used, clean out
+//f.o.#define USB20_LOGIC_0_UP_CURR		0.001
 
 /* Anything from range 360 mV .. 440 mV is regarded to be <logical 1> for USB 2.0 */
 #define USB20_LOGIC_1_LO_CURR	0.36		// TODO: not used, clean out
+//f.o.#define USB20_LOGIC_1_LO_CURR	0.010
 #define USB20_LOGIC_1_UP_CURR	0.44		// TODO: not used, clean out
 
 #define USB20_LOGIC_0_LO_CURR_INTGR	(-0)
@@ -81,16 +81,16 @@ ground, or 90 Ω differential to match the data cable impedance. */
 
 #define USB20_LOGIC_1_LO_CURR_INTGR	0
 #define USB20_LOGIC_1_LO_CURR_FRACT	36000
+//f.o.#define USB20_LOGIC_1_LO_CURR_FRACT	1000
 
 #define USB20_LOGIC_1_UP_CURR_INTGR	0
 #define USB20_LOGIC_1_UP_CURR_FRACT	44000
 
 
 /* Crrently not used. Undefined. */
+#define USB20OVERDOSE_CURR 		0	// TODO: not used, clean out
 
-#define USB20OVERDOSE_CURR 	0		// TODO: not used, clean out
-
-#define UNPROC			"Not processed"
+#define UNPROC				"Not processed"
 
 
 /* Switch on bits defined by bitmask 'uchBit' in Port D. Exposed to main() [HW_PORTD_TEST] */
@@ -103,10 +103,10 @@ void Term_Up();
 void Term_Down();
 
 /* Exposed to main() [HW_AD53_TEST] */
-void ConverterWrite(unsigned char data);
+void AD5300_rWrite(unsigned char data);
 
 /* Exposed to main() [HW_AD53_TEST] */
-void ConverterInit(void);
+void AD5300_Init(void);
 
 /* Initialize Port 'D' and, once needed, converter arrached to it. Exposed to main() */
 void PeriphInit(void);

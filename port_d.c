@@ -57,12 +57,13 @@
 #define MOSI_LO		PortD_Down(MOSI_PIN)
 #define MOSI_HI		PortD_Up(MOSI_PIN)
 
-#define ConverterActivate 	PortD_Down(SYNC_PIN)
-#define ConverterDeactivate	PortD_Up(SYNC_PIN)
+#define AD5300_Activate 	PortD_Down(SYNC_PIN)
+#define AD5300_Deactivate PortD_Up(SYNC_PIN)
 
+#define AD5300_DATA_LEN	16
+#define AD5300_DONTCARE_LEN 4
 
-#define AD5300_DATA_LEN		16
-#define AD5300_DONTCARE_LEN	4
+static void AD5300_Write(unsigned char data);
 
 /* Prepare Port 'D' */
 void PortD_Prepare()
@@ -123,12 +124,12 @@ void Term_Down()
 	{
 		case DO_GATE0_OP:
 			PortD_Down(PD0);
-			//printf("%s: _ 3 \n", cArg0);
+			//printf("__s: _ 3 \n");
 			break;
 
 		case DO_GATE1_OP:
-			ConverterWrite( USB20_LOGIC_0_UP_CURR_FRACT/1000 )  ;
-			//printf("%s: _ 4 \n", cArg0);
+			AD5300_Write( USB20_LOGIC_0_UP_CURR_FRACT/1000 )  ;
+			//printf("__s: _ 4 \n");
 			break;
 
 		default:
@@ -146,12 +147,12 @@ void Term_Up()
 	{
 		case DO_GATE0_OP:
 			PortD_Up(PD0);
-			//printf("%s: _ 1 \n", cArg0);
+			//printf("__s: _ 1 \n");
 			break;
 
 		case DO_GATE1_OP:
-			ConverterWrite( USB20_LOGIC_1_UP_CURR_FRACT/1000 )  ;
-			//printf("%s: _ 2 \n", cArg0);
+			AD5300_Write( USB20_LOGIC_1_UP_CURR_FRACT/1000 )  ;
+			//printf("__s: _ 2 \n");
 			break;
 
 		default:
@@ -207,7 +208,7 @@ int PortD_CheckL1( unsigned char uchBit )
 #endif /* (defined(DIN_FEEDBACK)) */ 
 
 
-void ConverterWrite(unsigned char data)
+static  void AD5300_Write(unsigned char data)
 {
 unsigned short tmp;
 
@@ -215,32 +216,32 @@ unsigned char iCnt;
 
 	tmp = data << AD5300_DONTCARE_LEN;
 
-	ConverterActivate;
+	AD5300_Activate;
 
 	for (iCnt = 0; iCnt < AD5300_DATA_LEN; iCnt++)
 	{
 		SCLK_HI;
 
-		(tmp & (unsigned short)( 1U<< (15 - iCnt) ) ) ? (MOSI_HI) : (MOSI_LO);
+		(tmp & (unsigned short)( 1U << (15 - iCnt) ) ) ? (MOSI_HI) : (MOSI_LO);
 
 		SCLK_LO;
 	}
 
-	ConverterDeactivate;
-} /* void ConverterWrite(unsigned short data) */
+	AD5300_Deactivate;
+} /* void AD5300_rWrite(unsigned short data) */
 
-void ConverterInit(void)
+void AD5300_Init(void)
 {
 	/* Prepare Port D */
 	PDSEL = PD1 | PD2 | PD3;
 	PDDIR = PD1 | PD2 | PD3;
 
 	/* Prepare controler AD53xx */
-	ConverterDeactivate;
+	AD5300_Deactivate;
 	SCLK_LO;// TODO: check if necessary 
 	MOSI_LO;// TODO: check if necessary 
 
-} /* void ConverterInit(void) */
+} /* void AD5300_Init(void) */
 
 
 /* Initialize Port 'D' and, once needed, converter arrached to it */
@@ -251,18 +252,16 @@ void PeriphInit(void)
 		case DO_GATE0_OP:
 			/* Set digital PIOs 1-4 as outputs */
 			PortD_Prepare( );
-			//printf("%s: _ A \n", cArg0);
 			break;
 
 		case DO_GATE1_OP:
 			/* Besides all, it prepares PIOs, so theres no need to do <PortD_Prepare()> */
-			ConverterInit();
-			//printf("%s: _ B \n", cArg0);
+			AD5300_Init();
 			break;
 
 		default:
 			printf("__s: bad kind of operatoin (while PERIPH. INIT), restart the program\n");
 			abort ();
 	}
-}
+} /* void PeriphInit(void) */
 

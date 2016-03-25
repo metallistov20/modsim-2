@@ -81,9 +81,19 @@ int _EnrollPoint(const char * caller, pTimepointType * ppThisPointChain,
 #endif /* !defined(QUASIFLOAT) */
 	char * pcMrq);
 
+/* Exposed to main() via macro */
+int _EnrollPoint(const char * caller, pTimepointType * ppThisPointChain, 
+#if !defined(QUASIFLOAT) 
+	float * pfltTm, float * pfltX, float * pfltY, 
+#else
+	pQuasiFloatType pqfltTm, pQuasiFloatType pqfltX, pQuasiFloatType pqfltY, 
+#endif /* !defined(QUASIFLOAT) */
+char * pcMrq);
 
+/* Exposed to main() via macro  */
 int _ProcessPoints(const char * caller, pTimepointType pPointChainPar);
 
+/* Exposed to main() via macro */
 void _DeletePoints(const char * caller, pTimepointType * ppThisPointChain);
 
 #define EnrollPoint(x, y, s, t, u) _EnrollPoint(__func__, (x), (y), (s), (t), (u))
@@ -93,7 +103,11 @@ void _DeletePoints(const char * caller, pTimepointType * ppThisPointChain);
 #define DeletePoints(x) _DeletePoints(__func__, (x))
 
 /* First time, exposed to ProcessPoint() */
-extern int iFIRST;
+#if !defined(QUASIFLOAT) 
+	float fFIRST;
+#else
+	int iFIRST;
+#endif /* defined(QUASIFLOAT)  */
 
 
 #endif /* _DATASTUCT_H_ */

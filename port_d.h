@@ -80,10 +80,6 @@ ground, or 90 Ω differential to match the data cable impedance. */
 #define USB20_LOGIC_1_UP_CURR_INTGR	0
 #define USB20_LOGIC_1_UP_CURR_FRACT	44000
 
-
-/* Crrently not used. Undefined. */
-#define USB20OVERDOSE_CURR 		0	// TODO: not used, clean out
-
 #define UNPROC				"Not processed"
 
 /* Prepared Port's D IOs defined by bitmask 'uchBit' as outputs. Exposed to main() [HW_PORTD_TEST] */
@@ -92,20 +88,19 @@ void PortD_Prepare(unsigned char uchBitMask);
 /* Switch on bits defined by bitmask 'uchBit' in Port D. Exposed to main() [HW_PORTD_TEST] */
 void PortD_Toggle(unsigned char uchBit);
 
-/* Switch on <Din> wire on either CPE#0, or CPE#1. Exposed to <ProcessPoint()> */
+/* Terminal line DOWN - switch off <dIN> wire on CPE#0, bzw CPE#1. Exposed to <ProcessPoint()> */
 void Term_Up();
 
-/* Switch off <Din> wire on either CPE#0, or CPE#1. Exposed to <ProcessPoint()> */
+/* Terminal line DOWN - switch off <dIN> wire on CPE#0, bzw CPE#1. Exposed to <ProcessPoint()> */
 void Term_Down();
 
-/* Exposed to main() [HW_AD53_TEST] */
+/* Write 'data'::{0..255} to converter. Parameter '0' for <0> Volts, <255> - VDD Volts. VDD is 3.3(5.0). Exposed to main() [HW_AD53_TEST] */
 void AD5300_Write(unsigned char data);
 
-/* Exposed to main() [HW_AD53_TEST] */
+/* Initialize converter. Exposed to main() [HW_AD53_TEST] */
 void AD5300_Init(void);
 
 /* Initialize Port 'D' and, once needed, converter arrached to it. Exposed to main() */
 void PeriphInit(void);
-
 
 #endif /* _PORT_D_H_ */

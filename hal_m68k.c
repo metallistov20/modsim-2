@@ -44,22 +44,8 @@ extern struct timeval starttimePROC;
 /* Var. to check if current second already was 'displayed' */
 int iOldSecPRC;
 
-/* Anything under this voltage is regarded to be <logical 0> for USB 1.1 */
-#define LOGIC_0_CURR		0.4
-/* Integer part of <LOGIC_0_CURR> */
-#define LOGIC_0_CURR_INTGR	0
-/* Fraction  of <LOGIC_0_CURR> */
-#define LOGIC_0_CURR_FRACT	4
-
-/* Anything above this voltage is regarded to be <logical 1> for USB 1.1 */
-#define LOGIC_1_CURR		2.4
-/* Integer part of <LOGIC_1_CURR> */
-#define LOGIC_1_CURR_INTGR	2
-/* Fraction  of <LOGIC_1_CURR> */
-#define LOGIC_1_CURR_FRACT	4
-
 /* Check if raw value is USB 1.0 <logical 0> and return '1' if so, return '0' otherwise */
-int iChkUsb10Lg0( QuasiFloatType qfltVal )
+static  int iChkUsb10Lg0( QuasiFloatType qfltVal )
 {
 	/* USB 1.0 levels. Logical '0'. LOGIC_0_CURR */
 	if (
@@ -68,10 +54,10 @@ int iChkUsb10Lg0( QuasiFloatType qfltVal )
 	) return 1;
 
 	return 0;
-}
+} /* static  int iChkUsb10Lg0( QuasiFloatType qfltVal ) */
 
 /* Check if raw value is USB 1.0 <logical 1> and return '1' if so, return '0' otherwise */
-int iChkUsb10Lg1( QuasiFloatType qfltVal )
+static int iChkUsb10Lg1( QuasiFloatType qfltVal )
 {
 	/* USB 1.0 levels. Logical '1'.  LOGIC_1_CURR */
 	if (
@@ -82,10 +68,10 @@ int iChkUsb10Lg1( QuasiFloatType qfltVal )
 	) return 1;
 
 	return 0;
-}
+} /* static int iChkUsb10Lg1( QuasiFloatType qfltVal ) */
 
 /* Check if raw value is USB 2.0 <logical 0> and return '1' if so, return '0' otherwise */
-int iChkUsb20Lg0(QuasiFloatType qfltVal)
+static int iChkUsb20Lg0(QuasiFloatType qfltVal)
 {
 	/* USB 2.0 levels. Logical '0'. LOGIC_0_CURR. -10 mV .. 10 mV */
 	if (
@@ -95,10 +81,10 @@ int iChkUsb20Lg0(QuasiFloatType qfltVal)
 	)  return 1;
 
 	return 0;
-}
+} /* static int iChkUsb20Lg0(QuasiFloatType qfltVal) */
 
 /* Check if raw value is USB 2.0 <logical 1> and return '1' if so, return '0' otherwise */
-int iChkUsb20Lg1(QuasiFloatType qfltVal)
+static int iChkUsb20Lg1(QuasiFloatType qfltVal)
 {
 	/* USB 2.0 levels. Logical '1'. LOGIC_1_CURR. 0.36V .. 0.44V */
 	if (
@@ -109,10 +95,10 @@ int iChkUsb20Lg1(QuasiFloatType qfltVal)
 	) return 1;
 
 	return 0;
-}
+} /* static int iChkUsb20Lg1(QuasiFloatType qfltVal) */
 
 /*  Check if current value is <logical 0> in terms of appropriate USB protocol */
-int iChkUsbLg0(QuasiFloatType qfltVal)
+static int iChkUsbLg0(QuasiFloatType qfltVal)
 {
 	/* it is assumes that here the <iOperation> value is either <DO_GATE0_OP> or <DO_GATE1_OP> */
 
@@ -122,10 +108,10 @@ int iChkUsbLg0(QuasiFloatType qfltVal)
 	else
 
 		return iChkUsb20Lg0(qfltVal);
-}
+} /* static int iChkUsbLg0(QuasiFloatType qfltVal) */
 
 /*  Check if current value is <logical 1> in terms of appropriate USB protocol */
-int iChkUsbLg1(QuasiFloatType qfltVal)
+static int iChkUsbLg1(QuasiFloatType qfltVal)
 {
 	/* it is assumes that here the <iOperation> value is either <DO_GATE0_OP> or <DO_GATE1_OP> */
 
@@ -135,7 +121,7 @@ int iChkUsbLg1(QuasiFloatType qfltVal)
 	else
 
 		return iChkUsb20Lg1(qfltVal);
-}
+} /* static int iChkUsbLg1(QuasiFloatType qfltVal) */
 
 int ProcessPoint( pTimepointType pTimepoint )
 {
@@ -234,18 +220,15 @@ qfltJiffy.fraction = 1;
 #if 1
 			else
 			{
-				/* Over-voltages, under-voltages, some middle values and rest are marked as <not processed> */
-#if 0
-				TODO: find this realloc() within UCLIBC:
-				pTimepoint->pcMarquee = realloc (pTimepoint->pcMarquee, strlen (UNPROC) +1 );
-#else
+				/* Over-voltages, under-voltages, and some middle voltage values are marked as <not processed> */
+
+				/* The following three instructionsis realloc(). TODO: impl-nt as FN, or link from UCLIBC if any. */
 				free(pTimepoint->pcMarquee);
 				pTimepoint->pcMarquee = NULL;// TODO: really needed, or can be left for <mman>
 				pTimepoint->pcMarquee = malloc (strlen (UNPROC) +1 );
-#endif /* (0) */
+
 				strcpy( pTimepoint->pcMarquee, UNPROC);
 			}
 #endif /* (0) */
 
-
-}
+} /* int ProcessPoint( pTimepointType pTimepoint ) */

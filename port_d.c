@@ -57,8 +57,8 @@
 #define MOSI_LO		PortD_Down(MOSI_PIN)
 #define MOSI_HI		PortD_Up(MOSI_PIN)
 
-#define AD5300_Activate 	PortD_Down(SYNC_PIN)
-#define AD5300_Deactivate PortD_Up(SYNC_PIN)
+#define AD5300_ACT 	PortD_Down(SYNC_PIN)
+#define AD5300_DEACT 	PortD_Up(SYNC_PIN)
 
 #define AD5300_DATA_LEN	16
 #define AD5300_DONTCARE_LEN 4
@@ -73,25 +73,25 @@ void PortD_Prepare(unsigned char uchBitMask)
 	printf ("Bits <%08bb> of Port D initialized as OUT\n", uchBitMask );
 }
 
-/* Toggle bits defined by bitmask 'uchBit' in Port D*/
+/* Toggle bits defined by bitmask 'uchBit' in Port D */
 void PortD_Toggle(unsigned char uchBit)
 {
 	PDDATA ^= uchBit;
 }
 
-/* Switch off bits defined by bitmask 'uchBit' in Port D*/
+/* Switch off bits defined by bitmask 'uchBit' in Port D */
 void PortD_Down(unsigned char uchBit)
 {
 	PDDATA &= ~uchBit;
 }
 
-/* Switch on bits defined by bitmask 'uchBit' in Port D*/
+/* Switch on bits defined by bitmask 'uchBit' in Port D */
 void PortD_Up(unsigned char uchBit)
 {
 	PDDATA |= uchBit;
 }
 
-/* Switch off <Din> wire on either CPE#0, or CPE#1 */
+/* Terminal line DOWN - switch off <dIN> wire on CPE#0, bzw CPE#1. Exposed to <ProcessPoint()> */
 void Term_Down()
 {
 	switch (iOperation)
@@ -110,7 +110,7 @@ void Term_Down()
 	}
 } /* void Term_Down() */
 
-/* Switch on <Din> wite on either CPE#0, or CPE#1 */
+/* Terminal line DOWN - switch off <dIN> wire on CPE#0, bzwCPE#1. Exposed to <ProcessPoint()> */
 void Term_Up()
 {
 	switch (iOperation)
@@ -129,7 +129,8 @@ void Term_Up()
 	}
 } /* void Term_Up() */
 
-void AD5300_Write(unsigned char data)
+/* Write 'data'::{0..255} to converter. Parameter '0' for <0> Volts, <255> - VDD Volts. VDD is 3.3 (bzw 5.0) */
+void AD5300_Write(unsigned char data /* Value '256' is relevant for converter, but not relevant for this FN. TODO: resolve */ ) 
 {
 unsigned short tmp;
 
@@ -137,7 +138,7 @@ unsigned char iCnt;
 
 	tmp = data << AD5300_DONTCARE_LEN;
 
-	AD5300_Activate;
+	AD5300_ACT;
 
 	for (iCnt = 0; iCnt < AD5300_DATA_LEN; iCnt++)
 	{
@@ -148,9 +149,10 @@ unsigned char iCnt;
 		SCLK_LO;
 	}
 
-	AD5300_Deactivate;
+	AD5300_DEACT;
 } /* void AD5300_rWrite(unsigned short data) */
 
+/* Initialize converter */
 void AD5300_Init(void)
 {
 	/* Prepare Port D */
@@ -158,7 +160,8 @@ void AD5300_Init(void)
 	PDDIR = PD1 | PD2 | PD3;
 
 	/* Prepare controler AD53xx */
-	AD5300_Deactivate;
+	AD5300_DEACT;
+
 	SCLK_LO;// TODO: check if necessary 
 	MOSI_LO;// TODO: check if necessary 
 

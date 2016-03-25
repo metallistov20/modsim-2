@@ -131,7 +131,7 @@ char cArg0[LARGE_BUF_SZ];
 		/* Get each paramter */
 		iOption = getopt_long (argc, argv, "12", long_options, &iOptionIdx);
 
-		/* Unsless under current arch're. TODO: check & remove */
+		/* TODO: check if assigning zero is necessary */
 		iOptionIdx = 0;
 
 		/* End of the options reached? */
@@ -145,12 +145,12 @@ char cArg0[LARGE_BUF_SZ];
 		switch (iOption)
 		{
 			case '1':
-				printf("%s: OK. option is  <%c>\n", cArg0, iOption);
+				printf("%s: option is  <%c>\n", cArg0, iOption);//TODO: remove
 				iOperation = DO_GATE0_OP;
 				break;
 
 			case '2':
-				printf("%s: OK. option is  <%c>\n", cArg0, iOption);
+				printf("%s: option is  <%c>\n", cArg0, iOption);//TODO: remove
 				iOperation = DO_GATE1_OP;
 				break;
 
@@ -172,7 +172,7 @@ char cArg0[LARGE_BUF_SZ];
 		return P_ERROR;
 	}
 
-	printf("[%s] %s: loading USB-curve-data via NFS from file <%s>\n", __FILE__, __func__, FILE_NAME);
+	printf("[%s] %s: loading USB-data via NFS from file <%s>\n", __FILE__, __func__, FILE_NAME);
 
 	/* For each string of Raw Data file */
 	while ( ! (feof (fp) ) ) 
@@ -180,7 +180,7 @@ char cArg0[LARGE_BUF_SZ];
 		/* Try to scan a whole string into temp. buffer */
 		if (0 > fscanf (fp, "%s", cBuf ) )
 		{
-			// eof reached
+			/* EOF reached, or can't scan for some other reason (such as NFS conn. is down) */
 		}
 		else
 		{
@@ -233,20 +233,17 @@ sscanf(cBuf, "%d.%d %d.%d %d.%d",
 #endif /* !defined(QUASIFLOAT) */
 #endif /* (DEBUG_DATA) */
 
-#if defined(QUASIFLOAT) 
-			if (iOldSec!= qfltTM.integer)
-				{iOldSec=qfltTM.integer; printf("sec: %d; ", iOldSec); fflush(stdout); }
-#else
+#if !defined(QUASIFLOAT) 
 			if (iOldSec!= (int)fltTM)
 				{iOldSec=(int)fltTM; printf("sec: %d; ", iOldSec); fflush(stdout); }
-#endif /* !defined(QUASIFLOAT) */
 
-
-#if !defined(QUASIFLOAT) 
 			/* Attach just scanned data (three floats) to tail of dynamic structure */
 			EnrollPoint(&pTimeChain, &fltTM, &fltDIn, &fltDOut, "N/A");
 #else
-			/* Attach just scanned data (three floats represented as <INT>.<INT>e<SIGN>0<INT>) to tail of dynamic structure */
+			if (iOldSec!= qfltTM.integer)
+				{iOldSec=qfltTM.integer; printf("sec: %d; ", iOldSec); fflush(stdout); }
+
+			/* Attach just scanned data (three floats represented as <INT>.<INT>) to tail of dynamic structure */
 			EnrollPoint(&pTimeChain, &qfltTM, &qfltDIn, &qfltDOut, "N/A");
 #endif /* !defined(QUASIFLOAT) */
 		}

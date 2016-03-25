@@ -42,21 +42,12 @@ float fltRelTime;
 float _left, _right;
 float fltJiffy = 1.0;
 
-/*
-1. On both PC, and MC68EZ328-based HW, going across list allocated in memory runs faster than
-time process defined by raw data. 
-
-2. For this reason we wait a little (do-while-loop below) before issuing current value
-onto Port D. Thus we shift 'current' time a bit ahead.
-
-3. Once, after shifting, we see that 'current' time is not less than time defined by raw data
-value , it's OK to issue current value onto Port D.
-*/
+	/* TODO: add plain description here  */
 
 	/* Operate uSeconds multiplied by 10e6 because <usleep> accepts	integer parameters only */
 	pTimepoint->fltAbsTime = pTimepoint->fltAbsTime*1000000;
 
-	printf("[%s] : <BEFORE TIME SHIFTING> real tm.: %f\n", __FILE__, /* caller, */	pTimepoint->fltAbsTime	);
+	printf("[%s] : <BEFORE TIME SHIFTING> real tm.: %f\n", __FILE__, pTimepoint->fltAbsTime	);
 
 	/* Don't proceed with this fuction once given an unappicable input data */
 	if (0.0 == pTimepoint->fltAbsTime ) return;
@@ -66,7 +57,8 @@ value , it's OK to issue current value onto Port D.
 		gettimeofday(&endtimePROC,0);
 
 		/* Compute how much time elapsed since head of list processing till now */
-		fltRelTime = 1000000*(endtimePROC.tv_sec - starttimePROC.tv_sec - 6.0) 
+		fltRelTime = 1000000*(endtimePROC.tv_sec - starttimePROC.tv_sec - fFIRST) 
+
 			+ endtimePROC.tv_usec - starttimePROC.tv_usec;
 
 		/* If relative time stays on the left from 0 */
@@ -81,7 +73,6 @@ value , it's OK to issue current value onto Port D.
 			_left = fltRelTime, _right = pTimepoint->fltAbsTime;
 
 
-
 		/* Wait for relative time <fltRelTime> to catch up with real time <pTimepoint->fltAbsTime>  */
 		usleep (fltJiffy);
 
@@ -91,10 +82,10 @@ value , it's OK to issue current value onto Port D.
 	
 	/* Now they're equal or least 'relative tm' is not less than 'real tm' */
 	printf("[%s] : <AFTER TIME SHIFTING> will pretend like <%f>, is same as <%f> \n", __FILE__,
-		pTimepoint->fltAbsTime,
-		fltRelTime );
 
-	/* Hardware Port 'D' processing. */
+		pTimepoint->fltAbsTime,	fltRelTime );
+
+	/* PC-based simulation of hardware Port 'D' processing */
 	none
 
-}
+} /* int ProcessPoint(pTimepointType pTimepoint) */

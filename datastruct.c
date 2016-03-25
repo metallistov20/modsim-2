@@ -42,7 +42,11 @@
 struct timeval starttimePROC;
 
 /* First time, will be subtracted in HAL */
-int iFIRST;
+#if !defined(QUASIFLOAT) 
+	float fFIRST;
+#else
+	int iFIRST;
+#endif /* defined(QUASIFLOAT)  */
 
 /* Attach 3 floats to tail of dynamic structure 'pTimepointType' */
 int _EnrollPoint(const char * caller, pTimepointType * ppThisPointChain, 
@@ -94,10 +98,7 @@ pTimepointType pChild, pTempPointChain;
 		else
 			iFIRST = (*ppThisPointChain)->qfltAbsTime.integer*1000000 + (*ppThisPointChain)->qfltAbsTime.fraction;
 #else
-		if ( 0 > (*ppThisPointChain)->fltAbsTime )
-			iFIRST = (*ppThisPointChain)->fltAbsTime*1000000 - (int)((*ppThisPointChain)->fltAbsTime * 100000 ) % 100000 ;
-		else
-			iFIRST = (*ppThisPointChain)->fltAbsTime*1000000 + (int)((*ppThisPointChain)->fltAbsTime * 100000) % 100000 ;
+		fFIRST = (*ppThisPointChain)->fltAbsTime;
 #endif /* defined(QUASIFLOAT)  */
 
 #if defined(DEBUG_DATA_)
@@ -190,7 +191,8 @@ pTimepointType pChild, pTempPointChain;
 	}
 
 	return P_SUCCESS;
-}
+
+} /* int _EnrollPoint( ... ) */
 
 
 /* Process data stored in dynamic structure pointed by 'pPointChainPar' */
@@ -233,7 +235,8 @@ double timeusePROC;
 	}
 
 	return P_SUCCESS;
-}
+
+} /* int _ProcessPoints(const char * caller, pTimepointType pPointChainPar) */
 
 /* Free memory occupied by '*ppThisPointChain' */
 void _DeletePoints(const char * caller, pTimepointType * ppThisPointChain)
@@ -261,4 +264,5 @@ pTimepointType pChild, pThisPointChain = *ppThisPointChain;
 
 	/* Dispose first element of chain */
 	*ppThisPointChain = NULL;
-}
+
+} /* void _DeletePoints(const char * caller, pTimepointType * ppThisPointChain) */

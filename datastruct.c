@@ -88,11 +88,17 @@ pTimepointType pChild, pTempPointChain;
 
 		(*ppThisPointChain)->pcMarquee = calloc (1, strlen (pcMrq) +1 );
 		strcpy( (*ppThisPointChain)->pcMarquee, pcMrq);
-
+#if defined(QUASIFLOAT) 
 		if ( 0 > (*ppThisPointChain)->qfltAbsTime.integer*1000000 )
 			iFIRST = (*ppThisPointChain)->qfltAbsTime.integer*1000000 - (*ppThisPointChain)->qfltAbsTime.fraction;
 		else
 			iFIRST = (*ppThisPointChain)->qfltAbsTime.integer*1000000 + (*ppThisPointChain)->qfltAbsTime.fraction;
+#else
+		if ( 0 > (*ppThisPointChain)->fltAbsTime )
+			iFIRST = (*ppThisPointChain)->fltAbsTime*1000000 - (int)((*ppThisPointChain)->fltAbsTime * 100000 ) % 100000 ;
+		else
+			iFIRST = (*ppThisPointChain)->fltAbsTime*1000000 + (int)((*ppThisPointChain)->fltAbsTime * 100000) % 100000 ;
+#endif /* defined(QUASIFLOAT)  */
 
 #if defined(DEBUG_DATA_)
 #if !defined(QUASIFLOAT)

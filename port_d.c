@@ -35,7 +35,7 @@
 #include "modsim.h"
 
 
-/* Not connected to AD5300. Leg 1 of USB#1. (White) */
+/* Not connected to AD5300. Leg 1 of CPE#0. (White) */
 #define NIX		PD0
 
 /* ~Synchronization. Leg 5 of AD5300. (Orange) */
@@ -62,8 +62,6 @@
 
 #define AD5300_DATA_LEN	16
 #define AD5300_DONTCARE_LEN 4
-
-static void AD5300_Write(unsigned char data);
 
 /* Prepare Port 'D' */
 void PortD_Prepare()
@@ -116,7 +114,7 @@ void PortD_Up(unsigned char uchBit)
 /* More than 3.2 and less than 4.5. Must be recomputed each 20-30 seconds. */
 #define CALIBRATED_VDD	( 4 )
 
-/* Switch off <Din> wire on either USB#0, or USB#1 */
+/* Switch off <Din> wire on either CPE#0, or CPE#1 */
 void Term_Down()
 {
 #if defined(UCSIMM)
@@ -139,7 +137,7 @@ void Term_Down()
 #endif /* (UCSIMM) */
 }
 
-/* Switch on <Din> wite on either USB#0, or USB#1 */
+/* Switch on <Din> wite on either CPE#0, or CPE#1 */
 void Term_Up()
 {
 #if defined(UCSIMM)
@@ -208,7 +206,7 @@ int PortD_CheckL1( unsigned char uchBit )
 #endif /* (defined(DIN_FEEDBACK)) */ 
 
 
-static  void AD5300_Write(unsigned char data)
+void AD5300_Write(unsigned char data)
 {
 unsigned short tmp;
 

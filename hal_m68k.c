@@ -145,24 +145,12 @@ int _left, _right;
 QuasiFloatType qfltJiffy; 
 qfltJiffy.fraction = 1;
 
-#if 0
-OBSOLETE
-	/* Put marquee 'secPRC: xxx;' on the screen, so we are sure platform is still not hanged */
-	if (0 == pTimepoint->qfltAbsTime.power)
-#endif
-		if (iOldSecPRC!= pTimepoint->qfltAbsTime.integer)
-
-			{iOldSecPRC=pTimepoint->qfltAbsTime.integer; printf("secPRC: %d; ", iOldSecPRC); fflush(stdout); }
-
-
-
-//printf("[%s] :  qfltAbsTime.integer = %d , qfltAbsTime.fraction = %d \n", __FILE__,pTimepoint->qfltAbsTime.integer, pTimepoint->qfltAbsTime.fraction );
+	if (iOldSecPRC!= pTimepoint->qfltAbsTime.integer)
+		{iOldSecPRC=pTimepoint->qfltAbsTime.integer; printf("secPRC: %d; ", iOldSecPRC); fflush(stdout); }
 
 	pTimepoint->qfltAbsTime.integer = (pTimepoint->qfltAbsTime.integer < 0)?
 		(pTimepoint->qfltAbsTime.integer * 1000000) - (pTimepoint->qfltAbsTime.fraction):
 		(pTimepoint->qfltAbsTime.integer * 1000000) + (pTimepoint->qfltAbsTime.fraction);
-
-//printf("[%s] :  qfltAbsTime.integer = %d (PR) ,  \n", __FILE__,	pTimepoint->qfltAbsTime.integer );
 
 	/* Take current time */
 	gettimeofday(&endtimePROC,0);
@@ -170,8 +158,6 @@ OBSOLETE
 	/* Compute time elapsed since head of list processing till now */
 	qfltRelTime.integer = 1000000*(endtimePROC.tv_sec - starttimePROC.tv_sec) 
 		+ endtimePROC.tv_usec - starttimePROC.tv_usec - iFIRST;
-
-//printf("[%s] :  qfltRelTime.integer = %d \n\n", __FILE__,qfltRelTime.integer );
 
 #if defined(FAST_UCSIMM)
 	printf("[%s] : <BEFORE TIME SHIFTING> real tm.: %d, shiftable tm.: %d \n", __FILE__,
@@ -237,16 +223,16 @@ OBSOLETE
 		/* Logical '1'.  LOGIC_1_CURR */
 		if ( iChkUsbLg1(pTimepoint->qfltYval) )
 
-			/* Pull terminal USB#0/USB#1 <dIN> line up. */
+			/* Pull terminal CPE#0/CPE#1 <dIN> line up. */
 			Term_Up( );
 
 		else
 			/* Logical '0'. LOGIC_0_CURR */
 			if ( iChkUsbLg0(pTimepoint->qfltYval) )
 
-				/* Pull terminal USB#0/USB#1 <dIN> line down. */
+				/* Pull terminal CPE#0/CPE#1 <dIN> line down. */
 				Term_Down( );
-#if 0
+#if 1
 			else
 			{
 				/* Over-voltages, under-voltages, some middle values and rest are marked as <not processed> */

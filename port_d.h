@@ -63,14 +63,15 @@ ground, or 90 Ω differential to match the data cable impedance. */
 
 
 /* Anything from range −10 mV .. +10 mV is regarded to be <logical 0> for USB 2.0 */
-#define USB20_LOGIC_0_LO_CURR	(-0.01)		// TODO: not used, clean out
-//f.o.#define USB20_LOGIC_0_LO_CURR		(-0.001)
-#define USB20_LOGIC_0_UP_CURR	0.01 		// TODO: not used, clean out
-//f.o.#define USB20_LOGIC_0_UP_CURR		0.001
+ //#define USB20_LOGIC_0_LO_CURR	(-0.01)		// TODO: not used, clean out
+ #define USB20_LOGIC_0_LO_CURR		(-0.001)
+
+ //#define USB20_LOGIC_0_UP_CURR	0.01 		// TODO: not used, clean out
+ #define USB20_LOGIC_0_UP_CURR		0.001
 
 /* Anything from range 360 mV .. 440 mV is regarded to be <logical 1> for USB 2.0 */
-#define USB20_LOGIC_1_LO_CURR	0.36		// TODO: not used, clean out
-//f.o.#define USB20_LOGIC_1_LO_CURR	0.010
+ //#define USB20_LOGIC_1_LO_CURR	0.36		// TODO: not used, clean out
+ #define USB20_LOGIC_1_LO_CURR	0.010
 #define USB20_LOGIC_1_UP_CURR	0.44		// TODO: not used, clean out
 
 #define USB20_LOGIC_0_LO_CURR_INTGR	(-0)
@@ -80,8 +81,8 @@ ground, or 90 Ω differential to match the data cable impedance. */
 #define USB20_LOGIC_0_UP_CURR_FRACT	1000
 
 #define USB20_LOGIC_1_LO_CURR_INTGR	0
-#define USB20_LOGIC_1_LO_CURR_FRACT	36000
-//f.o.#define USB20_LOGIC_1_LO_CURR_FRACT	1000
+ //#define USB20_LOGIC_1_LO_CURR_FRACT	36000
+ #define USB20_LOGIC_1_LO_CURR_FRACT	1000
 
 #define USB20_LOGIC_1_UP_CURR_INTGR	0
 #define USB20_LOGIC_1_UP_CURR_FRACT	44000
@@ -96,14 +97,14 @@ ground, or 90 Ω differential to match the data cable impedance. */
 /* Switch on bits defined by bitmask 'uchBit' in Port D. Exposed to main() [HW_PORTD_TEST] */
 void PortD_Toggle(unsigned char uchBit);
 
-/* Switch on <Din> wire on either USB#0, or USB#1. Exposed to <ProcessPoint()> */
+/* Switch on <Din> wire on either CPE#0, or CPE#1. Exposed to <ProcessPoint()> */
 void Term_Up();
 
-/* Switch off <Din> wire on either USB#0, or USB#1. Exposed to <ProcessPoint()> */
+/* Switch off <Din> wire on either CPE#0, or CPE#1. Exposed to <ProcessPoint()> */
 void Term_Down();
 
 /* Exposed to main() [HW_AD53_TEST] */
-void AD5300_rWrite(unsigned char data);
+void AD5300_Write(unsigned char data);
 
 /* Exposed to main() [HW_AD53_TEST] */
 void AD5300_Init(void);

@@ -62,10 +62,10 @@ int iOldSec;
 static struct option long_options[] =
 {
 	/* USB 1.1 on CPE#0 Gate */
-	{"USB1",  no_argument, 		0,'1'},
+	{"CPE#0",  no_argument, 		0,'1'},
 
 	/* USB 2.0 on CPE#1 Gate */
-	{"USB2",  no_argument, 		0,'2'},
+	{"CPE#1",  no_argument, 		0,'2'},
 
 	/* End of array */
 	{0, 0, 0, 0}
@@ -117,16 +117,18 @@ char cArg0[LARGE_BUF_SZ];
 #endif /* (defined(HW_DUMB_TEST) ) */
 
 
+printf(" = 1 \n");
 
 	/* Avoid dafault 0 value */
 	iOperation=DO_NO_OP;
 
 	/* Assign program name, requirted for output*/
 	strcpy (cArg0, argv[0]);
-
+printf(" = 2 \n");
 	/* Parsing command line arguments */
 	while (1)
 	{
+printf(" = 3 \n");
 		/* Get each paramter */
 		iOption = getopt_long (argc, argv, "12", long_options, &iOptionIdx);
 
@@ -154,18 +156,29 @@ char cArg0[LARGE_BUF_SZ];
 				break;
 
 			default:
+				{
 				printf("%s: bad usage, exiting", cArg0);
+#if defined(UCSIMM)
 				abort ();
+#else
+				return -1;	
+#endif /* defined(UCSIMM) */
+				}
 		}
 	} /* Command line arguments were parsed */
 
 	if ( DO_GATE0_OP != iOperation && DO_GATE1_OP != iOperation )
 	{
+#if defined(UCSIMM)
 		printf("%s: bad usage; must be either <./%s -1> ether <./%s -2>; exiting.\n", cArg0, cArg0);
 		abort ();
+#else
+		printf("%s: bad usage; must be either one of these: <./%s --CPE#0>, <./%s -CPE#1>, <./%s -1> ether <./%s -2>; exiting.\n", cArg0, cArg0, cArg0, cArg0, cArg0 );
+		return -1;
+#endif /* defined(UCSIMM) */
 	}
 
-	printf("[%s] %s: NOTIFICATION: assuming that CPE is attached to [%s] gate, works according to [%s] protocol.\n", __FILE__, __func__, (DO_GATE0_OP==iOperation)?"USB#0":"USB#1", (DO_GATE0_OP==iOperation)?"USB1.1":"USB2.0"   );
+	printf("[%s] %s: NOTIFICATION: assuming that CPE is attached to [%s] gate, works according to [%s] protocol.\n", __FILE__, __func__, (DO_GATE0_OP==iOperation)?"CPE#0":"CPE#1", (DO_GATE0_OP==iOperation)?"USB1.1":"USB2.0"   );
 
 	/* Try to open Raw Data file at place defined by 'FILE_NAME' */
 	if ( NULL == (fp = fopen (FILE_NAME, "r") ) )
@@ -236,8 +249,13 @@ sscanf(cBuf, "%d.%d %d.%d %d.%d",
 #endif /* !defined(QUASIFLOAT) */
 #endif /* (DEBUG_DATA) */
 
+#if defined(QUASIFLOAT) 
 			if (iOldSec!= qfltTM.integer)
 				{iOldSec=qfltTM.integer; printf("sec: %d; ", iOldSec); fflush(stdout); }
+#else
+			if (iOldSec!= (int)fltTM)
+				{iOldSec=(int)fltTM; printf("sec: %d; ", iOldSec); fflush(stdout); }
+#endif /* !defined(QUASIFLOAT) */
 
 
 #if !defined(QUASIFLOAT) 

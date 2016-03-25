@@ -71,15 +71,18 @@ static struct option long_options[] =
 	{0, 0, 0, 0}
 };
 
-#if defined(UCSIMM)
-
-/* Old UCLIBC not have <abort()> within <stdlib>  */
-void abort()
+static int iBadUsage(char * cArg)
 {
-	exit (-1);
-}
-#endif /* (defined(UCSIMM) ) */
+#if defined(UCSIMM)
+		printf("%s: bad usage; must be either <%s -1> ether <%s -2>; exiting.\n", cArg, cArg, cArg );
+#else
+		printf("%s: bad usage; must be either one of these: <%s --CPE#0>, <%s -CPE#1>, <%s -1> ether <%s -2>; exiting.\n", cArg, cArg, cArg, cArg, cArg );
+#endif /* defined(UCSIMM) */
 
+		return -1;
+} /* static int iBadUsage(char * cArg) */
+
+/* Variable to tell whether we're to work on CPE#0 termical or on CPE#1 terminal */
 int iOperation;
 
 int main (int argc, char **argv)
@@ -156,27 +159,12 @@ printf(" = 3 \n");
 				break;
 
 			default:
-				{
-				printf("%s: bad usage, exiting", cArg0);
-#if defined(UCSIMM)
-				abort ();
-#else
-				return -1;	
-#endif /* defined(UCSIMM) */
-				}
+				return iBadUsage(cArg0);
 		}
 	} /* Command line arguments were parsed */
 
 	if ( DO_GATE0_OP != iOperation && DO_GATE1_OP != iOperation )
-	{
-#if defined(UCSIMM)
-		printf("%s: bad usage; must be either <./%s -1> ether <./%s -2>; exiting.\n", cArg0, cArg0);
-		abort ();
-#else
-		printf("%s: bad usage; must be either one of these: <./%s --CPE#0>, <./%s -CPE#1>, <./%s -1> ether <./%s -2>; exiting.\n", cArg0, cArg0, cArg0, cArg0, cArg0 );
-		return -1;
-#endif /* defined(UCSIMM) */
-	}
+		return iBadUsage(cArg0);
 
 	printf("[%s] %s: NOTIFICATION: assuming that CPE is attached to [%s] gate, works according to [%s] protocol.\n", __FILE__, __func__, (DO_GATE0_OP==iOperation)?"CPE#0":"CPE#1", (DO_GATE0_OP==iOperation)?"USB1.1":"USB2.0"   );
 

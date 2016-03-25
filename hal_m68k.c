@@ -175,7 +175,7 @@ qfltJiffy.fraction = 1;
 	else
 		/* then '_right' is real time, '_left' is relative time */
 		_left = qfltRelTime.integer, _right = pTimepoint->qfltAbsTime.integer;
-#if 0
+
 	if (0 == pTimepoint->qfltAbsTime.integer) return;
 
 	/* TODO: make <do-while> instead of <while-do>, thus avoid a code duplication */
@@ -210,7 +210,6 @@ qfltJiffy.fraction = 1;
 #else
 #endif /* defined(FAST_UCSIMM) */
 	}
-#endif /* (0) */
 
 #if defined(FAST_UCSIMM)
 	/* Now they're equal or least 'relative tm' is not less than 'real tm' */
@@ -247,11 +246,6 @@ qfltJiffy.fraction = 1;
 				strcpy( pTimepoint->pcMarquee, UNPROC);
 			}
 #endif /* (0) */
-
-
-#if defined(DIN_FEEDBACK)
-	;
-#endif /* (DIN_FEEDBACK) */
 
 
 }

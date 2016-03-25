@@ -66,145 +66,68 @@
 /* Prepare Port 'D' */
 void PortD_Prepare()
 {
-#if defined(UCSIMM)
-
-#if !defined(DIN_FEEDBACK)
 	PDSEL = PD0 | PD1 | PD2 | PD3;
 
 	PDDIR = PD0 | PD1 | PD2 | PD3;
 
 	printf ("Bits <%08bb> <%08bb> of Port D initialized as OUT\n", (unsigned char)PD0, (unsigned char)PD1);
-#else
-
-    	SPIMCONT = 0x402f;/* TODO: put OR'ed macros of <asm/MC68EZ328.h> of constant here */
-    	SPIMCONT |= SPIMCONT_ENABLE;
-
-	printf ("Port D : bit <%08bb> OUT, bit <%08bb> IN \n", (unsigned char)PD0, (unsigned char)PD1);
-
-
-#endif /* (!defined(DIN_FEEDBACK)) */
-
-#endif /* (UCSIMM) */
 }
 
 /* Toggle bits defined by bitmask 'uchBit' in Port D*/
 void PortD_Toggle(unsigned char uchBit)
 {
-#if defined(UCSIMM)
 	PDDATA ^= uchBit;
-#endif /* (UCSIMM) */
 }
 
 /* Switch off bits defined by bitmask 'uchBit' in Port D*/
 void PortD_Down(unsigned char uchBit)
 {
-#if defined(UCSIMM)
 	PDDATA &= ~uchBit;
-#endif /* (UCSIMM) */
 }
 
 /* Switch on bits defined by bitmask 'uchBit' in Port D*/
 void PortD_Up(unsigned char uchBit)
 {
-#if defined(UCSIMM)
 	PDDATA |= uchBit;
-#endif /* (UCSIMM) */
 }
-
-/* More than 3.2 and less than 4.5. Must be recomputed each 20-30 seconds. */
-#define CALIBRATED_VDD	( 4 )
 
 /* Switch off <Din> wire on either CPE#0, or CPE#1 */
 void Term_Down()
 {
-#if defined(UCSIMM)
 	switch (iOperation)
 	{
 		case DO_GATE0_OP:
 			PortD_Down(PD0);
-			//printf("__s: _ 3 \n");
 			break;
 
 		case DO_GATE1_OP:
 			AD5300_Write( USB20_LOGIC_0_UP_CURR_FRACT/1000 )  ;
-			//printf("__s: _ 4 \n");
 			break;
 
 		default:
-			printf("__s: bad kind of operatoin (while DOWN), restart the program\n");
-			abort ();
+			printf("__s: bad kind of operatoin (while DOWN), restart the program.\n");
+			exit (-1);
 	}
-#endif /* (UCSIMM) */
-}
+} /* void Term_Down() */
 
 /* Switch on <Din> wite on either CPE#0, or CPE#1 */
 void Term_Up()
 {
-#if defined(UCSIMM)
 	switch (iOperation)
 	{
 		case DO_GATE0_OP:
 			PortD_Up(PD0);
-			//printf("__s: _ 1 \n");
 			break;
 
 		case DO_GATE1_OP:
 			AD5300_Write( USB20_LOGIC_1_UP_CURR_FRACT/1000 )  ;
-			//printf("__s: _ 2 \n");
 			break;
 
 		default:
 			printf("__s: bad kind of operatoin (while UP), restart the program\n");
-			abort ();
+			exit (-1);
 	}
-#endif /* (UCSIMM) */
-}
-
-/* Port D probe routine, two bits are enough for current task */
-void PortD_Probe( )
-{
-#if defined(UCSIMM)
-	PortD_Prepare( );
-
-	PortD_Toggle(  PD0 );
-
-	while (1)
-	{
-		PortD_Toggle(  PD1 | PD0 );
-
-		/* Dubious */
-		usleep (10);
-	}
-#endif /* (UCSIMM) */
-}
-
-#if defined(DIN_FEEDBACK)
-
-/* Return contents of Port D (as integer) as its data ready */
-unsigned char PortD_Read(unsigned char uchBit)
-{
-	while (!(SPIMCONT & SPIMCONT_IRQ))
-
-		usleep(1);
-
-	return (PDDATA & uchBit) ;
-
-}
-
-/* Check if bit(s) defined by 'uchBit' of Port E is zero */
-int PortD_CheckL0( unsigned char uchBit )
-{
-	return (0 == PortD_Read (~uchBit) );
-}
-
-/* Check if bit(s) defined by 'uchBit' of Port E is one */
-int PortD_CheckL1( unsigned char uchBit )
-{
-	return (0 < PortD_Read (uchBit) );
-}
-
-#endif /* (defined(DIN_FEEDBACK)) */ 
-
+} /* void Term_Up() */
 
 void AD5300_Write(unsigned char data)
 {
@@ -259,7 +182,7 @@ void PeriphInit(void)
 
 		default:
 			printf("__s: bad kind of operatoin (while PERIPH. INIT), restart the program\n");
-			abort ();
+			exit (-1);
 	}
 } /* void PeriphInit(void) */
 

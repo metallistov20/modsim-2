@@ -63,27 +63,20 @@ ground, or 90 Ω differential to match the data cable impedance. */
 
 
 /* Anything from range −10 mV .. +10 mV is regarded to be <logical 0> for USB 2.0 */
- //#define USB20_LOGIC_0_LO_CURR	(-0.01)		// TODO: not used, clean out
- #define USB20_LOGIC_0_LO_CURR		(-0.001)
-
- //#define USB20_LOGIC_0_UP_CURR	0.01 		// TODO: not used, clean out
- #define USB20_LOGIC_0_UP_CURR		0.001
+#define USB20_LOGIC_0_LO_CURR	(-0.01)		// TODO: not used, clean out
+#define USB20_LOGIC_0_UP_CURR	0.01 		// TODO: not used, clean out
 
 /* Anything from range 360 mV .. 440 mV is regarded to be <logical 1> for USB 2.0 */
- //#define USB20_LOGIC_1_LO_CURR	0.36		// TODO: not used, clean out
- #define USB20_LOGIC_1_LO_CURR	0.010
+#define USB20_LOGIC_1_LO_CURR	0.36		// TODO: not used, clean out
 #define USB20_LOGIC_1_UP_CURR	0.44		// TODO: not used, clean out
 
 #define USB20_LOGIC_0_LO_CURR_INTGR	(-0)
 #define USB20_LOGIC_0_LO_CURR_FRACT	1000
-
 #define USB20_LOGIC_0_UP_CURR_INTGR	0
 #define USB20_LOGIC_0_UP_CURR_FRACT	1000
 
 #define USB20_LOGIC_1_LO_CURR_INTGR	0
- //#define USB20_LOGIC_1_LO_CURR_FRACT	36000
- #define USB20_LOGIC_1_LO_CURR_FRACT	1000
-
+#define USB20_LOGIC_1_LO_CURR_FRACT	36000
 #define USB20_LOGIC_1_UP_CURR_INTGR	0
 #define USB20_LOGIC_1_UP_CURR_FRACT	44000
 

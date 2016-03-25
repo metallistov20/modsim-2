@@ -49,9 +49,6 @@ LD=$(PREFIX)ld
 # Excessive debug info not needed when program is ready. Spoils 'realtime' operating mode. Keep commented-out.
 CFLAGS+=-DDEBUG_DATA
 
-# Checking Data-IN (backward data stream on D-); expected to be same as X(CH2) in raw data (CSV file) 
-# CFLAGS+= -DDIN_FEEDBACK
-
 # Endless curve on oscilloscope ( all the four bits UP, then wait 10 ms, then DOWN, and again )
 # CFLAGS+= -DHW_PORTD_TEST
 

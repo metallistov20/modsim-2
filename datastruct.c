@@ -86,7 +86,7 @@ pTimepointType pChild, pTempPointChain;
 		(*ppThisPointChain)->pcMarquee = calloc (1, strlen (pcMrq) +1 );
 		strcpy( (*ppThisPointChain)->pcMarquee, pcMrq);
 
-#if DEBUG_DATA
+#if defined(DEBUG_DATA_)
 #if !defined(QUASIFLOAT)
 		printf("[%s] %s:%s : FIRST <%f> <%f> <%f> <%s> \n", __FILE__, caller, __func__,
 			(*ppThisPointChain)->fltAbsTime,
@@ -146,7 +146,7 @@ pTimepointType pChild, pTempPointChain;
 		pTempPointChain->pcMarquee = calloc (1, strlen (pcMrq) +1 );
 		strcpy( pTempPointChain->pcMarquee, pcMrq);
 
-#if DEBUG_DATA
+#if defined(DEBUG_DATA_)
 #if !defined(QUASIFLOAT)
 		printf("[%s] %s:%s : NEXT <%f> <%f> <%f> <%s> \n", __FILE__, caller, __func__,
 			pTempPointChain->fltAbsTime,
@@ -212,17 +212,10 @@ double timeusePROC;
 			pPointChain->pcMarquee
 		);
 #else
-		printf("[%s] %s:%s : <%d.%dE%c0%d> <%d.%dE%c0%d> <%d.%dE%c0%d> <%s> \n", __FILE__, caller, __func__,
-
+		printf("[%s] %s:%s : <%d.%d> <%d.%d> <%d.%d> <%s> \n", __FILE__, caller, __func__,
 			pPointChain->qfltAbsTime.integer,pPointChain->qfltAbsTime.fraction,
-			pPointChain->qfltAbsTime.sgn,pPointChain->qfltAbsTime.power,
-
 			pPointChain->qfltXval.integer,pPointChain->qfltXval.fraction,
-			pPointChain->qfltXval.sgn,pPointChain->qfltXval.power,
-
 			pPointChain->qfltYval.integer,pPointChain->qfltYval.fraction,
-			pPointChain->qfltYval.sgn,pPointChain->qfltYval.power,
-
 			pPointChain->pcMarquee
 		);
 #endif /* !defined(QUASIFLOAT) */

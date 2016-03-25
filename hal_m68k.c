@@ -20,6 +20,9 @@
 /* printf(), stdout */
 #include <stdio.h>
 
+/* realloc() */
+#include <stdlib.h>
+
 /* struct timeval, gettimeofday() */
 #include <sys/time.h>
 
@@ -41,15 +44,26 @@ extern struct timeval starttimePROC;
 /* Var. to check if current second already was 'displayed' */
 int iOldSecPRC;
 
+/* Anything under this voltage is regarded to be <logical 0> for USB 1.1 */
+#define LOGIC_0_CURR		0.4
+/* Integer part of <LOGIC_0_CURR> */
+#define LOGIC_0_CURR_INTGR	0
+/* Fraction  of <LOGIC_0_CURR> */
+#define LOGIC_0_CURR_FRACT	4
+
+/* Anything above this voltage is regarded to be <logical 1> for USB 1.1 */
+#define LOGIC_1_CURR		2.4
+/* Integer part of <LOGIC_1_CURR> */
+#define LOGIC_1_CURR_INTGR	2
+/* Fraction  of <LOGIC_1_CURR> */
+#define LOGIC_1_CURR_FRACT	4
 
 /* Check if raw value is USB 1.0 <logical 0> and return '1' if so, return '0' otherwise */
 int iChkUsb10Lg0( QuasiFloatType qfltVal )
 {
 	/* USB 1.0 levels. Logical '0'. LOGIC_0_CURR */
 	if (
-		('+' == qfltVal.sgn) && (0 == qfltVal.power) &&
-
-		 (  (0 == qfltVal.integer)&&(4 >= qfltVal.fraction)   ) 
+		(USB11_LOGIC_0_CURR_INTGR == qfltVal.integer) && (USB11_LOGIC_0_CURR_FRACT >= qfltVal.fraction) 
 
 	) return 1;
 
@@ -61,12 +75,68 @@ int iChkUsb10Lg1( QuasiFloatType qfltVal )
 {
 	/* USB 1.0 levels. Logical '1'.  LOGIC_1_CURR */
 	if (
-		('+' == qfltVal.sgn) && (0 == qfltVal.power) &&
-		 (  (2 == qfltVal.integer)&&(4 <= qfltVal.fraction)   ) ||  (    3 <= qfltVal.integer   )    
+		(  (USB11_LOGIC_1_CURR_INTGR == qfltVal.integer) && (USB11_LOGIC_1_CURR_FRACT <= qfltVal.fraction)   ) 
+			||
+		(    USB11_LOGIC_1_CURR_INTGR <= qfltVal.integer   )    
+
 	) return 1;
 
 	return 0;
 }
+
+/* Check if raw value is USB 2.0 <logical 0> and return '1' if so, return '0' otherwise */
+int iChkUsb20Lg0(QuasiFloatType qfltVal)
+{
+	/* USB 2.0 levels. Logical '0'. LOGIC_0_CURR. -10 mV .. 10 mV */
+	if (
+		(  (USB20_LOGIC_0_LO_CURR_INTGR == qfltVal.integer) && (USB20_LOGIC_0_LO_CURR_FRACT >= qfltVal.fraction)   ) 		
+		/* Values from raange -10mV .. 0V are here due inability to keep integer <-0.0> inside <qfltVal.integer> . TODO: resolve */
+
+	)  return 1;
+
+	return 0;
+}
+
+/* Check if raw value is USB 2.0 <logical 1> and return '1' if so, return '0' otherwise */
+int iChkUsb20Lg1(QuasiFloatType qfltVal)
+{
+	/* USB 2.0 levels. Logical '1'. LOGIC_1_CURR. 0.36V .. 0.44V */
+	if (
+		(  (USB20_LOGIC_1_LO_CURR_INTGR == qfltVal.integer) && (USB20_LOGIC_1_LO_CURR_FRACT <= qfltVal.fraction)   ) 
+		&& 
+		(  (USB20_LOGIC_1_UP_CURR_INTGR == qfltVal.integer) && (USB20_LOGIC_1_LO_CURR_FRACT >= qfltVal.fraction)   ) 
+
+	) return 1;
+
+	return 0;
+}
+
+/*  Check if current value is <logical 0> in terms of appropriate USB protocol */
+int iChkUsbLg0(QuasiFloatType qfltVal)
+{
+	/* it is assumes that here the <iOperation> value is either <DO_GATE0_OP> or <DO_GATE1_OP> */
+
+	if (DO_GATE0_OP == iOperation)
+
+		return iChkUsb10Lg0(qfltVal);
+	else
+
+		return iChkUsb20Lg0(qfltVal);
+}
+
+/*  Check if current value is <logical 1> in terms of appropriate USB protocol */
+int iChkUsbLg1(QuasiFloatType qfltVal)
+{
+	/* it is assumes that here the <iOperation> value is either <DO_GATE0_OP> or <DO_GATE1_OP> */
+
+	if (DO_GATE0_OP == iOperation)
+
+		return iChkUsb10Lg1(qfltVal);
+	else
+
+		return iChkUsb20Lg1(qfltVal);
+}
+
 
 int ProcessPoint( pTimepointType pTimepoint )
 {
@@ -75,7 +145,6 @@ QuasiFloatType qfltRelTime;
 int _left, _right;
 QuasiFloatType qfltJiffy; 
 qfltJiffy.fraction = 1;
-
 
 	pTimepoint->qfltAbsTime.integer = (pTimepoint->qfltAbsTime.integer < 0)?
 		(pTimepoint->qfltAbsTime.integer * 1000000) - (pTimepoint->qfltAbsTime.fraction / 10):
@@ -151,36 +220,46 @@ qfltJiffy.fraction = 1;
 #else
 #endif /* defined(FAST_UCSIMM) */
 
+#if 0
+OBSOLETE
+
 		/* Put marquee 'secPRC: xxx;' on the screen, so we are sure platform is still not hanged */
 		if (0 == pTimepoint->qfltAbsTime.power)
 
 			if (iOldSecPRC!= pTimepoint->qfltAbsTime.integer)
 
 				{iOldSecPRC=pTimepoint->qfltAbsTime.integer; printf("secPRC: %d; ", iOldSecPRC); fflush(stdout); }
+#endif
 
 
-		/* USB 1.0 levels. Logical '1'.  LOGIC_1_CURR */
-		if ( iChkUsb10Lg1(pTimepoint->qfltXval) )
+		/* Logical '1'.  LOGIC_1_CURR */
+		if ( iChkUsbLg1(pTimepoint->qfltXval) )
 
 			/* Pull terminal USB#0/USB#1 <dIN> line up. */
 			Term_Up( PD0 );
 
 		else
-			/* USB 1.0 levels. Logical '0'. LOGIC_0_CURR */
-			if ( iChkUsb10Lg0(pTimepoint->qfltXval) )
+			/* Logical '0'. LOGIC_0_CURR */
+			if ( iChkUsbLg0(pTimepoint->qfltXval) )
 
 				/* Pull terminal USB#0/USB#1 <dIN> line down. */
 				Term_Down( PD0 );
-#if 0
 			else
-				/* TODO: REWORK! A lot of _logical_ zeroes (or sort of that ) will come with negative power of 10 (i.e. 'sgn' is '-'). */
-				PortD_Down( PD0 );
-
-			/* Attention: overvoltage, U = 3.6++ Volts will be processed as logical zero, too. */
+			{
+				/* Over-voltages, under-voltages, some middle values and rest are marked as <not processed> */
+#if 0
+				TODO: find this realloc() within UCLIBC:
+				pTimepoint->pcMarquee = realloc (pTimepoint->pcMarquee, strlen (UNPROC) +1 );
+#else
+				free(pTimepoint->pcMarquee);
+				pTimepoint->pcMarquee = NULL;// TODO: really needed, or can be left for <mman>
+				pTimepoint->pcMarquee = malloc (strlen (UNPROC) +1 );
 #endif /* (0) */
-
+				strcpy( pTimepoint->pcMarquee, UNPROC);
+			}
 #if defined(DIN_FEEDBACK)
 	;
 #endif /* (DIN_FEEDBACK) */
+
 
 }

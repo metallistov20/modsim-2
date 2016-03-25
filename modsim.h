@@ -33,8 +33,9 @@
 /* Error. Bad hardware environment detected or some unexpected hardware responce occured */
 #define P_ERROR_HW	(-4)
 
-#define FILE_NAME	"./RawData/12d1:1446/NewFile1.csv"
-//#define FILE_NAME	"./RawData/1bbb:022c/NewFile1.csv"
+#define FILE_NAME	"./RawData/090c:1000/data.TXT"
+//OBSOLETE FILE FORMAT TODO: remove #define FILE_NAME	"./RawData/12d1:1446/NewFile1.csv"
+//OBSOLETE FILE FORMAT TODO: remove#define FILE_NAME	"./RawData/1bbb:022c/NewFile1.csv"
 
 /* Local buffer size */
 #define LARGE_BUF_SZ	0x100

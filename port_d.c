@@ -127,7 +127,7 @@ void Term_Down()
 			break;
 
 		case DO_GATE1_OP:
-			ConverterWrite( ( LOGIC_0_CURR * 256) / CALIBRATED_VDD  )  ;
+			ConverterWrite( USB20_LOGIC_0_UP_CURR_FRACT/1000 )  ;
 			//printf("%s: _ 4 \n", cArg0);
 			break;
 
@@ -150,7 +150,7 @@ void Term_Up()
 			break;
 
 		case DO_GATE1_OP:
-			ConverterWrite( (  LOGIC_1_CURR * 256) / CALIBRATED_VDD  )  ;
+			ConverterWrite( USB20_LOGIC_1_UP_CURR_FRACT/1000 )  ;
 			//printf("%s: _ 2 \n", cArg0);
 			break;
 
@@ -246,7 +246,6 @@ void ConverterInit(void)
 /* Initialize Port 'D' and, once needed, converter arrached to it */
 void PeriphInit(void)
 {
-#if defined(UCSIMM)
 	switch (iOperation)
 	{
 		case DO_GATE0_OP:
@@ -265,6 +264,5 @@ void PeriphInit(void)
 			printf("__s: bad kind of operatoin (while PERIPH. INIT), restart the program\n");
 			abort ();
 	}
-#endif /* (UCSIMM) */
 }
 

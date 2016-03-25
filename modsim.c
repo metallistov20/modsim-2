@@ -183,7 +183,7 @@ char cArg0[LARGE_BUF_SZ];
 		{
 		/* Aux. buffer to keep results of parsing */
 		char * cpTmp = cBuf;
-#if DEBUG_DATA
+#if defined(DEBUG_DATA_)
 			printf("[%s] %s: scanned: < %s >\n", __FILE__, __func__, cBuf);
 #endif /* (DEBUG_DATA) */
 
@@ -203,32 +203,30 @@ char cArg0[LARGE_BUF_SZ];
 
 				/* replace all commas with spaces, to let the <scanf()> parse it */
 				{ if (',' == *cpTmp) *cpTmp = ' '; cpTmp++; }
-	
+
+#if defined(DEBUG_DATA_)
+			printf("[%s] %s: changed: < %s >\n", __FILE__, __func__, cBuf);
+#endif /* (DEBUG_DATA) */
 
 #if !defined(QUASIFLOAT) 
 			/* Find 3 floats separated by spaces in aux. buffer */
 			sscanf(cBuf, "%f %f %f,", &fltTM,     &fltDIn,   &fltDOut );
 #else
-			/* Find 3 floats separated by spaces in aux. buffer. Each float represented as <INT>.<INT>e<SIGN>0<INT> */
-			sscanf(cBuf, "%d.%de%c0%d %d.%de%c0%d %d.%de%c0%d,",
-					&(qfltTM.integer),&(qfltTM.fraction),&(qfltTM.sgn),&(qfltTM.power),
-					&(qfltDIn.integer),&(qfltDIn.fraction),&(qfltDIn.sgn),&(qfltDIn.power),
-					&(qfltDOut.integer),&(qfltDOut.fraction),&(qfltDOut.sgn),&(qfltDOut.power)  );
-
-/* For each 'second' value do output. Only once. */ /* TODO: remove? */
-if (0 == qfltTM.power) if (iOldSec!= qfltTM.integer){iOldSec=qfltTM.integer; printf("sec: %d; ", iOldSec); fflush(stdout); }
-
+sscanf(cBuf, "%d.%d %d.%d %d.%d",
+					&(qfltTM.integer),&(qfltTM.fraction),
+					&(qfltDIn.integer),&(qfltDIn.fraction),
+					&(qfltDOut.integer),&(qfltDOut.fraction)    );
 #endif /* !defined(QUASIFLOAT) */
 
-#if DEBUG_DATA
+#if defined(DEBUG_DATA_)
 #if !defined(QUASIFLOAT) 
 			printf("[%s] %s: parsed :  <%f> <%f> <%f>\n", __FILE__, __func__, fltTM, fltDIn, fltDOut );
 #else
-			printf("[%s] %s: parsed :  <%d.%de%c0%d>  <%d.%de%c0%d>  <%d.%de%c0%d> \n",
+			printf("[%s] %s: parsed :  <%d.%d>  <%d.%d>  <%d.%d> \n",
 					__FILE__, __func__, 
-					qfltTM.integer,qfltTM.fraction,qfltTM.sgn,qfltTM.power,
-					qfltDIn.integer,qfltDIn.fraction,qfltDIn.sgn,qfltDIn.power,
-					qfltDOut.integer,qfltDOut.fraction,qfltDOut.sgn,qfltDOut.power  );
+					qfltTM.integer,qfltTM.fraction,
+					qfltDIn.integer,qfltDIn.fraction,
+					qfltDOut.integer,qfltDOut.fraction   );
 #endif /* !defined(QUASIFLOAT) */
 #endif /* (DEBUG_DATA) */
 
@@ -245,10 +243,12 @@ if (0 == qfltTM.power) if (iOldSec!= qfltTM.integer){iOldSec=qfltTM.integer; pri
 	/* Dispose pointer to Raw Data file */
 	fclose(fp);
 
+#if defined(UCSIMM)
 	/* Initialize on-board peripherals */
 	PeriphInit();
+#endif /* (UCSIMM) */
 
-	printf("\n[%s] %s: issuing USB-curve-data on Pin #0 Port 'D'\n", __FILE__, __func__);
+	printf("\n[%s] %s: issuing USB-data on Port 'D'\n", __FILE__, __func__);
 
 	/* Process data stored in dynamic structure pointed by 'pTimeChain' */
 	ProcessPoints(pTimeChain);

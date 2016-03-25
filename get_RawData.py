@@ -75,10 +75,17 @@ plot.title("Oscilloscope Channel 1")
 plot.ylabel("Voltage (V)")
 plot.xlabel("Time (" + tUnit + ")")
 plot.xlim(time[0], time[-1])
-#plot.show()
+##plot.show()
+
+#for x in range(1,data_size):
+#	print "(", x, " of ", data_size-1, " )  Probe1: (", data1[x], ")  Probe2 : (", data2[x], ")"
+
+print "<num elements: ", data_size-1, ", time in ", tUnit, ">"
+print "Time X(CH1) X(CH2)"
+print "Second Volt Volt"
 
 for x in range(1,data_size):
-	print "(", x, " of ", data_size-1, " )  Probe1: (", data1[x], ")  Probe2 : (", data2[x], ")"
+	print ("%2.6f,%2.5f,%2.5f" % (  time[x],data1[x],data2[x] ) ) ;
 
 print "<end>"
 

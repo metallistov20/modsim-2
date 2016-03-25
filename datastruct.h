@@ -37,12 +37,14 @@ typedef struct _QuasiFloatType
 
 	/* Fractal part of quasi-float */
 	int fraction;
-
+#if 0
+OBSOLETE
 	/* 10th power sign */
 	char sgn;
 
 	/* 10th power absolute value, can be any of [0..9] */
 	int power; 
+#endif
 
 }  QuasiFloatType, *pQuasiFloatType;
 #endif /* defined(QUASIFLOAT) */

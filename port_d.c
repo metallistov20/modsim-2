@@ -63,14 +63,14 @@
 #define AD5300_DATA_LEN	16
 #define AD5300_DONTCARE_LEN 4
 
-/* Prepare Port 'D' */
-void PortD_Prepare()
+/* Prepare Port's D IOs defined by bitmask 'uchBit' as outputs */
+void PortD_Prepare(unsigned char uchBitMask)
 {
-	PDSEL = PD0 | PD1 | PD2 | PD3;
+	PDSEL = uchBitMask;
 
-	PDDIR = PD0 | PD1 | PD2 | PD3;
+	PDDIR = uchBitMask;
 
-	printf ("Bits <%08bb> <%08bb> of Port D initialized as OUT\n", (unsigned char)PD0, (unsigned char)PD1);
+	printf ("Bits <%08bb> of Port D initialized as OUT\n", uchBitMask );
 }
 
 /* Toggle bits defined by bitmask 'uchBit' in Port D*/
@@ -172,7 +172,7 @@ void PeriphInit(void)
 	{
 		case DO_GATE0_OP:
 			/* Set digital PIOs 1-4 as outputs */
-			PortD_Prepare( );
+			PortD_Prepare( PD0 | PD1 | PD2 | PD3 );
 			break;
 
 		case DO_GATE1_OP:

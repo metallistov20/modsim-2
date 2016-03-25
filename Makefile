@@ -47,7 +47,7 @@ CC=$(PREFIX)gcc
 LD=$(PREFIX)ld
 
 # Excessive debug info not needed when program is ready. Spoils 'realtime' operating mode. Keep commented-out.
-CFLAGS+=-DDEBUG_DATA
+# CFLAGS+=-DDEBUG_DATA
 
 # Endless curve on oscilloscope ( all the four bits UP, then wait 10 ms, then DOWN, and again )
 # CFLAGS+= -DHW_PORTD_TEST

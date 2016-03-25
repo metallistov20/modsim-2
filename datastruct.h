@@ -58,13 +58,13 @@ typedef struct _TimepointType
 	/* CVS's time stamp */
 	float fltAbsTime;
 #else
-	/* D- , yellow pin */
+	/* D- , green wire of USB wire quartet */
 	QuasiFloatType qfltXval;
 
-	/* D+ , blue pin */
+	/* D+ , white wire of USB wire quartet */
 	QuasiFloatType qfltYval;
 
-	/* CVS's time stamp */
+	/* CSV's time stamp */
 	QuasiFloatType qfltAbsTime;
 #endif /* !defined(QUASIFLOAT) */
 

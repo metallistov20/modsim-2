@@ -86,6 +86,8 @@ ground, or 90 Ω differential to match the data cable impedance. */
 
 #define UNPROC				"Not processed"
 
+/* Prepared Port's D IOs defined by bitmask 'uchBit' as outputs. Exposed to main() [HW_PORTD_TEST] */
+void PortD_Prepare(unsigned char uchBitMask);
 
 /* Switch on bits defined by bitmask 'uchBit' in Port D. Exposed to main() [HW_PORTD_TEST] */
 void PortD_Toggle(unsigned char uchBit);

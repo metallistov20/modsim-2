@@ -98,11 +98,11 @@ char cArg0[LARGE_BUF_SZ];
 
 	printf("[%s] %s: NOTIFICATION: doing test of Port 'D' of MC68EZ328 controller. Will hang in this test. \n", __FILE__, __func__);
 
-	/* Set digital PIOs 1-4 as outputs */
-	PortD_Prepare( );
+	/* Set digital IOs PD0...PD3 as outputs */
+	PortD_Prepare( PD0 | PD1 | PD2 | PD3 );
 
-	/* Set up and set down, eternally */
-	while (1) { PortD_Toggle(0xF0 ); usleep(10) ; }
+	/* Set digital IOs PD0...PD3 up and set down, eternally */
+	while (1) { PortD_Toggle( PD0 | PD1 | PD2 | PD3 ); usleep(10) ; }
 
 #endif /* (defined(HW_DUMB_TEST) ) */
 
@@ -119,19 +119,15 @@ char cArg0[LARGE_BUF_SZ];
 
 #endif /* (defined(HW_DUMB_TEST) ) */
 
-
-printf(" = 1 \n");
-
 	/* Avoid dafault 0 value */
 	iOperation=DO_NO_OP;
 
 	/* Assign program name, requirted for output*/
 	strcpy (cArg0, argv[0]);
-printf(" = 2 \n");
+
 	/* Parsing command line arguments */
 	while (1)
 	{
-printf(" = 3 \n");
 		/* Get each paramter */
 		iOption = getopt_long (argc, argv, "12", long_options, &iOptionIdx);
 
@@ -277,6 +273,7 @@ sscanf(cBuf, "%d.%d %d.%d %d.%d",
 	printf("[%s] %s: done (success) \n", __FILE__, __func__); fflush(stdout);
 
 	return P_SUCCESS;
-}
+
+} /* int main(int argc, char **argv) */
 
 

@@ -33,6 +33,12 @@ LD3		27
 #define PD2 0x20
 #define PD3 0x10
 
+#define PD4 0x08
+#define PD5 0x04
+#define PD6 0x02
+#define PD7 0x01
+
+
 /* RUNET: TTL levels "logical 0" 0.4V and "logical 1" 2.4V, more precise: less than 0.4 and more
 than 2.4 correspondingly. Current on DIn, DOut shuld not exceet 3.6 V. */
 

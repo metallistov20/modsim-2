@@ -35,17 +35,19 @@
 #include "modsim.h"
 
 
-/* Not connected to AD5300. Leg 1 of CPE#0. (White) */
+/* Not connected to AD5300. Leg 1 of CPE#0. (D-, White) */
 #define NIX		PD0
+/* Not connected to AD5300. Leg 2 of CPE#0. (D+, Green) */
+#define NIX_IN		PD1
 
 /* ~Synchronization. Leg 5 of AD5300. (Orange) */
-#define SYNC_PIN	PD1
+#define SYNC_PIN	PD2 // PD1
 
 /* Clocking. Leg 6 of AD5300. (Yellow) */
-#define SCLK_PIN	PD2
+#define SCLK_PIN	PD3 // PD2
 
 /* Data output. Leg 7 of AD5300. (Green) */
-#define MOSI_PIN	PD3
+#define MOSI_PIN	PD4 // PD3
 
 /* Port to write Data to*/
 #define SPI_PORT	PDDATA
@@ -156,8 +158,11 @@ unsigned char iCnt;
 void AD5300_Init(void)
 {
 	/* Prepare Port D */
-	PDSEL = PD1 | PD2 | PD3;
-	PDDIR = PD1 | PD2 | PD3;
+//TODO: rem after test: 	PDSEL = PD1 | PD2 | PD3;
+//TODO: rem after test:		PDDIR = PD1 | PD2 | PD3;
+
+	PDSEL = PD2 | PD3 | PD4;
+	PDDIR = PD2 | PD3 | PD4;
 
 	/* Prepare controler AD53xx */
 	AD5300_DEACT;
@@ -175,7 +180,8 @@ void PeriphInit(void)
 	{
 		case DO_GATE0_OP:
 			/* Set digital PIOs 1-4 as outputs */
-			PortD_Prepare( PD0 | PD1 | PD2 | PD3 );
+//TODO: rem after test:			PortD_Prepare( PD0 | PD1 | PD2 | PD3 );
+			PortD_Prepare( PD0 | PD1 /* | PD2 | PD3 */ );
 			break;
 
 		case DO_GATE1_OP:

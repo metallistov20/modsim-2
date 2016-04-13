@@ -98,11 +98,14 @@ char cArg0[LARGE_BUF_SZ];
 
 	printf("[%s] %s: NOTIFICATION: doing test of Port 'D' of MC68EZ328 controller. Will hang in this test. \n", __FILE__, __func__);
 
-	/* Set digital IOs PD0...PD3 as outputs */
-	PortD_Prepare( PD0 | PD1 | PD2 | PD3 );
+	/* Set digital IOs PD0...PD7 as outputs */
+	PortD_Prepare( PD0 | PD1 | PD2 | PD3 | PD4 | PD5 | PD6 | PD7 );
 
 	/* Set digital IOs PD0...PD3 up and set down, eternally */
-	while (1) { PortD_Toggle( PD0 | PD1 | PD2 | PD3 ); usleep(10) ; }
+	while (1) { 
+		PortD_Toggle( PD0 | PD1  ); /* PortD_Toggle( PD0 | PD1 | PD2 | PD3 | PD4 | PD5 | PD6 | PD7 ); */
+		usleep(10) ;
+	}
 
 #endif /* (defined(HW_DUMB_TEST) ) */
 
@@ -112,10 +115,10 @@ char cArg0[LARGE_BUF_SZ];
 	printf("[%s] %s: NOTIFICATION: doing test of AD53xx controller. Will hang in this test. \n", __FILE__, __func__ );
 
 	/* Besides all, it prepares PIOs, so theres no need to do <PortD_Prepare()> */
-	ConverterInit();
+	AD5300_Init();
 
 	/* Checking on values close to limit, on limits, in the middle, and at random valuoes from range, ..  */
-	while (1) { ConverterWrite( 0 );ConverterWrite(0x11);ConverterWrite(0xAA); ConverterWrite(0xFF); }
+	while (1) { AD5300_Write( 0 );AD5300_Write(0x11);AD5300_Write(0xAA); AD5300_Write(0xFF); }
 
 #endif /* (defined(HW_DUMB_TEST) ) */
 

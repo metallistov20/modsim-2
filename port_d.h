@@ -20,23 +20,78 @@
 #ifndef _PORT_D_H_
 #define _PORT_D_H_
 
-/*
-BIT		Pin
-~~~~~~~~~~~~~~~~~~
-LD0		30
-LD1		29
-LD2		28
-LD3		27
-*/
+/* Port 'D', bit 0, pin 30 */
 #define PD0 0x80
+/* Port 'D', bit 1, pin 29 */
 #define PD1 0x40
+/* Port 'D', bit 2, pin 28 */
 #define PD2 0x20
+/* Port 'D', bit 3, pin 27 */
 #define PD3 0x10
 
+/* Port 'D', bit 4, pin 26 */
 #define PD4 0x08
+/* Port 'D', bit 5, pin 25 */
 #define PD5 0x04
+/* Port 'D', bit 6, pin 24 */
 #define PD6 0x02
+/* Port 'D', bit 7, pin 23 */
 #define PD7 0x01
+
+
+/* Not connected to AD5300. 'White' wire of CPE#0. (D-, White) */
+#define NIX_W			PD0
+/* Not connected to AD5300. 'Green' wire of CPE#0. (D+, Green) */
+#define NIX_G			PD1
+
+/* ~Synchronization. Leg 5 of 'white' AD5300. (Orange) */
+#define SYNC_PIN_W	 	PD2
+/* Clocking. Leg 6 of 'white' AD5300. (Yellow) */
+#define SCLK_PIN_W	 	PD3
+/* Data output. Leg 7 of 'white' AD5300. (Green) */
+#define MOSI_PIN_W	 	PD4
+
+/* ~Synchronization. Leg 5 of 'green' AD5300. (Orange) */
+#define SYNC_PIN_G	 	PD5
+/* Clocking. Leg 6 of 'green' AD5300. (Yellow) */
+#define SCLK_PIN_G	 	PD6
+/* Data output. Leg 7 of 'freen' AD5300. (Green) */
+#define MOSI_PIN_G	 	PD7
+
+/* Port to write Data to*/
+#define SPI_PORT		PDDATA
+
+/* Toggle down SCKL on 'white' converter */
+#define SCLK_LO_W		PortD_Down(SCLK_PIN_W)
+/* Toggle up SCKL on 'white' converter */
+#define SCLK_HI_W		PortD_Up(SCLK_PIN_W)
+/* Toggle down MOSI on 'white' converter */
+#define MOSI_LO_W		PortD_Down(MOSI_PIN_W)
+/* Toggle up MOSI on 'white' converter */
+#define MOSI_HI_W		PortD_Up(MOSI_PIN_W)
+/* Activate 'white' converter */
+#define AD5300_ACT_W 		PortD_Down(SYNC_PIN_W)
+/* Deactivate 'white' converter */
+#define AD5300_DEACT_W 		PortD_Up(SYNC_PIN_W)
+
+/* Toggle down SCKL on 'green' converter */
+#define SCLK_LO_G		PortD_Down(SCLK_PIN_G)
+/* Toggle up SCKL on 'green' converter */
+#define SCLK_HI_G		PortD_Up(SCLK_PIN_G)
+/* Toggle down MOSI on 'green' converter */
+#define MOSI_LO_G		PortD_Down(MOSI_PIN_G)
+/* Toggle up MOSI on 'green' converter */
+#define MOSI_HI_G		PortD_Up(MOSI_PIN_G)
+/* Activate 'green' converter */
+#define AD5300_ACT_G 		PortD_Down(SYNC_PIN_G)
+/* Deactivate 'green' converter */
+#define AD5300_DEACT_G 		PortD_Up(SYNC_PIN_G)
+
+/* Length of data word at AD53xx converter */
+#define AD5300_DATA_LEN		16
+/* Amount of bits (within data word) to be ignored while passing 8-bit data value to AD53xx converter */
+#define AD5300_DONTCARE_LEN	4
+
 
 
 /* RUNET: TTL levels "logical 0" 0.4V and "logical 1" 2.4V, more precise: less than 0.4 and more
@@ -88,6 +143,9 @@ ground, or 90 Ω differential to match the data cable impedance. */
 
 #define UNPROC				"Not processed"
 
+/* Set Port D into default state */
+void PortD_Reset();
+
 /* Prepared Port's D IOs defined by bitmask 'uchBit' as outputs. Exposed to main() [HW_PORTD_TEST] */
 void PortD_Prepare(unsigned char uchBitMask);
 
@@ -100,11 +158,13 @@ void Term_Up();
 /* Terminal line DOWN - switch off <dIN> wire on CPE#0, bzw CPE#1. Exposed to <ProcessPoint()> */
 void Term_Down();
 
-/* Write 'data'::{0..255} to converter. Parameter '0' for <0> Volts, <255> - VDD Volts. VDD is 3.3(5.0). Exposed to main() [HW_AD53_TEST] */
-void AD5300_Write(unsigned char data);
+/* Write 'data'::{0..255} to 'white'/'green' converter. Parameter '0' for 0V, '255' for VDD Volts. Exposed to main() [HW_AD53_TEST] */
+void AD5300_Write_W(unsigned char data);
+void AD5300_Write_G(unsigned char data);
 
-/* Initialize converter. Exposed to main() [HW_AD53_TEST] */
-void AD5300_Init(void);
+/* Initialize 'white'/'green' converter . Exposed to main() [HW_AD53_TEST] */
+void AD5300_Init_W(void);
+void AD5300_Init_G(void);
 
 /* Initialize Port 'D' and, once needed, converter arrached to it. Exposed to main() */
 void PeriphInit(void);

@@ -98,6 +98,9 @@ char cArg0[LARGE_BUF_SZ];
 
 	printf("[%s] %s: NOTIFICATION: doing test of Port 'D' of MC68EZ328 controller. Will hang in this test. \n", __FILE__, __func__);
 
+	/* Put port D into initial state */
+	PortD_Reset();
+
 	/* Set digital IOs PD0...PD7 as outputs */
 	PortD_Prepare( PD0 | PD1 /* | PD2 | PD3 | PD4 | PD5 | PD6 | PD7 */ );
 
@@ -113,6 +116,9 @@ char cArg0[LARGE_BUF_SZ];
 #if defined(HW_AD53_TEST)
 
 	printf("[%s] %s: NOTIFICATION: doing test of AD53xx controller. Will hang in this test. \n", __FILE__, __func__ );
+
+	/* Put port D into initial state */
+	PortD_Reset();
 
 	/* Besides all, it prepares PIOs, so theres no need to do <PortD_Prepare()> */
 	AD5300_Init_W(); AD5300_Init_G();

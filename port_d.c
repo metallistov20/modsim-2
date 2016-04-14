@@ -40,14 +40,29 @@
 /* Not connected to AD5300. Leg 2 of CPE#0. (D+, Green) */
 #define NIX_IN		PD1
 
+#if 0
+
 /* ~Synchronization. Leg 5 of AD5300. (Orange) */
-#define SYNC_PIN	PD2 // PD1
+#define SYNC_PIN	 PD2
 
 /* Clocking. Leg 6 of AD5300. (Yellow) */
-#define SCLK_PIN	PD3 // PD2
+#define SCLK_PIN	 PD3
 
 /* Data output. Leg 7 of AD5300. (Green) */
-#define MOSI_PIN	PD4 // PD3
+#define MOSI_PIN	 PD4
+
+#else
+
+/* ~Synchronization. Leg 5 of AD5300. (Orange) */
+#define SYNC_PIN	PD5 // PD2
+
+/* Clocking. Leg 6 of AD5300. (Yellow) */
+#define SCLK_PIN	PD6 // PD3
+
+/* Data output. Leg 7 of AD5300. (Green) */
+#define MOSI_PIN	PD7 // PD4
+
+#endif /* (0) */
 
 /* Port to write Data to*/
 #define SPI_PORT	PDDATA
@@ -157,12 +172,12 @@ unsigned char iCnt;
 /* Initialize converter */
 void AD5300_Init(void)
 {
-	/* Prepare Port D */
-//TODO: rem after test: 	PDSEL = PD1 | PD2 | PD3;
-//TODO: rem after test:		PDDIR = PD1 | PD2 | PD3;
+//TODO: rem after test:	PDSEL = PD2 | PD3 | PD4;
+//TODO: rem after test:	PDDIR = PD2 | PD3 | PD4;
 
-	PDSEL = PD2 | PD3 | PD4;
-	PDDIR = PD2 | PD3 | PD4;
+	/* Prepare Port D */
+	PDSEL = SYNC_PIN | SCLK_PIN | MOSI_PIN;
+	PDDIR = SYNC_PIN | SCLK_PIN | MOSI_PIN;  
 
 	/* Prepare controler AD53xx */
 	AD5300_DEACT;

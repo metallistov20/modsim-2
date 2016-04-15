@@ -48,6 +48,12 @@ typedef struct _TimepointType
 	/* String to descibe this tm. point */
 	char * pcMarquee;
 
+	/* 0 - 256 for ADxx for 'white' */
+	unsigned short ushSplineXval;
+
+	/* 0 - 256 for ADxx for 'green' */
+	unsigned short ushSplineYval;
+
 #if !defined(QUASIFLOAT) 
 	/* D- , yellow pin */
 	float fltXval;

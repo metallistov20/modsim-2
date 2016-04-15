@@ -38,12 +38,19 @@ extern struct timeval starttimePROC;
 /* Process Realtime and Relative-time values: certain data to be oputput onto Port D */
 int ProcessPoint(pTimepointType pTimepoint)
 {
+#if !defined(QUASIFLOAT) 
 float fltRelTime;
 float _left, _right;
 float fltJiffy = 1.0;
+#else
+QuasiFloatType fltRelTime;
+QuasiFloatType _left, _right;
+int fltJiffy = 1;
+#endif /* defined(QUASIFLOAT)  */
 
 	/* TODO: add plain description here  */
 
+#if !defined(QUASIFLOAT) 
 	/* Operate uSeconds multiplied by 10e6 because <usleep> accepts	integer parameters only */
 	pTimepoint->fltAbsTime = pTimepoint->fltAbsTime*1000000;
 
@@ -87,5 +94,10 @@ float fltJiffy = 1.0;
 
 	/* PC-based simulation of hardware Port 'D' processing */
 	none
+
+#else
+
+#endif /* defined(QUASIFLOAT)  */
+
 
 } /* int ProcessPoint(pTimepointType pTimepoint) */

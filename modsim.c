@@ -107,7 +107,8 @@ char cArg0[LARGE_BUF_SZ];
 	/* Set digital IOs PD0...PD3 up and set down, eternally */
 	PortD_Toggle( PD0 ); while (1) { 
 		PortD_Toggle( PD0 | PD1  );
-		usleep(10) ;
+		/* usleep(10); */
+		usleep(1);
 	}
 
 #endif /* (defined(HW_DUMB_TEST) ) */

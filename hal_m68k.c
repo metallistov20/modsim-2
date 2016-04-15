@@ -131,6 +131,9 @@ int _left, _right;
 QuasiFloatType qfltJiffy; 
 qfltJiffy.fraction = 1;
 
+#if 0
+// TODO: to be removed as obsolete
+
 	if (iOldSecPRC!= pTimepoint->qfltAbsTime.integer)
 		{iOldSecPRC=pTimepoint->qfltAbsTime.integer; printf("secPRC: %d; ", iOldSecPRC); fflush(stdout); }
 
@@ -205,6 +208,12 @@ qfltJiffy.fraction = 1;
 #else
 #endif /* defined(FAST_UCSIMM) */
 
+#endif /* (0) */
+
+
+#if 0
+// TODO: to be removed as obsolete
+
 		/* Logical '1'.  LOGIC_1_CURR */
 		if ( iChkUsbLg1(pTimepoint->qfltYval) )
 
@@ -229,6 +238,15 @@ qfltJiffy.fraction = 1;
 
 				strcpy( pTimepoint->pcMarquee, UNPROC);
 			}
+#endif /* (0) */
+
+#else
+		/* Put current value on 'green' wire */
+		AD5300_Write_W(pTimepoint->ushSplineXval);
+
+		/* Put current value on 'white' wire */
+		AD5300_Write_G(pTimepoint->ushSplineYval);
+
 #endif /* (0) */
 
 } /* int ProcessPoint( pTimepointType pTimepoint ) */

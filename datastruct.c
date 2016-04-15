@@ -38,6 +38,8 @@
 /* Errcode definitions */
 #include "modsim.h"
 
+#define max(x,y)	((x>y)?x:y)
+
 /* Time measurement variable to define begin of time scale */
 struct timeval starttimePROC;
 
@@ -84,11 +86,25 @@ pTimepointType pChild, pTempPointChain;
 		(*ppThisPointChain)->fltXval = *pfltX;
 		(*ppThisPointChain)->fltYval = *pfltY;
 		(*ppThisPointChain)->fltAbsTime = *pfltTm;
+
+		// TODO: introduce spline approximation here
+		(*ppThisPointChain)->ushSplineXval = (*ppThisPointChain)->fltXval * 100;
+		(*ppThisPointChain)->ushSplineYval = (*ppThisPointChain)->fltYval * 100;
 #else
 		memcpy(& ((*ppThisPointChain)->qfltXval), pqfltX, sizeof(QuasiFloatType) );
 		memcpy(& ((*ppThisPointChain)->qfltYval), pqfltY, sizeof(QuasiFloatType) );
 		memcpy(& ((*ppThisPointChain)->qfltAbsTime), pqfltTm, sizeof(QuasiFloatType) );
+
+		// TODO: introduce spline approximation here
+		(*ppThisPointChain)->ushSplineXval = ( (*ppThisPointChain)->qfltXval.integer * 100000 +
+				(*ppThisPointChain)->qfltXval.fraction ) / 1000;
+
+		(*ppThisPointChain)->ushSplineYval = ( (*ppThisPointChain)->qfltYval.integer * 100000 +
+				(*ppThisPointChain)->qfltYval.fraction ) / 1000;
 #endif /* !defined(QUASIFLOAT) */
+
+		(*ppThisPointChain)->ushSplineXval = max(256, (*ppThisPointChain)->ushSplineXval);
+		(*ppThisPointChain)->ushSplineYval = max(256, (*ppThisPointChain)->ushSplineYval);
 
 		(*ppThisPointChain)->pcMarquee = calloc (1, strlen (pcMrq) +1 );
 		strcpy( (*ppThisPointChain)->pcMarquee, pcMrq);
@@ -101,20 +117,20 @@ pTimepointType pChild, pTempPointChain;
 		fFIRST = (*ppThisPointChain)->fltAbsTime;
 #endif /* defined(QUASIFLOAT)  */
 
-#if defined(DEBUG_DATA_)
+#if defined(DEBUG_DATA)
 #if !defined(QUASIFLOAT)
-		printf("[%s] %s:%s : FIRST <%f> <%f> <%f> <%s> \n", __FILE__, caller, __func__,
+		printf("[%s] %s:%s : FIRST <%f> <%f>[%d] <%f>[%d] <%s> \n", __FILE__, caller, __func__,
 			(*ppThisPointChain)->fltAbsTime,
-			(*ppThisPointChain)->fltXval,
-			(*ppThisPointChain)->fltYval,
+			(*ppThisPointChain)->fltXval, (*ppThisPointChain)->ushSplineXval,
+			(*ppThisPointChain)->fltYval, (*ppThisPointChain)->ushSplineYval,
 			(*ppThisPointChain)->pcMarquee
 		);
 #else
-		printf("[%s] %s:%s : FIRST <%d.%d> <%d.%d> <%d.%d> <%s> \n", __FILE__, caller, __func__,
+		printf("[%s] %s:%s : FIRST <%d.%d> <%d.%d>[%d] <%d.%d>[%d] <%s> \n", __FILE__, caller, __func__,
 
 			(*ppThisPointChain)->qfltAbsTime.integer,(*ppThisPointChain)->qfltAbsTime.fraction,
-			(*ppThisPointChain)->qfltXval.integer,(*ppThisPointChain)->qfltXval.fraction,
-			(*ppThisPointChain)->qfltYval.integer,(*ppThisPointChain)->qfltYval.fraction,
+			(*ppThisPointChain)->qfltXval.integer,(*ppThisPointChain)->qfltXval.fraction, (*ppThisPointChain)->ushSplineXval,
+			(*ppThisPointChain)->qfltYval.integer,(*ppThisPointChain)->qfltYval.fraction, (*ppThisPointChain)->ushSplineYval,
 			(*ppThisPointChain)->pcMarquee
 		);
 #endif /* !defined(QUASIFLOAT) */
@@ -146,33 +162,46 @@ pTimepointType pChild, pTempPointChain;
 		pTempPointChain->fltXval = *pfltX;
 		pTempPointChain->fltYval = *pfltY;
 		pTempPointChain->fltAbsTime = *pfltTm;
+
+		// TODO: introduce spline approximation here
+		pTempPointChain->ushSplineXval = pTempPointChain->fltXval * 100;
+		pTempPointChain->ushSplineYval = pTempPointChain->fltYval * 100;
 #else
 		memcpy(& ( pTempPointChain->qfltXval), 	pqfltX, sizeof(QuasiFloatType) );
 		memcpy(& ( pTempPointChain->qfltYval), 	pqfltY, sizeof(QuasiFloatType) );
 		memcpy(& ( pTempPointChain->qfltAbsTime), pqfltTm, sizeof(QuasiFloatType) );
+
+		// TODO: introduce spline approximation here
+		pTempPointChain->ushSplineXval = ( pTempPointChain->qfltXval.integer * 100000 +
+				pTempPointChain->qfltXval.fraction ) / 1000;
+		
+		pTempPointChain->ushSplineYval = ( pTempPointChain->qfltYval.integer * 100000 +
+				pTempPointChain->qfltYval.fraction ) / 1000;
 #endif /* !defined(QUASIFLOAT) */
+
+		pTempPointChain->ushSplineXval = max(256, pTempPointChain->ushSplineXval);
+		pTempPointChain->ushSplineYval = max(256, pTempPointChain->ushSplineYval);
 
 		pTempPointChain->pcMarquee = calloc (1, strlen (pcMrq) +1 );
 		strcpy( pTempPointChain->pcMarquee, pcMrq);
 
+
 #if defined(DEBUG_DATA)
 #if !defined(QUASIFLOAT)
-		printf("[%s] %s:%s : NEXT <%f> <%f> <%f> <%s> \n", __FILE__, caller, __func__,
+		printf("[%s] %s:%s : NEXT <%f> <%f>[%d] <%f>[%d] <%s> \n", __FILE__, caller, __func__,
 			pTempPointChain->fltAbsTime,
-			pTempPointChain->fltXval,
-			pTempPointChain->fltYval,
+			pTempPointChain->fltXval, pTempPointChain->ushSplineXval,
+			pTempPointChain->fltYval, pTempPointChain->ushSplineYval,
 			pTempPointChain->pcMarquee
 		);
 #else
-/*
-		printf("[%s] %s:%s : NEXT <%d.%d> <%d.%d> <%d.%d> <%s> \n", __FILE__, caller, __func__,
+		printf("[%s] %s:%s : NEXT <%d.%d> <%d.%06d>[%d] <%d.%06d>[%d]   <%s> \n", __FILE__, caller, __func__,
 
 			pTempPointChain->qfltAbsTime.integer,pTempPointChain->qfltAbsTime.fraction,
-			pTempPointChain->qfltXval.integer,pTempPointChain->qfltXval.fraction,
-			pTempPointChain->qfltYval.integer,pTempPointChain->qfltYval.fraction,
+			pTempPointChain->qfltXval.integer,pTempPointChain->qfltXval.fraction, pTempPointChain->ushSplineXval,
+			pTempPointChain->qfltYval.integer,pTempPointChain->qfltYval.fraction, pTempPointChain->ushSplineYval,		
 			pTempPointChain->pcMarquee
 		);
-*/
 #endif /* !defined(QUASIFLOAT) */
 #endif /* (DEBUG_DATA) */
 

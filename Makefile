@@ -23,7 +23,7 @@ endif
 
 ifeq ($(strip $(platform)),PC)
 	PREFIX=
-	CFLAGS=-O3
+	CFLAGS=-O3 -DQUASIFLOAT -DDEBUG_DATA
 
 	OBJS= modsim.o datastruct.o hal_x86.o
 	GRBG=*.o *~ m
@@ -53,7 +53,7 @@ LD=$(PREFIX)ld
 # CFLAGS+= -DHW_PORTD_TEST
 
 # Basic diagnosis of Converter. Elnless loop, either.
- CFLAGS+= -DHW_AD53_TEST
+# CFLAGS+= -DHW_AD53_TEST
 
 # Slow output of processed data on UCSIMM which spoil realtime process of data being isseued
 # CFLAGS += -DFAST_UCSIMM

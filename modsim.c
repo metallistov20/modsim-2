@@ -101,15 +101,11 @@ char cArg0[LARGE_BUF_SZ];
 	/* Put port D into initial state */
 	PortD_Reset();
 
-	/* Set digital IOs PD0...PD7 as outputs */
-	PortD_Prepare( PD0 | PD1 /* | PD2 | PD3 | PD4 | PD5 | PD6 | PD7 */ );
+	/* Set digital IOs PD0, PD1  as outputs */
+	PortD_Prepare( NIX_W | NIX_G);
 
-	/* Set digital IOs PD0...PD3 up and set down, eternally */
-	PortD_Toggle( PD0 ); while (1) { 
-		PortD_Toggle( PD0 | PD1  );
-		/* usleep(10); */
-		usleep(1);
-	}
+	/* Set digital IOs PD0, PD1 up and set down, eternally */
+	PortD_Toggle( NIX_W ); while (1) { PortD_Toggle( NIX_W | NIX_G  ); usleep(1);	}
 
 #endif /* (defined(HW_DUMB_TEST) ) */
 
@@ -125,14 +121,17 @@ char cArg0[LARGE_BUF_SZ];
 	AD5300_Init_W(); AD5300_Init_G();
 
 	/* Checking on values close to limit, on limits, in the middle, and at random valuoes from range, ..  */
-	while (1) {	AD5300_Write_W( 0 );
-				AD5300_Write_G(0xFF);
-			AD5300_Write_W(0x11);
-				AD5300_Write_G( 0 );
-			AD5300_Write_W(0xAA);
-				AD5300_Write_G( 0x11 );
-			AD5300_Write_W(0xFF); }
-				AD5300_Write_G( 0xAA );
+	while (1)
+	{
+		AD5300_Write_W( 0 );
+			AD5300_Write_G(0xFF);
+		AD5300_Write_W(0x11);
+			AD5300_Write_G( 0 );
+		AD5300_Write_W(0xAA);
+			AD5300_Write_G( 0x11 );
+		AD5300_Write_W(0xFF);
+			AD5300_Write_G( 0xAA );
+	}
 
 #endif /* (defined(HW_DUMB_TEST) ) */
 
@@ -289,5 +288,3 @@ sscanf(cBuf, "%d.%d %d.%d %d.%d",
 	return P_SUCCESS;
 
 } /* int main(int argc, char **argv) */
-
-

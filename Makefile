@@ -49,10 +49,10 @@ LD=$(PREFIX)ld
 # Excessive debug info not needed when program is ready. Spoils 'realtime' operating mode. Keep commented-out.
 # CFLAGS+=-DDEBUG_DATA
 
-# Endless curve on oscilloscope ( all the four bits UP, then wait 10 ms, then DOWN, and again )
+# Endless curve on oscilloscope ( first two bits UP, then wait 1 ms, then DOWN, and again )
 # CFLAGS+= -DHW_PORTD_TEST
 
-# Basic diagnosis of Converter. Elnless loop, either.
+# Basic diagnistocs of ADxx Converter. Endless loop, either.
 # CFLAGS+= -DHW_AD53_TEST
 
 # Slow output of processed data on UCSIMM which spoil realtime process of data being isseued

@@ -39,6 +39,7 @@
 #include "modsim.h"
 
 #define max(x,y)	((x>y)?x:y)
+#define CONV_BASE	256
 
 /* Time measurement variable to define begin of time scale */
 struct timeval starttimePROC;
@@ -103,8 +104,8 @@ pTimepointType pChild, pTempPointChain;
 				(*ppThisPointChain)->qfltYval.fraction ) / 1000;
 #endif /* !defined(QUASIFLOAT) */
 
-		(*ppThisPointChain)->ushSplineXval = max(256, (*ppThisPointChain)->ushSplineXval);
-		(*ppThisPointChain)->ushSplineYval = max(256, (*ppThisPointChain)->ushSplineYval);
+		(*ppThisPointChain)->ushSplineXval = max(CONV_BASE, (*ppThisPointChain)->ushSplineXval);
+		(*ppThisPointChain)->ushSplineYval = max(CONV_BASE, (*ppThisPointChain)->ushSplineYval);
 
 		(*ppThisPointChain)->pcMarquee = calloc (1, strlen (pcMrq) +1 );
 		strcpy( (*ppThisPointChain)->pcMarquee, pcMrq);
@@ -179,8 +180,9 @@ pTimepointType pChild, pTempPointChain;
 				pTempPointChain->qfltYval.fraction ) / 1000;
 #endif /* !defined(QUASIFLOAT) */
 
-		pTempPointChain->ushSplineXval = max(256, pTempPointChain->ushSplineXval);
-		pTempPointChain->ushSplineYval = max(256, pTempPointChain->ushSplineYval);
+		// TODO: remove parasitic values (mostly they're same by modul, and different by sign)
+		pTempPointChain->ushSplineXval = max(CONV_BASE, pTempPointChain->ushSplineXval);
+		pTempPointChain->ushSplineYval = max(CONV_BASE, pTempPointChain->ushSplineYval);
 
 		pTempPointChain->pcMarquee = calloc (1, strlen (pcMrq) +1 );
 		strcpy( pTempPointChain->pcMarquee, pcMrq);

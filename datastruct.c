@@ -39,7 +39,18 @@
 #include "modsim.h"
 
 #define max(x,y)	((x>y)?x:y)
+
+/* Base of  ADxx converter */
 #define CONV_BASE	256
+
+/* Hundred multiplier to get decimal data for ADxx converter from volatge value */
+#define CONV_CENTUM	100
+
+/* Decimal power of fractal part */
+#define FRACT_PWR	100000
+
+/* Subraction of Decimal power and Centi */
+#define FRACT_PWR_SB	1000
 
 /* Time measurement variable to define begin of time scale */
 struct timeval starttimePROC;
@@ -89,19 +100,19 @@ pTimepointType pChild, pTempPointChain;
 		(*ppThisPointChain)->fltAbsTime = *pfltTm;
 
 		// TODO: introduce spline approximation here
-		(*ppThisPointChain)->ushSplineXval = (*ppThisPointChain)->fltXval * 100;
-		(*ppThisPointChain)->ushSplineYval = (*ppThisPointChain)->fltYval * 100;
+		(*ppThisPointChain)->ushSplineXval = (*ppThisPointChain)->fltXval * CONV_CENTUM;
+		(*ppThisPointChain)->ushSplineYval = (*ppThisPointChain)->fltYval * CONV_CENTUM;
 #else
 		memcpy(& ((*ppThisPointChain)->qfltXval), pqfltX, sizeof(QuasiFloatType) );
 		memcpy(& ((*ppThisPointChain)->qfltYval), pqfltY, sizeof(QuasiFloatType) );
 		memcpy(& ((*ppThisPointChain)->qfltAbsTime), pqfltTm, sizeof(QuasiFloatType) );
 
 		// TODO: introduce spline approximation here
-		(*ppThisPointChain)->ushSplineXval = ( (*ppThisPointChain)->qfltXval.integer * 100000 +
-				(*ppThisPointChain)->qfltXval.fraction ) / 1000;
+		(*ppThisPointChain)->ushSplineXval = ( (*ppThisPointChain)->qfltXval.integer * FRACT_PWR +
+				(*ppThisPointChain)->qfltXval.fraction ) / FRACT_PWR_SB;
 
-		(*ppThisPointChain)->ushSplineYval = ( (*ppThisPointChain)->qfltYval.integer * 100000 +
-				(*ppThisPointChain)->qfltYval.fraction ) / 1000;
+		(*ppThisPointChain)->ushSplineYval = ( (*ppThisPointChain)->qfltYval.integer * FRACT_PWR +
+				(*ppThisPointChain)->qfltYval.fraction ) / FRACT_PWR_SB;
 #endif /* !defined(QUASIFLOAT) */
 
 		(*ppThisPointChain)->ushSplineXval = max(CONV_BASE, (*ppThisPointChain)->ushSplineXval);
@@ -110,10 +121,10 @@ pTimepointType pChild, pTempPointChain;
 		(*ppThisPointChain)->pcMarquee = calloc (1, strlen (pcMrq) +1 );
 		strcpy( (*ppThisPointChain)->pcMarquee, pcMrq);
 #if defined(QUASIFLOAT) 
-		if ( 0 > (*ppThisPointChain)->qfltAbsTime.integer*1000000 )
-			iFIRST = (*ppThisPointChain)->qfltAbsTime.integer*1000000 - (*ppThisPointChain)->qfltAbsTime.fraction;
+		if ( 0 > (*ppThisPointChain)->qfltAbsTime.integer*FRACT_PWR )
+			iFIRST = (*ppThisPointChain)->qfltAbsTime.integer*FRACT_PWR - (*ppThisPointChain)->qfltAbsTime.fraction;
 		else
-			iFIRST = (*ppThisPointChain)->qfltAbsTime.integer*1000000 + (*ppThisPointChain)->qfltAbsTime.fraction;
+			iFIRST = (*ppThisPointChain)->qfltAbsTime.integer*FRACT_PWR+ (*ppThisPointChain)->qfltAbsTime.fraction;
 #else
 		fFIRST = (*ppThisPointChain)->fltAbsTime;
 #endif /* defined(QUASIFLOAT)  */
@@ -136,6 +147,9 @@ pTimepointType pChild, pTempPointChain;
 		);
 #endif /* !defined(QUASIFLOAT) */
 #endif /* (DEBUG_DATA) */
+
+		/* No first el't */
+		(*ppThisPointChain)->pPrev = NULL;
 
 	}
 	else
@@ -165,19 +179,19 @@ pTimepointType pChild, pTempPointChain;
 		pTempPointChain->fltAbsTime = *pfltTm;
 
 		// TODO: introduce spline approximation here
-		pTempPointChain->ushSplineXval = pTempPointChain->fltXval * 100;
-		pTempPointChain->ushSplineYval = pTempPointChain->fltYval * 100;
+		pTempPointChain->ushSplineXval = pTempPointChain->fltXval * CONV_CENTUM;
+		pTempPointChain->ushSplineYval = pTempPointChain->fltYval * CONV_CENTUM;
 #else
 		memcpy(& ( pTempPointChain->qfltXval), 	pqfltX, sizeof(QuasiFloatType) );
 		memcpy(& ( pTempPointChain->qfltYval), 	pqfltY, sizeof(QuasiFloatType) );
 		memcpy(& ( pTempPointChain->qfltAbsTime), pqfltTm, sizeof(QuasiFloatType) );
 
 		// TODO: introduce spline approximation here
-		pTempPointChain->ushSplineXval = ( pTempPointChain->qfltXval.integer * 100000 +
-				pTempPointChain->qfltXval.fraction ) / 1000;
+		pTempPointChain->ushSplineXval = ( pTempPointChain->qfltXval.integer * FRACT_PWR +
+				pTempPointChain->qfltXval.fraction ) / FRACT_PWR_SB;
 		
-		pTempPointChain->ushSplineYval = ( pTempPointChain->qfltYval.integer * 100000 +
-				pTempPointChain->qfltYval.fraction ) / 1000;
+		pTempPointChain->ushSplineYval = ( pTempPointChain->qfltYval.integer * FRACT_PWR +
+				pTempPointChain->qfltYval.fraction ) / FRACT_PWR_SB;
 #endif /* !defined(QUASIFLOAT) */
 
 		// TODO: remove parasitic values (mostly they're same by modul, and different by sign)
@@ -214,9 +228,10 @@ pTimepointType pChild, pTempPointChain;
 			pChild = pChild->pNext;
 		}
 
-		/* before while we've already ensured that next chunk was created allright */
+		/* Point onto previous el't */
+		pTempPointChain->pPrev = pChild;
 
-		/* attach a new chain entry to the end of existing chain */
+		/* Next chunk was created allright (we know it at this moment), so we attach a new chain entry to the end of existing chain */
 		pChild->pNext = pTempPointChain;
 
 	}

@@ -75,7 +75,10 @@ typedef struct _TimepointType
 #endif /* !defined(QUASIFLOAT) */
 
 	/* Next time point in the chain */
-	struct _TimepointType * pNext; 
+	struct _TimepointType * pNext;
+
+	/* Previous time point */
+	struct _TimepointType * pPrev;
 
 } TimepointType, *pTimepointType;
 

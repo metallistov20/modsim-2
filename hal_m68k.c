@@ -242,10 +242,10 @@ qfltJiffy.fraction = 1;
 
 #else
 		/* Put current value on 'green' wire */
-		AD5300_Write_W(pTimepoint->ushSplineXval);
+		AD5300_Write_W(pTimepoint->ushQuadAvgXval);
 
 		/* Put current value on 'white' wire */
-		AD5300_Write_G(pTimepoint->ushSplineYval);
+		AD5300_Write_G(pTimepoint->ushQuadAvgYval);
 
 #endif /* (0) */
 

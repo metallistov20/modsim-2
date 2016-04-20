@@ -23,8 +23,7 @@ endif
 
 ifeq ($(strip $(platform)),PC)
 	PREFIX=
-	CFLAGS=-O3 -DQUASIFLOAT -DDEBUG_DATA
-
+	CFLAGS=-O3 -DQUASIFLOAT -DDEBUG_DATA 
 	OBJS= modsim.o datastruct.o hal_x86.o
 	GRBG=*.o *~ m
 
@@ -33,7 +32,7 @@ else
 	ifeq ($(strip $(platform)),DRAGONBALL)
 		# Prefix for UCLIBC crosscompiler
 		PREFIX=m68k-pic-coff-
-		CFLAGS=-O3 -DUCSIMM -DQUASIFLOAT -I/opt/uClinux/m68k-pic-coff/include
+		CFLAGS=-O3 -DUCSIMM -DQUASIFLOAT -I/opt/uClinux/m68k-pic-coff/include 
 
 		OBJS= modsim.o datastruct.o hal_m68k.o port_d.o
 		GRBG=*.o *~ *.coff m
@@ -59,16 +58,19 @@ LD=$(PREFIX)ld
 # CFLAGS += -DFAST_UCSIMM
 
 .o: .s
-	$(CC) $(ASMFLAGS)   -o $@ -c $< 
+	$(CC) $(ASMFLAGS) -o $@ -c $< 
 
 .o: .c
-	$(CC) $(CFLAGS)   -o $@ -c $< 
+	$(CC) $(CFLAGS) -o $@ -c $<  -lm 
 
 all:	m
 
 
+P_m:
+	gcc  modsim.c datastruct.c hal_x86.c  
+
 m: $(OBJS)
-	$(CC) $(CFLAGS)  -o m $(OBJS)
+	$(CC) $(CFLAGS)  -o m $(OBJS)  -lm 
 	$(EXTRA)
 
 clean:

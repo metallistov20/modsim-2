@@ -49,10 +49,16 @@ typedef struct _TimepointType
 	char * pcMarquee;
 
 	/* 0 - 256 for ADxx for 'white' */
-	unsigned short ushSplineXval;
+	unsigned short ushRawXval;
 
 	/* 0 - 256 for ADxx for 'green' */
-	unsigned short ushSplineYval;
+	unsigned short ushRawYval;
+
+	/* Average qudratic for 'white' */
+	unsigned short ushQuadAvgXval;
+
+	/* Average qudratic for 'green' */
+	unsigned short ushQuadAvgYval;	
 
 #if !defined(QUASIFLOAT) 
 	/* D- , yellow pin */

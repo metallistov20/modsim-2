@@ -4,6 +4,14 @@
 /* sprintf() */
 #include <string.h>
 
+/* <_1_SCLK_HI_W> et al */
+#include "beagle.h"
+
+static PortD_Down(){};// TODO: rem
+static PortD_Up(){};// TODO: rem
+/* <AD5300_DATA_LEN>, <AD5300_DONTCARE_LEN> */
+#include "port_d.h"
+
 #define MEDIUM_SIZE 1024
 char pcCmdBuffer[MEDIUM_SIZE];
 
@@ -121,7 +129,56 @@ static void OffGPIO(FILE * fcPortFile)
 		printf("[%s] [%s] empty Port ID \n",__FILE__, __func__ );
 }
 
-void test () 
+void _1_AD5300_Write_W(unsigned char data) 
+{
+unsigned short tmp;
+
+unsigned char iCnt;
+
+#if defined(SH_FOPS)
+
+	tmp = data << AD5300_DONTCARE_LEN;
+
+	_1_AD5300_ACT_W;
+
+	for (iCnt = 0; iCnt < AD5300_DATA_LEN; iCnt++)
+	{
+		_1_SCLK_HI_W;
+
+		(tmp & (unsigned short)( 1U << (15 - iCnt) ) ) ? (_1_MOSI_HI_W) : (_1_MOSI_LO_W);
+
+		_1_SCLK_LO_W;
+	}
+
+	_1_AD5300_DEACT_W;
+#endif
+} /* void _1_AD5300_Write_W(unsigned short data) */
+
+void _1_AD5300_Write_G(unsigned char data) 
+{
+unsigned short tmp;
+
+unsigned char iCnt;
+
+#if defined(SH_FOPS)
+	tmp = data << AD5300_DONTCARE_LEN;
+
+	_1_AD5300_ACT_G;
+
+	for (iCnt = 0; iCnt < AD5300_DATA_LEN; iCnt++)
+	{
+		_1_SCLK_HI_G;
+
+		(tmp & (unsigned short)( 1U << (15 - iCnt) ) ) ? (_1_MOSI_HI_G) : (_1_MOSI_LO_G);
+
+		_1_SCLK_LO_G;
+	}
+
+	_1_AD5300_DEACT_G;
+#endif
+} /* void _1_AD5300_Write_W(unsigned short data) */
+
+void test() 
 {
 int iIdx;
 
@@ -133,6 +190,7 @@ int iIdx;
 		OpenGPIO( GPIOs[iIdx] );	
 	}
 
+#if !defined(SH_FOPS)
 	/* Open GPIO value files and store file poniters in array <GPIO_VALUE_FILES> */
 	for (iIdx = 0; iIdx < sizeof(GPIO_VALUE_FILES)/sizeof(GPIO_VALUE_FILES[0]);iIdx++ )
 	{
@@ -150,6 +208,7 @@ int iIdx;
 		}
 
 	} /* for (iIdx = 0; ... */
+#endif
 
 	while (1) 
 	{	/* Cyclically toggle GPIO ports ON */
@@ -173,8 +232,13 @@ int iIdx;
 			OffGPIO( GPIO_VALUE_FILES[iIdx] );
 #endif /* (0) */
 		}
+
+//		_1_AD5300_Write_W( 0xFF );
+//		_1_AD5300_Write_G( 0xFF );
+
 	} /* while (1) */
 
+#if !defined(SH_FOPS)
 	/* Open GPIO value files and store file poniters in array <GPIO_VALUE_FILES> */
 	for (iIdx = 0; iIdx < sizeof(GPIO_VALUE_FILES)/sizeof(GPIO_VALUE_FILES[0]);iIdx++ )
 	{
@@ -188,7 +252,7 @@ int iIdx;
 			continue;
 		}
 	}/* for (iIdx = 0; ... */
-
+#endif
 }/* void main () */
 
 

@@ -38,6 +38,15 @@ else
 		GRBG=*.o *~ *.coff m
 
 		EXTRA=cp ./m /home/ez
+	else
+		ifeq ($(strip $(platform)),SITARA)
+			# Prefix for Cortex-8 ARM crosscompiler 
+			PREFIX= #arm-none-linux-gnueabi-
+			CFLAGS=-O3  -DQUASIFLOAT -DSH_FOPS
+
+			OBJS= beagle.o
+			GRBG=*.o *~ m
+		endif
 	endif
 endif
 
@@ -52,7 +61,7 @@ LD=$(PREFIX)ld
 # CFLAGS+= -DHW_PORTD_TEST
 
 # Basic diagnistocs of ADxx Converter. Endless loop, either.
- CFLAGS+= -DHW_AD53_TEST
+# CFLAGS+= -DHW_AD53_TEST
 
 # Slow output of processed data on UCSIMM which spoil realtime process of data being isseued
 # CFLAGS += -DFAST_UCSIMM

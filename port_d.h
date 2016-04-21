@@ -58,8 +58,6 @@
 /* Data output. Leg 7 of 'freen' AD5300. (Green) */
 #define MOSI_PIN_G	 	PD7
 
-/* Port to write Data to*/
-#define SPI_PORT		PDDATA
 
 /* Toggle down SCKL on 'white' converter */
 #define SCLK_LO_W		PortD_Down(SCLK_PIN_W)

@@ -20,6 +20,8 @@
 #ifndef _BEAGLE_H_
 #define _BEAGLE_H_
 
+#define NUM_PORTS	6
+
 #if defined(SH_FOPS)
 
 	/* Definitions for shell file operatoins */
@@ -305,6 +307,30 @@
 /* Deactivate 'green' converter */
 #define _5_AD5300_DEACT_G 	PortD_Up(SYNC_5_G)
 
+
+
+#if defined(SH_FOPS)
+typedef void (*GPIOHandler)(char *);
+typedef char * GPIOTarget;
+#else
+typedef void (*GPIOHandler)(FILE *);
+typedef FILE * GPIOTarget;
+#endif
+
+FILE * GPIO_VALUE_FILES[30];
+
+/* Toggle down SCKL on 'white' converter */
+GPIOTarget SCLK_i_W[NUM_PORTS] = {_30, _117, _2, _45, _68, NULL};
+/* Toggle up SCKL on 'white' converter */
+GPIOTarget MOSI_i_W[NUM_PORTS] = {_31, _115, _15, _23, _44, NULL};
+/* Toggle down MOSI on 'white' converter */
+GPIOTarget SYNC_i_W[NUM_PORTS] = {_66, _60, _14, _47, _26, NULL};
+/* Toggle up MOSI on 'white' converter */
+GPIOTarget SCLK_i_G[NUM_PORTS] = {_5, _50, _112, _27, _46, NULL};
+/* Activate 'white' converter */
+GPIOTarget MOSI_i_G[NUM_PORTS] = {_3, _51, _66/*!*/, _22, _65, NULL};
+/* Deactivate 'white' converter */
+GPIOTarget SYNC_i_G[NUM_PORTS] = {_67, _4, _69, _67/*!*/, _61, NULL};
 
 
 #endif /* _BEAGLE_H_ */

@@ -49,6 +49,7 @@ FILE * GPIO_VALUE_FILES[30];
 #endif /* (0) */
 
 
+
 /* Make GPIO port <pcPortStr>: a) to appear in the system; b) to become output port; */
 static void OpenGPIO(char * pcPortStr)
 {
@@ -78,9 +79,9 @@ static void OpenGPIO(char * pcPortStr)
 
 /* Toggle GPIO port <pcPortStr> ON */
 #if defined(SH_FOPS)
-static void OnGPIO(char * pcPortStr)
+void OnGPIO(char * pcPortStr)
 #else
-static void OnGPIO(FILE * fcPortFile)
+void OnGPIO(FILE * fcPortFile)
 #endif /* (0) */
 {
 #if defined(SH_FOPS)
@@ -109,9 +110,9 @@ static void OnGPIO(FILE * fcPortFile)
 
 /* Toggle GPIO port <pcPortStr> OFF */
 #if defined(SH_FOPS)
-static void OffGPIO(char * pcPortStr)
+void OffGPIO(char * pcPortStr)
 #else
-static void OffGPIO(FILE * fcPortFile)
+void OffGPIO(FILE * fcPortFile)
 #endif /* (0) */
 {
 #if defined(SH_FOPS)
@@ -138,6 +139,53 @@ static void OffGPIO(FILE * fcPortFile)
 		printf("[%s] [%s] empty Port ID \n",__FILE__, __func__ );
 }
 
+void _i_AD5300_Write_W(unsigned char data, int iIdx) 
+{
+unsigned short tmp;
+
+unsigned char iCnt;
+
+	tmp = data << AD5300_DONTCARE_LEN;
+
+	OffGPIO ( SYNC_i_W [iIdx] );
+
+	for (iCnt = 0; iCnt < AD5300_DATA_LEN; iCnt++)
+	{
+		OnGPIO( SCLK_i_W[iIdx] );
+
+		(tmp & (unsigned short)( 1U << (15 - iCnt) ) ) ? (OnGPIO( MOSI_i_W[iIdx] )) : (OffGPIO( MOSI_i_W[iIdx] ));
+
+		OffGPIO( SCLK_i_W[iIdx] );
+	}
+
+	OnGPIO ( SYNC_i_W [iIdx] );
+
+} /* void _i_AD5300_Write_W(unsigned short data, int iIdx) */
+
+void _i_AD5300_Write_G(unsigned char data, int iIdx) 
+{
+unsigned short tmp;
+
+unsigned char iCnt;
+
+	tmp = data << AD5300_DONTCARE_LEN;
+
+	OffGPIO ( SYNC_i_G [iIdx] );
+
+	for (iCnt = 0; iCnt < AD5300_DATA_LEN; iCnt++)
+	{
+		OnGPIO( SCLK_i_G[iIdx] );
+
+		(tmp & (unsigned short)( 1U << (15 - iCnt) ) ) ? (OnGPIO( MOSI_i_G[iIdx] )) : (OffGPIO( MOSI_i_G[iIdx] ));
+
+		OffGPIO( SCLK_i_G[iIdx] );
+	}
+
+	OnGPIO ( SYNC_i_G [iIdx] );
+
+} /* void _i_AD5300_Write_G(unsigned short data, int iIdx) */
+
+// TODO: rem.
 void _1_AD5300_Write_W(unsigned char data) 
 {
 unsigned short tmp;
@@ -163,6 +211,7 @@ unsigned char iCnt;
 #endif
 } /* void _1_AD5300_Write_W(unsigned short data) */
 
+// TODO: remove as nasty
 void _1_AD5300_Write_G(unsigned char data) 
 {
 unsigned short tmp;
@@ -270,5 +319,7 @@ printf("[%s] [%s] opened all GPIO ports \n",__FILE__, __func__ );
 
 void main () 
 {
+	// TODO: don't forget to get plainly initialized members of such arrays as SCLK_i_W[] et al. 
+	
 	test () ;
 }

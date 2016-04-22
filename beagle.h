@@ -22,17 +22,17 @@
 
 
 /* ~Synchronization.  */
-#define SYNC_1_W	 	"66" //"30"
+#define SYNC_1_W	 	"30"
 /* Clocking.  */
 #define SCLK_1_W	 	"31"
 /* Data output. */
-#define MOSI_1_W	 	"48"
+#define MOSI_1_W	 	"66" //"48"
 /* ~Synchronization. */
-#define SYNC_1_G	 	"67" //"5"
+#define SYNC_1_G	 	"5"
 /* Clocking. */
 #define SCLK_1_G	 	"3"
 /* Data output. */
-#define MOSI_1_G	 	"49"
+#define MOSI_1_G	 	"67" // "49"
 
 /* Toggle down SCKL on 'white' converter */
 #define _1_SCLK_LO_W		OffGPIO(SCLK_1_W)

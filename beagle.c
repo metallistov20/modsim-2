@@ -55,7 +55,7 @@ static void OpenGPIO(char * pcPortStr)
 		usleep(1000);
 
 		/* Command prepare */
-		sprintf (pcCmdBuffer, "out > /sys/class/gpio/gpio%s/direction", pcPortStr);
+		sprintf (pcCmdBuffer, "echo out > /sys/class/gpio/gpio%s/direction", pcPortStr);
 
 		/* Run command in <sh> shell */
 		system (pcCmdBuffer);
@@ -185,10 +185,11 @@ int iIdx;
 	/* Initialize GPIO ports */
 	for (iIdx = 0; iIdx < sizeof(GPIOs)/sizeof(GPIOs[0]);iIdx++ )
 	{
-		printf("[%s] [%s] opening GPIO %s \n",__FILE__, __func__ , GPIOs[iIdx] );
+//.		printf("[%s] [%s] opening GPIO %s \n",__FILE__, __func__ , GPIOs[iIdx] );
 
 		OpenGPIO( GPIOs[iIdx] );	
 	}
+printf("[%s] [%s] opened all GPIO ports \n",__FILE__, __func__ );
 
 #if !defined(SH_FOPS)
 	/* Open GPIO value files and store file poniters in array <GPIO_VALUE_FILES> */
@@ -229,12 +230,12 @@ int iIdx;
 #if defined(SH_FOPS)
 			OffGPIO( GPIOs[iIdx] );
 #else
-			OffGPIO( GPIO_VALUE_FILES[iIdx] );
+//.			OffGPIO( GPIO_VALUE_FILES[iIdx] );
 #endif /* (0) */
 		}
 
-//		_1_AD5300_Write_W( 0xFF );
-//		_1_AD5300_Write_G( 0xFF );
+		_1_AD5300_Write_W( 0xAA );
+		_1_AD5300_Write_G( 0x55 );
 
 	} /* while (1) */
 

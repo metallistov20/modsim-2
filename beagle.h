@@ -20,19 +20,107 @@
 #ifndef _BEAGLE_H_
 #define _BEAGLE_H_
 
+#if defined(SH_FOPS)
+
+	/* Definitions for shell file operatoins */
+
+	/* CPE#1 */
+	#define _30 "30"
+	#define _31 "31"
+	#define _48 "48"
+	#define _5 "5"
+	#define _3 "3"
+	#define _49 "49"
+
+	/* CPE#2 */
+	#define _117 "117"
+	#define _115 "115"
+	#define _60 "60"
+	#define _50 "50"
+	#define _51 "51"
+	#define _4 "4"
+
+	/* CPE#3 */
+	#define _2 "2"
+	#define _15 "15"
+	#define _14 "14"
+	#define _112 "112"
+	#define _66 "66"
+	#define _69 "69"
+
+	/* CPE#4 */
+	#define _45 "45"
+	#define _23 "23"
+	#define _47 "47"
+	#define _27 "27"
+	#define _22 "22"
+	#define _67 "67"
+
+	/* CPE#5*/
+	#define _68 "68"
+	#define _44 "44"
+	#define _26 "26"
+	#define _46 "46"
+	#define _65 "65"
+	#define _61 "61"
+#else
+	/* Definitions for GLIBC API file operatoins */
+
+	/* CPE#1 */
+	#define _30 GPIO_VALUE_FILES[0]
+	#define _31 GPIO_VALUE_FILES[1]
+	#define _48 GPIO_VALUE_FILES[2]
+	#define _5 GPIO_VALUE_FILES[3]
+	#define _3 GPIO_VALUE_FILES[4]
+	#define _49 GPIO_VALUE_FILES[5]
+
+	/* CPE#2 */
+	#define _117 GPIO_VALUE_FILES[6]
+	#define _115 GPIO_VALUE_FILES[7]
+	#define _60 GPIO_VALUE_FILES[8]
+	#define _50 GPIO_VALUE_FILES[9]
+	#define _51 GPIO_VALUE_FILES[10]
+	#define _4 GPIO_VALUE_FILES[11]
+
+	/* CPE#3 */
+	#define _2 GPIO_VALUE_FILES[12]
+	#define _15 GPIO_VALUE_FILES[13]
+	#define _14 GPIO_VALUE_FILES[14]
+	#define _112 GPIO_VALUE_FILES[15]
+	#define _66 GPIO_VALUE_FILES[16]
+	#define _69 GPIO_VALUE_FILES[17]
+
+	/* CPE#4 */
+	#define _45 GPIO_VALUE_FILES[18]
+	#define _23 GPIO_VALUE_FILES[19]
+	#define _47 GPIO_VALUE_FILES[20]
+	#define _27 GPIO_VALUE_FILES[21]
+	#define _22 GPIO_VALUE_FILES[22]
+	#define _67 GPIO_VALUE_FILES[23]
+
+	/* CPE#5 */
+	#define _68 GPIO_VALUE_FILES[24]
+	#define _44 GPIO_VALUE_FILES[25]
+	#define _26 GPIO_VALUE_FILES[26]
+	#define _46 GPIO_VALUE_FILES[27]
+	#define _65 GPIO_VALUE_FILES[28]
+	#define _61 GPIO_VALUE_FILES[29]
+
+#endif /* (SH_FOPS) */
+
 
 /* ~Synchronization.  */
-#define SYNC_1_W	 	"30"
+#define SYNC_1_W	 	_30
 /* Clocking.  */
-#define SCLK_1_W	 	"31"
+#define SCLK_1_W	 	_31
 /* Data output. */
-#define MOSI_1_W	 	"66" //"48"
+#define MOSI_1_W	 	_66
 /* ~Synchronization. */
-#define SYNC_1_G	 	"5"
+#define SYNC_1_G	 	_5
 /* Clocking. */
-#define SCLK_1_G	 	"3"
+#define SCLK_1_G	 	_3
 /* Data output. */
-#define MOSI_1_G	 	"67" // "49"
+#define MOSI_1_G	 	_67
 
 /* Toggle down SCKL on 'white' converter */
 #define _1_SCLK_LO_W		OffGPIO(SCLK_1_W)
@@ -62,17 +150,17 @@
 
 
 /* ~Synchronization.  */
-#define SYNC_2_W	 	"117"
+#define SYNC_2_W	 	_117
 /* Clocking.  */
-#define SCLK_2_W	 	"115"
+#define SCLK_2_W	 	_115
 /* Data output. */
-#define MOSI_2_W	 	"60"
+#define MOSI_2_W	 	_60
 /* ~Synchronization. */
-#define SYNC_2_G	 	"50"
+#define SYNC_2_G	 	_50
 /* Clocking. */
-#define SCLK_2_G	 	"51"
+#define SCLK_2_G	 	_51
 /* Data output. */
-#define MOSI_2_G	 	"4"
+#define MOSI_2_G	 	_4
 
 /* Toggle down SCKL on 'white' converter */
 #define _2_SCLK_LO_W		OffGPIO(SCLK_2_W)
@@ -101,17 +189,17 @@
 #define _2_AD5300_DEACT_G	PortD_Up(SYNC_2_G)
 
 /* ~Synchronization.  */
-#define SYNC_3_W	 	"2"
+#define SYNC_3_W	 	_2
 /* Clocking.  */
-#define SCLK_3_W	 	"15"
+#define SCLK_3_W	 	_15
 /* Data output. */
-#define MOSI_3_W	 	"14"
+#define MOSI_3_W	 	_14
 /* ~Synchronization. */
-#define SYNC_3_G	 	"112"
+#define SYNC_3_G	 	_112
 /* Clocking. */
-#define SCLK_3_G	 	"66"
+#define SCLK_3_G	 	_66
 /* Data output. */
-#define MOSI_3_G	 	"69"
+#define MOSI_3_G	 	_69
 
 /* Toggle down SCKL on 'white' converter */
 #define _3_SCLK_LO_W		OffGPIO(SCLK_3_W)
@@ -140,17 +228,17 @@
 #define _3_AD5300_DEACT_G 	PortD_Up(SYNC_3_G)
 
 /* ~Synchronization.  */
-#define SYNC_4_W	 	"45"
+#define SYNC_4_W	 	_45
 /* Clocking.  */
-#define SCLK_4_W	 	"23"
+#define SCLK_4_W	 	_23
 /* Data output. */
-#define MOSI_4_W	 	"47"
+#define MOSI_4_W	 	_47
 /* ~Synchronization. */
-#define SYNC_4_G	 	"27"
+#define SYNC_4_G	 	_27
 /* Clocking. */
-#define SCLK_4_G	 	"22"
+#define SCLK_4_G	 	_22
 /* Data output. */
-#define MOSI_4_G	 	"67"
+#define MOSI_4_G	 	_67
 
 /* Toggle down SCKL on 'white' converter */
 #define _4_SCLK_LO_W		OffGPIO(SCLK_4_W)
@@ -179,17 +267,17 @@
 #define _4_AD5300_DEACT_G 	PortD_Up(SYNC_4_G)
 
 /* ~Synchronization.  */
-#define SYNC_5_W	 	"68"
+#define SYNC_5_W	 	_68
 /* Clocking.  */
-#define SCLK_5_W	 	"44"
+#define SCLK_5_W	 	_44
 /* Data output. */
-#define MOSI_5_W	 	"26"
+#define MOSI_5_W	 	_26
 /* ~Synchronization. */
-#define SYNC_5_G	 	"46"
+#define SYNC_5_G	 	_46
 /* Clocking. */
-#define SCLK_5_G	 	"65"
+#define SCLK_5_G	 	_65
 /* Data output. */
-#define MOSI_5_G	 	"61"
+#define MOSI_5_G	 	_61
 
 /* Toggle down SCKL on 'white' converter */
 #define _5_SCLK_LO_W		OffGPIO(SCLK_5_W)

@@ -31,13 +31,22 @@ char * GPIOs[] = {
 }; /* char * GPIOs[] */
 
 
-FILE * GPIO_VALUE_FILES[] = {
+FILE * GPIO_VALUE_FILES[30];
+#if 0
+ = {
+	 /* "30", "31", "48" , "5", "3", "49", "117", "115", */
+	 NULL, NULL, NULL , NULL, NULL, NULL, NULL, NULL,
 
+	 /* "60", "50", "51" , "4", "2", "15", "14",  "112", */
 	 NULL, NULL, NULL , NULL, NULL, NULL, NULL, NULL,
-	 NULL, NULL, NULL , NULL, NULL, NULL, NULL, NULL,
+
+	 /* "66", "69", "45", "23", "47", "27", "22", */
 	 NULL, NULL, NULL , NULL, NULL, NULL, NULL,
+
+	 /* "67", "68", "44", "26", "46", "65", "61" */
 	 NULL, NULL, NULL , NULL, NULL, NULL, NULL   
 };
+#endif /* (0) */
 
 
 /* Make GPIO port <pcPortStr>: a) to appear in the system; b) to become output port; */
@@ -135,7 +144,7 @@ unsigned short tmp;
 
 unsigned char iCnt;
 
-#if defined(SH_FOPS)
+#if !defined(SH_FOPS)
 
 	tmp = data << AD5300_DONTCARE_LEN;
 
@@ -160,7 +169,7 @@ unsigned short tmp;
 
 unsigned char iCnt;
 
-#if defined(SH_FOPS)
+#if !defined(SH_FOPS)
 	tmp = data << AD5300_DONTCARE_LEN;
 
 	_1_AD5300_ACT_G;
@@ -181,6 +190,8 @@ unsigned char iCnt;
 void test() 
 {
 int iIdx;
+
+	memset( (void*) GPIO_VALUE_FILES, 0, sizeof (GPIO_VALUE_FILES) );
 
 	/* Initialize GPIO ports */
 	for (iIdx = 0; iIdx < sizeof(GPIOs)/sizeof(GPIOs[0]);iIdx++ )
@@ -212,30 +223,30 @@ printf("[%s] [%s] opened all GPIO ports \n",__FILE__, __func__ );
 #endif
 
 	while (1) 
-	{	/* Cyclically toggle GPIO ports ON */
+	{
+#if defined(SH_FOPS)
+		/* Cyclically toggle GPIO ports ON */
 		for (iIdx = 0; iIdx < sizeof(GPIOs)/sizeof(GPIOs[0]);iIdx++ )
 		{
 //.			printf("[%s] [%s] toggling GPIO %s ON\n",__FILE__, __func__ , GPIOs[iIdx] );
-#if defined(SH_FOPS)
 			OnGPIO( GPIOs[iIdx] );
-#else
-			OnGPIO( GPIO_VALUE_FILES[iIdx] );
-#endif /* (0) */
 		}
 
 		/* Cyclically toggle GPIO ports OFF */
 		for (iIdx = 0; iIdx < sizeof(GPIOs)/sizeof(GPIOs[0]);iIdx++ )
 		{
 //.			printf("[%s] [%s] toggling GPIO %s OFF\n",__FILE__, __func__ , GPIOs[iIdx] );
-#if defined(SH_FOPS)
 			OffGPIO( GPIOs[iIdx] );
-#else
-//.			OffGPIO( GPIO_VALUE_FILES[iIdx] );
-#endif /* (0) */
 		}
-
-		_1_AD5300_Write_W( 0xAA );
-		_1_AD5300_Write_G( 0x55 );
+#else		
+		/* Cyclically toggle GPIO ports OFF */
+		for (iIdx = 0; iIdx < sizeof(GPIOs)/sizeof(GPIOs[0]);iIdx++ )
+		{
+			/* Test */
+			_1_AD5300_Write_W( 0xAA );
+			_1_AD5300_Write_G( 0x55 );
+		}
+#endif /* defined(SH_FOPS) */
 
 	} /* while (1) */
 

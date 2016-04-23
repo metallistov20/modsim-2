@@ -139,6 +139,7 @@ void OffGPIO(FILE * fcPortFile)
 		printf("[%s] [%s] empty Port ID \n",__FILE__, __func__ );
 }
 
+// TODO: remove on nearest Monday
 void _i_AD5300_Write_W(unsigned char data, int iIdx) 
 {
 unsigned short tmp;
@@ -147,21 +148,22 @@ unsigned char iCnt;
 
 	tmp = data << AD5300_DONTCARE_LEN;
 
-	OffGPIO ( SYNC_i_W [iIdx] );
+	_i_AD5300_ACT_W ( SYNC_i_W [iIdx] );
 
 	for (iCnt = 0; iCnt < AD5300_DATA_LEN; iCnt++)
 	{
-		OnGPIO( SCLK_i_W[iIdx] );
+		_i_SCLK_HI_W( SCLK_i_W[iIdx] );
 
-		(tmp & (unsigned short)( 1U << (15 - iCnt) ) ) ? (OnGPIO( MOSI_i_W[iIdx] )) : (OffGPIO( MOSI_i_W[iIdx] ));
+		(tmp & (unsigned short)( 1U << (15 - iCnt) ) ) ? (_i_MOSI_HI_W( MOSI_i_W[iIdx] )) : (_i_MOSI_LO_W( MOSI_i_W[iIdx] ));
 
-		OffGPIO( SCLK_i_W[iIdx] );
+		_i_SCLK_LO_W( SCLK_i_W[iIdx] );
 	}
 
-	OnGPIO ( SYNC_i_W [iIdx] );
+	_i_AD5300_DEACT_W ( SYNC_i_W [iIdx] );
 
 } /* void _i_AD5300_Write_W(unsigned short data, int iIdx) */
 
+// TODO: remove on nearest Monday
 void _i_AD5300_Write_G(unsigned char data, int iIdx) 
 {
 unsigned short tmp;
@@ -170,18 +172,18 @@ unsigned char iCnt;
 
 	tmp = data << AD5300_DONTCARE_LEN;
 
-	OffGPIO ( SYNC_i_G [iIdx] );
+	_i_AD5300_ACT_G ( SYNC_i_G [iIdx] );
 
 	for (iCnt = 0; iCnt < AD5300_DATA_LEN; iCnt++)
 	{
-		OnGPIO( SCLK_i_G[iIdx] );
+		_i_SCLK_HI_G( SCLK_i_G[iIdx] );
 
-		(tmp & (unsigned short)( 1U << (15 - iCnt) ) ) ? (OnGPIO( MOSI_i_G[iIdx] )) : (OffGPIO( MOSI_i_G[iIdx] ));
+		(tmp & (unsigned short)( 1U << (15 - iCnt) ) ) ? (_i_MOSI_HI_G( MOSI_i_G[iIdx] )) : (_i_MOSI_LO_G( MOSI_i_G[iIdx] ));
 
-		OffGPIO( SCLK_i_G[iIdx] );
+		_i_SCLK_LO_G( SCLK_i_G[iIdx] );
 	}
 
-	OnGPIO ( SYNC_i_G [iIdx] );
+	_i_AD5300_DEACT_G ( SYNC_i_G [iIdx] );
 
 } /* void _i_AD5300_Write_G(unsigned short data, int iIdx) */
 

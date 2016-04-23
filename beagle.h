@@ -111,6 +111,7 @@
 #endif /* (SH_FOPS) */
 
 
+// TODO: remove on nearest Monday
 /* ~Synchronization.  */
 #define SYNC_1_W	 	_30
 /* Clocking.  */
@@ -124,6 +125,7 @@
 /* Data output. */
 #define MOSI_1_G	 	_67
 
+// TODO: remove on nearest Monday
 /* Toggle down SCKL on 'white' converter */
 #define _1_SCLK_LO_W		OffGPIO(SCLK_1_W)
 /* Toggle up SCKL on 'white' converter */
@@ -137,6 +139,7 @@
 /* Deactivate 'white' converter */
 #define _1_AD5300_DEACT_W 	OnGPIO(SYNC_1_W)
 
+// TODO: remove on nearest Monday
 /* Toggle down SCKL on 'green' converter */
 #define _1_SCLK_LO_G		PortD_Down(SCLK_1_G)
 /* Toggle up SCKL on 'green' converter */
@@ -150,6 +153,7 @@
 /* Deactivate 'green' converter */
 #define _1_AD5300_DEACT_G 	PortD_Up(SYNC_1_G)
 
+#if 0
 
 /* ~Synchronization.  */
 #define SYNC_2_W	 	_117
@@ -307,6 +311,7 @@
 /* Deactivate 'green' converter */
 #define _5_AD5300_DEACT_G 	PortD_Up(SYNC_5_G)
 
+#endif /* (0) */
 
 
 #if defined(SH_FOPS)
@@ -319,18 +324,44 @@ typedef FILE * GPIOTarget;
 
 FILE * GPIO_VALUE_FILES[30];
 
-/* Toggle down SCKL on 'white' converter */
+/* GPIOs connected to SCKL with 'white' wire */
 GPIOTarget SCLK_i_W[NUM_PORTS] = {_30, _117, _2, _45, _68, NULL};
-/* Toggle up SCKL on 'white' converter */
+/* GPIOs connected to MOSI with 'white' wire */
 GPIOTarget MOSI_i_W[NUM_PORTS] = {_31, _115, _15, _23, _44, NULL};
-/* Toggle down MOSI on 'white' converter */
+/* GPIOs connected to SYNC with 'white' wire */
 GPIOTarget SYNC_i_W[NUM_PORTS] = {_66, _60, _14, _47, _26, NULL};
-/* Toggle up MOSI on 'white' converter */
+/* GPIOs connected to SCKL with 'green' wire */
 GPIOTarget SCLK_i_G[NUM_PORTS] = {_5, _50, _112, _27, _46, NULL};
-/* Activate 'white' converter */
+/* GPIOs connected to MOSI with 'green' wire */
 GPIOTarget MOSI_i_G[NUM_PORTS] = {_3, _51, _66/*!*/, _22, _65, NULL};
-/* Deactivate 'white' converter */
+/* GPIOs connected to SYNC with 'green' wire */
 GPIOTarget SYNC_i_G[NUM_PORTS] = {_67, _4, _69, _67/*!*/, _61, NULL};
+
+/* Toggle down SCKL on 'white' converter */
+#define _i_SCLK_LO_W(x)		OffGPIO(x)
+/* Toggle up SCKL on 'white' converter */
+#define _i_SCLK_HI_W(x)		OnGPIO(x)
+/* Toggle down MOSI on 'white' converter */
+#define _i_MOSI_LO_W(x)		OffGPIO(x)
+/* Toggle up MOSI on 'white' converter */
+#define _i_MOSI_HI_W(x)		OnGPIO(x)
+/* Activate 'white' converter */
+#define _i_AD5300_ACT_W(x) 	OffGPIO(x)
+/* Deactivate 'white' converter */
+#define _i_AD5300_DEACT_W(x) 	OnGPIO(x)
+
+/* Toggle down SCKL on 'green' converter */
+#define _i_SCLK_LO_G(x)		PortD_Down(x)
+/* Toggle up SCKL on 'green' converter */
+#define _i_SCLK_HI_G(x)		PortD_Up(x)
+/* Toggle down MOSI on 'green' converter */
+#define _i_MOSI_LO_G(x)		PortD_Down(x)
+/* Toggle up MOSI on 'green' converter */
+#define _i_MOSI_HI_G(x)		PortD_Up(x)
+/* Activate 'green' converter */
+#define _i_AD5300_ACT_G(x) 	PortD_Down(x)
+/* Deactivate 'green' converter */
+#define _i_AD5300_DEACT_G(x) 	PortD_Up(x)
 
 
 #endif /* _BEAGLE_H_ */

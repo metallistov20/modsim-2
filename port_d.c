@@ -75,6 +75,9 @@ void PortD_Up(unsigned char uchBit)
 
 } /* void PortD_Up(unsigned char uchBit) */
 
+#if 0
+// TODO: remove as obsolete
+
 /* Terminal line DOWN - switch off <dIN> wire on CPE#0, bzw CPE#1. Exposed to <ProcessPoint()> */
 void Term_Down()
 {
@@ -122,6 +125,8 @@ void Term_Up()
 			exit (-1);
 	}
 } /* void Term_Up() */
+
+#endif /* (0) */
 
 void AD5300_Write_W(unsigned char data) 
 {

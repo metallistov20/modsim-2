@@ -44,6 +44,10 @@ extern struct timeval starttimePROC;
 /* Var. to check if current second already was 'displayed' */
 int iOldSecPRC;
 
+#if 0
+
+// TODO: remove as obsolete 
+
 /* Check if raw value is USB 1.0 <logical 0> and return '1' if so, return '0' otherwise */
 static  int iChkUsb10Lg0( QuasiFloatType qfltVal )
 {
@@ -122,6 +126,7 @@ static int iChkUsbLg1(QuasiFloatType qfltVal)
 
 		return iChkUsb20Lg1(qfltVal);
 } /* static int iChkUsbLg1(QuasiFloatType qfltVal) */
+#endif /* (0) */
 
 int ProcessPoint( pTimepointType pTimepoint )
 {

@@ -7,8 +7,9 @@
 /* <_1_SCLK_HI_W> et al */
 #include "beagle.h"
 
-static PortD_Down(){};// TODO: rem
-static PortD_Up(){};// TODO: rem
+//static PortD_Down(){};// TODO: rem
+//static PortD_Up(){};// TODO: rem
+
 /* <AD5300_DATA_LEN>, <AD5300_DONTCARE_LEN> */
 #include "port_d.h"
 
@@ -32,23 +33,6 @@ char * GPIOs[] = {
 
 
 FILE * GPIO_VALUE_FILES[30];
-#if 0
- = {
-	 /* "30", "31", "48" , "5", "3", "49", "117", "115", */
-	 NULL, NULL, NULL , NULL, NULL, NULL, NULL, NULL,
-
-	 /* "60", "50", "51" , "4", "2", "15", "14",  "112", */
-	 NULL, NULL, NULL , NULL, NULL, NULL, NULL, NULL,
-
-	 /* "66", "69", "45", "23", "47", "27", "22", */
-	 NULL, NULL, NULL , NULL, NULL, NULL, NULL,
-
-	 /* "67", "68", "44", "26", "46", "65", "61" */
-	 NULL, NULL, NULL , NULL, NULL, NULL, NULL   
-};
-#endif /* (0) */
-
-
 
 /* Make GPIO port <pcPortStr>: a) to appear in the system; b) to become output port; */
 static void OpenGPIO(char * pcPortStr)
@@ -240,7 +224,7 @@ unsigned char iCnt;
 
 void test() 
 {
-int iIdx;
+int iIdx, iPdx;
 
 	memset( (void*) GPIO_VALUE_FILES, 0, sizeof (GPIO_VALUE_FILES) );
 
@@ -254,6 +238,7 @@ int iIdx;
 printf("[%s] [%s] opened all GPIO ports \n",__FILE__, __func__ );
 
 #if !defined(SH_FOPS)
+
 	/* Open GPIO value files and store file poniters in array <GPIO_VALUE_FILES> */
 	for (iIdx = 0; iIdx < sizeof(GPIO_VALUE_FILES)/sizeof(GPIO_VALUE_FILES[0]);iIdx++ )
 	{
@@ -271,7 +256,64 @@ printf("[%s] [%s] opened all GPIO ports \n",__FILE__, __func__ );
 		}
 
 	} /* for (iIdx = 0; ... */
-#endif
+
+printf("\n[%s] [%s]  SCLK_i_W : ", __FILE__, __func__ );
+	/* GPIOs connected to SCKL with 'white' wire */
+	for (iPdx = 0; iPdx < (NUM_PORTS-1); iPdx++)
+{		SCLK_i_W[iPdx] = GPIO_VALUE_FILES[NUM_PORTS*iPdx];
+printf("<%p> ", SCLK_i_W[iPdx]);
+}
+
+printf("\n[%s] [%s]  MOSI_i_W : ", __FILE__, __func__ );
+	/* GPIOs connected to MOSI with 'white' wire */
+	for (iPdx = 0; iPdx < (NUM_PORTS-1); iPdx++)
+{		MOSI_i_W[iPdx] = GPIO_VALUE_FILES[NUM_PORTS*iPdx + 1];
+printf("<%p> ", MOSI_i_W[iPdx]);
+}
+
+printf("\n[%s] [%s]  SYNC_i_W : ", __FILE__, __func__ );
+	/* GPIOs connected to SYNC with 'white' wire */
+	for (iPdx = 0; iPdx < (NUM_PORTS-1); iPdx++)
+{		SYNC_i_W[iPdx] = GPIO_VALUE_FILES[NUM_PORTS*iPdx + 2];
+printf("<%p> ", SYNC_i_W[iPdx]);
+}
+
+printf("\n[%s] [%s]  SCLK_i_G : ", __FILE__, __func__ );
+	/* GPIOs connected to SCKL with 'green' wire */
+	for (iPdx = 0; iPdx < (NUM_PORTS-1); iPdx++)
+{		SCLK_i_G[iPdx] = GPIO_VALUE_FILES[NUM_PORTS*iPdx + 3];
+printf("<%p> ", SCLK_i_G[iPdx]);
+}
+
+printf("\n[%s] [%s]  MOSI_i_G : ", __FILE__, __func__ );
+	/* GPIOs connected to MOSI with 'green' wire */
+	for (iPdx = 0; iPdx < (NUM_PORTS-1); iPdx++)
+{		MOSI_i_G[iPdx] = GPIO_VALUE_FILES[NUM_PORTS*iPdx + 4];
+printf("<%p> ", MOSI_i_G[iPdx]);
+}
+
+printf("\n[%s] [%s]  SYNC_i_G : ", __FILE__, __func__ );
+	/* GPIOs connected to SYNC with 'green' wire */
+	for (iPdx = 0; iPdx < (NUM_PORTS-1); iPdx++)
+		SYNC_i_G[iPdx] = GPIO_VALUE_FILES[NUM_PORTS*iPdx + 5];
+
+
+
+// TODO: remove block+
+
+printf("\n[%s] [%s]  Workaround to check data in Osc\n", __FILE__, __func__ );	
+	for (iPdx = 0; iPdx < (NUM_PORTS-1); iPdx++)
+	{
+		__tmp[iPdx] = MOSI_i_W[iPdx];
+		MOSI_i_W[iPdx] = SYNC_i_G[iPdx];
+		SYNC_i_G[iPdx] = __tmp[iPdx];
+	}
+// TODO: remove block-
+
+
+fflush(stdout);// TODO: rem.
+
+#endif /* !defined(SH_FOPS) */
 
 	while (1) 
 	{
@@ -291,11 +333,17 @@ printf("[%s] [%s] opened all GPIO ports \n",__FILE__, __func__ );
 		}
 #else		
 		/* Cyclically toggle GPIO ports OFF */
-		for (iIdx = 0; iIdx < sizeof(GPIOs)/sizeof(GPIOs[0]);iIdx++ )
+		//.for (iIdx = 0; iIdx < sizeof(GPIOs)/sizeof(GPIOs[0]);iIdx++ )
+
+		/* For each CPE port except last one (which is going to be USB 3.0, and conseq. requires special handling) */
+		for (iIdx = 0; iIdx < NUM_PORTS - 1 /* skip USB 3.0 Port */;iIdx++ )
+
 		{
 			/* Test */
-			_1_AD5300_Write_W( 0xAA );
-			_1_AD5300_Write_G( 0x55 );
+			//._1_AD5300_Write_W( 0xAA );
+			_i_AD5300_Write_W(0xAA, iIdx); /* CH1: blue oscilloscope beam */
+			//._1_AD5300_Write_G( 0x55 );
+			_i_AD5300_Write_G(0x88, iIdx); /* CH2: yellow oscilloscope beam*/
 		}
 #endif /* defined(SH_FOPS) */
 

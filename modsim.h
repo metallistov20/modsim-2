@@ -70,12 +70,12 @@ struct option
 };
 
 
-/* Old UCLIBC not have <getopt_long()>, but has <getopt()> */
+/* Old UCLIBC does not have <getopt_long()>, but has <getopt()> */
 #define getopt_long(a,b,c,d,e)  getopt(a,b,c)
 
 #endif /* (defined(UCSIMM) ) */
 
-/* Exposed to term_Down() and Term_Up() */
+/* Exposed to <PeriphInit> */
 extern int iOperation;
 
 #endif /* _MODSIM_H_ */

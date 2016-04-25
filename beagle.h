@@ -27,10 +27,10 @@
 	/* Definitions for shell file operatoins */
 
 	/* CPE#1 */
-	#define _30 "30"
+	#define _30 "66" // "30"
 	#define _31 "31"
 	#define _48 "48"
-	#define _5 "5"
+	#define _5 "67" //"5"
 	#define _3 "3"
 	#define _49 "49"
 
@@ -47,7 +47,7 @@
 	#define _15 "15"
 	#define _14 "14"
 	#define _112 "112"
-	#define _66 "66"
+	#define _66 "30" // "66"
 	#define _69 "69"
 
 	/* CPE#4 */
@@ -56,7 +56,7 @@
 	#define _47 "47"
 	#define _27 "27"
 	#define _22 "22"
-	#define _67 "67"
+	#define _67 "5" // "67"
 
 	/* CPE#5*/
 	#define _68 "68"
@@ -69,44 +69,44 @@
 	/* Definitions for GLIBC API file operatoins */
 
 	/* CPE#1 */
-	#define _30 GPIO_VALUE_FILES[0]
-	#define _31 GPIO_VALUE_FILES[1]
-	#define _48 GPIO_VALUE_FILES[2]
-	#define _5 GPIO_VALUE_FILES[3]
-	#define _3 GPIO_VALUE_FILES[4]
-	#define _49 GPIO_VALUE_FILES[5]
+	FILE * _30;
+	FILE * _31;
+	FILE * _48;
+	FILE * _5;
+	FILE * _3;
+	FILE * _49;
 
 	/* CPE#2 */
-	#define _117 GPIO_VALUE_FILES[6]
-	#define _115 GPIO_VALUE_FILES[7]
-	#define _60 GPIO_VALUE_FILES[8]
-	#define _50 GPIO_VALUE_FILES[9]
-	#define _51 GPIO_VALUE_FILES[10]
-	#define _4 GPIO_VALUE_FILES[11]
+	FILE * _117;
+	FILE * _115;
+	FILE * _60;
+	FILE * _50;
+	FILE * _51;
+	FILE * _4;
 
 	/* CPE#3 */
-	#define _2 GPIO_VALUE_FILES[12]
-	#define _15 GPIO_VALUE_FILES[13]
-	#define _14 GPIO_VALUE_FILES[14]
-	#define _112 GPIO_VALUE_FILES[15]
-	#define _66 GPIO_VALUE_FILES[16]
-	#define _69 GPIO_VALUE_FILES[17]
+	FILE * _2;
+	FILE * _15;
+	FILE * _14;
+	FILE * _112;
+	FILE * _66;
+	FILE * _69;
 
 	/* CPE#4 */
-	#define _45 GPIO_VALUE_FILES[18]
-	#define _23 GPIO_VALUE_FILES[19]
-	#define _47 GPIO_VALUE_FILES[20]
-	#define _27 GPIO_VALUE_FILES[21]
-	#define _22 GPIO_VALUE_FILES[22]
-	#define _67 GPIO_VALUE_FILES[23]
+	FILE * _45;
+	FILE * _23;
+	FILE * _47;
+	FILE * _27;
+	FILE * _22;
+	FILE * _67;
 
 	/* CPE#5 */
-	#define _68 GPIO_VALUE_FILES[24]
-	#define _44 GPIO_VALUE_FILES[25]
-	#define _26 GPIO_VALUE_FILES[26]
-	#define _46 GPIO_VALUE_FILES[27]
-	#define _65 GPIO_VALUE_FILES[28]
-	#define _61 GPIO_VALUE_FILES[29]
+	FILE * _68;
+	FILE * _44;
+	FILE * _26;
+	FILE * _46;
+	FILE * _65;
+	FILE * _61;
 
 #endif /* (SH_FOPS) */
 
@@ -141,177 +141,17 @@
 
 // TODO: remove on nearest Monday
 /* Toggle down SCKL on 'green' converter */
-#define _1_SCLK_LO_G		PortD_Down(SCLK_1_G)
+#define _1_SCLK_LO_G		OffGPIO(SCLK_1_G)
 /* Toggle up SCKL on 'green' converter */
-#define _1_SCLK_HI_G		PortD_Up(SCLK_1_G)
+#define _1_SCLK_HI_G		OnGPIO(SCLK_1_G)
 /* Toggle down MOSI on 'green' converter */
-#define _1_MOSI_LO_G		PortD_Down(MOSI_1_G)
+#define _1_MOSI_LO_G		OffGPIO(MOSI_1_G)
 /* Toggle up MOSI on 'green' converter */
-#define _1_MOSI_HI_G		PortD_Up(MOSI_1_G)
+#define _1_MOSI_HI_G		OnGPIO(MOSI_1_G)
 /* Activate 'green' converter */
-#define _1_AD5300_ACT_G 	PortD_Down(SYNC_1_G)
+#define _1_AD5300_ACT_G 	OffGPIO(SYNC_1_G)
 /* Deactivate 'green' converter */
-#define _1_AD5300_DEACT_G 	PortD_Up(SYNC_1_G)
-
-#if 0
-
-/* ~Synchronization.  */
-#define SYNC_2_W	 	_117
-/* Clocking.  */
-#define SCLK_2_W	 	_115
-/* Data output. */
-#define MOSI_2_W	 	_60
-/* ~Synchronization. */
-#define SYNC_2_G	 	_50
-/* Clocking. */
-#define SCLK_2_G	 	_51
-/* Data output. */
-#define MOSI_2_G	 	_4
-
-/* Toggle down SCKL on 'white' converter */
-#define _2_SCLK_LO_W		OffGPIO(SCLK_2_W)
-/* Toggle up SCKL on 'white' converter */
-#define _2_SCLK_HI_W		OnGPIO(SCLK_2_W)
-/* Toggle down MOSI on 'white' converter */
-#define _2_MOSI_LO_W		OffGPIO(MOSI_2_W)
-/* Toggle up MOSI on 'white' converter */
-#define _2_MOSI_HI_W		OnGPIO(MOSI_2_W)
-/* Activate 'white' converter */
-#define _2_AD5300_ACT_W 	OffGPIO(SYNC_2_W)
-/* Deactivate 'white' converter */
-#define _2_AD5300_DEACT_W 	OnGPIO(SYNC_2_W)
-
-/* Toggle down SCKL on 'green' converter */
-#define _2_SCLK_LO_G		PortD_Down(SCLK_2_G)
-/* Toggle up SCKL on 'green' converter */
-#define _2_SCLK_HI_G		PortD_Up(SCLK_2_G)
-/* Toggle down MOSI on 'green' converter */
-#define _2_MOSI_LO_G		PortD_Down(MOSI_2_G)
-/* Toggle up MOSI on 'green' converter */
-#define _2_MOSI_HI_G		PortD_Up(MOSI_2_G)
-/* Activate 'green' converter */
-#define _2_AD5300_ACT_G 	PortD_Down(SYNC_2_G)
-/* Deactivate 'green' converter */
-#define _2_AD5300_DEACT_G	PortD_Up(SYNC_2_G)
-
-/* ~Synchronization.  */
-#define SYNC_3_W	 	_2
-/* Clocking.  */
-#define SCLK_3_W	 	_15
-/* Data output. */
-#define MOSI_3_W	 	_14
-/* ~Synchronization. */
-#define SYNC_3_G	 	_112
-/* Clocking. */
-#define SCLK_3_G	 	_66
-/* Data output. */
-#define MOSI_3_G	 	_69
-
-/* Toggle down SCKL on 'white' converter */
-#define _3_SCLK_LO_W		OffGPIO(SCLK_3_W)
-/* Toggle up SCKL on 'white' converter */
-#define _3_SCLK_HI_W		OnGPIO(SCLK_3_W)
-/* Toggle down MOSI on 'white' converter */
-#define _3_MOSI_LO_W		OffGPIO(MOSI_3_W)
-/* Toggle up MOSI on 'white' converter */
-#define _3_MOSI_HI_W		OnGPIO(MOSI_3_W)
-/* Activate 'white' converter */
-#define _3_AD5300_ACT_W 	OffGPIO(SYNC_3_W)
-/* Deactivate 'white' converter */
-#define _3_AD5300_DEACT_W 	OnGPIO(SYNC_3_W)
-
-/* Toggle down SCKL on 'green' converter */
-#define _3_SCLK_LO_G		PortD_Down(SCLK_3_G)
-/* Toggle up SCKL on 'green' converter */
-#define _3_SCLK_HI_G		PortD_Up(SCLK_3_G)
-/* Toggle down MOSI on 'green' converter */
-#define _3_MOSI_LO_G		PortD_Down(MOSI_3_G)
-/* Toggle up MOSI on 'green' converter */
-#define _3_MOSI_HI_G		PortD_Up(MOSI_3_G)
-/* Activate 'green' converter */
-#define _3_AD5300_ACT_G 	PortD_Down(SYNC_3_G)
-/* Deactivate 'green' converter */
-#define _3_AD5300_DEACT_G 	PortD_Up(SYNC_3_G)
-
-/* ~Synchronization.  */
-#define SYNC_4_W	 	_45
-/* Clocking.  */
-#define SCLK_4_W	 	_23
-/* Data output. */
-#define MOSI_4_W	 	_47
-/* ~Synchronization. */
-#define SYNC_4_G	 	_27
-/* Clocking. */
-#define SCLK_4_G	 	_22
-/* Data output. */
-#define MOSI_4_G	 	_67
-
-/* Toggle down SCKL on 'white' converter */
-#define _4_SCLK_LO_W		OffGPIO(SCLK_4_W)
-/* Toggle up SCKL on 'white' converter */
-#define _4_SCLK_HI_W		OnGPIO(SCLK_4_W)
-/* Toggle down MOSI on 'white' converter */
-#define _4_MOSI_LO_W		OffGPIO(MOSI_4_W)
-/* Toggle up MOSI on 'white' converter */
-#define _4_MOSI_HI_W		OnGPIO(MOSI_4_W)
-/* Activate 'white' converter */
-#define _4_AD5300_ACT_W 	OffGPIO(SYNC_4_W)
-/* Deactivate 'white' converter */
-#define _4_AD5300_DEACT_W 	OnGPIO(SYNC_4_W)
-
-/* Toggle down SCKL on 'green' converter */
-#define _4_SCLK_LO_G		PortD_Down(SCLK_4_G)
-/* Toggle up SCKL on 'green' converter */
-#define _4_SCLK_HI_G		PortD_Up(SCLK_4_G)
-/* Toggle down MOSI on 'green' converter */
-#define _4_MOSI_LO_G		PortD_Down(MOSI_4_G)
-/* Toggle up MOSI on 'green' converter */
-#define _4_MOSI_HI_G		PortD_Up(MOSI_4_G)
-/* Activate 'green' converter */
-#define _4_AD5300_ACT_G 	PortD_Down(SYNC_4_G)
-/* Deactivate 'green' converter */
-#define _4_AD5300_DEACT_G 	PortD_Up(SYNC_4_G)
-
-/* ~Synchronization.  */
-#define SYNC_5_W	 	_68
-/* Clocking.  */
-#define SCLK_5_W	 	_44
-/* Data output. */
-#define MOSI_5_W	 	_26
-/* ~Synchronization. */
-#define SYNC_5_G	 	_46
-/* Clocking. */
-#define SCLK_5_G	 	_65
-/* Data output. */
-#define MOSI_5_G	 	_61
-
-/* Toggle down SCKL on 'white' converter */
-#define _5_SCLK_LO_W		OffGPIO(SCLK_5_W)
-/* Toggle up SCKL on 'white' converter */
-#define _5_SCLK_HI_W		OnGPIO(SCLK_5_W)
-/* Toggle down MOSI on 'white' converter */
-#define _5_MOSI_LO_W		OffGPIO(MOSI_5_W)
-/* Toggle up MOSI on 'white' converter */
-#define _5_MOSI_HI_W		OnGPIO(MOSI_5_W)
-/* Activate 'white' converter */
-#define _5_AD5300_ACT_W 	OffGPIO(SYNC_5_W)
-/* Deactivate 'white' converter */
-#define _5_AD5300_DEACT_W 	OnGPIO(SYNC_5_W)
-
-/* Toggle down SCKL on 'green' converter */
-#define _5_SCLK_LO_G		PortD_Down(SCLK_5_G)
-/* Toggle up SCKL on 'green' converter */
-#define _5_SCLK_HI_G		PortD_Up(SCLK_5_G)
-/* Toggle down MOSI on 'green' converter */
-#define _5_MOSI_LO_G		PortD_Down(MOSI_5_G)
-/* Toggle up MOSI on 'green' converter */
-#define _5_MOSI_HI_G		PortD_Up(MOSI_5_G)
-/* Activate 'green' converter */
-#define _5_AD5300_ACT_G 	PortD_Down(SYNC_5_G)
-/* Deactivate 'green' converter */
-#define _5_AD5300_DEACT_G 	PortD_Up(SYNC_5_G)
-
-#endif /* (0) */
+#define _1_AD5300_DEACT_G 	OnGPIO(SYNC_1_G)
 
 
 #if defined(SH_FOPS)
@@ -324,18 +164,41 @@ typedef FILE * GPIOTarget;
 
 FILE * GPIO_VALUE_FILES[30];
 
+#if defined(SH_FOPS)
+
 /* GPIOs connected to SCKL with 'white' wire */
 GPIOTarget SCLK_i_W[NUM_PORTS] = {_30, _117, _2, _45, _68, NULL};
 /* GPIOs connected to MOSI with 'white' wire */
 GPIOTarget MOSI_i_W[NUM_PORTS] = {_31, _115, _15, _23, _44, NULL};
 /* GPIOs connected to SYNC with 'white' wire */
-GPIOTarget SYNC_i_W[NUM_PORTS] = {_66, _60, _14, _47, _26, NULL};
+GPIOTarget SYNC_i_W[NUM_PORTS] = {_48, _60, _14, _47, _26, NULL};
 /* GPIOs connected to SCKL with 'green' wire */
 GPIOTarget SCLK_i_G[NUM_PORTS] = {_5, _50, _112, _27, _46, NULL};
 /* GPIOs connected to MOSI with 'green' wire */
-GPIOTarget MOSI_i_G[NUM_PORTS] = {_3, _51, _66/*TODO: why? */, _22, _65, NULL};
+GPIOTarget MOSI_i_G[NUM_PORTS] = {_3, _51, _66, _22, _65, NULL};
 /* GPIOs connected to SYNC with 'green' wire */
-GPIOTarget SYNC_i_G[NUM_PORTS] = {_67, _4, _69, _67/*TODO: why? */, _61, NULL};
+GPIOTarget SYNC_i_G[NUM_PORTS] = {_67, _4, _69, _67, _61, NULL};
+
+#else
+
+/* GPIOs connected to SCKL with 'white' wire */
+GPIOTarget SCLK_i_W[NUM_PORTS];
+/* GPIOs connected to MOSI with 'white' wire */
+GPIOTarget MOSI_i_W[NUM_PORTS];
+/* GPIOs connected to SYNC with 'white' wire */
+GPIOTarget SYNC_i_W[NUM_PORTS];
+/* GPIOs connected to SCKL with 'green' wire */
+GPIOTarget SCLK_i_G[NUM_PORTS];
+/* GPIOs connected to MOSI with 'green' wire */
+GPIOTarget MOSI_i_G[NUM_PORTS];
+/* GPIOs connected to SYNC with 'green' wire */
+GPIOTarget SYNC_i_G[NUM_PORTS];
+
+/* TODO: rem as workaround */
+GPIOTarget __tmp[NUM_PORTS];  
+
+#endif /* defined(SH_FOPS) */
+
 
 /* Toggle down SCKL on 'white' converter */
 #define _i_SCLK_LO_W(x)		OffGPIO(x)

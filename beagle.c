@@ -1,3 +1,22 @@
+/*
+ (C) Copyright 2016, TP-Link Inc, konstantin.mauch@tp-link.com
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License as
+ published by the Free Software Foundation; either version 2 of
+ the License, or (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT any WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+ MA 02111-1307 USA
+*/
+
 /* stdout, NULL */
 #include <stdio.h>
 
@@ -6,9 +25,6 @@
 
 /* <_1_SCLK_HI_W> et al */
 #include "beagle.h"
-
-//static PortD_Down(){};// TODO: rem
-//static PortD_Up(){};// TODO: rem
 
 /* <AD5300_DATA_LEN>, <AD5300_DONTCARE_LEN> */
 #include "port_d.h"
@@ -123,7 +139,6 @@ void OffGPIO(FILE * fcPortFile)
 		printf("[%s] [%s] empty Port ID \n",__FILE__, __func__ );
 }
 
-// TODO: remove on nearest Monday
 void _i_AD5300_Write_W(unsigned char data, int iIdx) 
 {
 unsigned short tmp;
@@ -147,7 +162,6 @@ unsigned char iCnt;
 
 } /* void _i_AD5300_Write_W(unsigned short data, int iIdx) */
 
-// TODO: remove on nearest Monday
 void _i_AD5300_Write_G(unsigned char data, int iIdx) 
 {
 unsigned short tmp;
@@ -171,60 +185,10 @@ unsigned char iCnt;
 
 } /* void _i_AD5300_Write_G(unsigned short data, int iIdx) */
 
-// TODO: rem.
-void _1_AD5300_Write_W(unsigned char data) 
+
+void AD5300_Init() 
 {
-unsigned short tmp;
-
-unsigned char iCnt;
-
-#if !defined(SH_FOPS)
-
-	tmp = data << AD5300_DONTCARE_LEN;
-
-	_1_AD5300_ACT_W;
-
-	for (iCnt = 0; iCnt < AD5300_DATA_LEN; iCnt++)
-	{
-		_1_SCLK_HI_W;
-
-		(tmp & (unsigned short)( 1U << (15 - iCnt) ) ) ? (_1_MOSI_HI_W) : (_1_MOSI_LO_W);
-
-		_1_SCLK_LO_W;
-	}
-
-	_1_AD5300_DEACT_W;
-#endif
-} /* void _1_AD5300_Write_W(unsigned short data) */
-
-// TODO: remove as nasty
-void _1_AD5300_Write_G(unsigned char data) 
-{
-unsigned short tmp;
-
-unsigned char iCnt;
-
-#if !defined(SH_FOPS)
-	tmp = data << AD5300_DONTCARE_LEN;
-
-	_1_AD5300_ACT_G;
-
-	for (iCnt = 0; iCnt < AD5300_DATA_LEN; iCnt++)
-	{
-		_1_SCLK_HI_G;
-
-		(tmp & (unsigned short)( 1U << (15 - iCnt) ) ) ? (_1_MOSI_HI_G) : (_1_MOSI_LO_G);
-
-		_1_SCLK_LO_G;
-	}
-
-	_1_AD5300_DEACT_G;
-#endif
-} /* void _1_AD5300_Write_W(unsigned short data) */
-
-void test() 
-{
-int iIdx, iPdx;
+int iIdx;
 
 	memset( (void*) GPIO_VALUE_FILES, 0, sizeof (GPIO_VALUE_FILES) );
 
@@ -235,7 +199,7 @@ int iIdx, iPdx;
 
 		OpenGPIO( GPIOs[iIdx] );	
 	}
-printf("[%s] [%s] opened all GPIO ports \n",__FILE__, __func__ );
+	printf("[%s] [%s] opened all GPIO ports \n",__FILE__, __func__ );
 
 #if !defined(SH_FOPS)
 
@@ -257,42 +221,26 @@ printf("[%s] [%s] opened all GPIO ports \n",__FILE__, __func__ );
 
 	} /* for (iIdx = 0; ... */
 
-printf("\n[%s] [%s]  SCLK_i_W : ", __FILE__, __func__ );
 	/* GPIOs connected to SCKL with 'white' wire */
 	for (iPdx = 0; iPdx < (NUM_PORTS-1); iPdx++)
-{		SCLK_i_W[iPdx] = GPIO_VALUE_FILES[NUM_PORTS*iPdx];
-printf("<%p> ", SCLK_i_W[iPdx]);
-}
+		SCLK_i_W[iPdx] = GPIO_VALUE_FILES[NUM_PORTS*iPdx];
 
-printf("\n[%s] [%s]  MOSI_i_W : ", __FILE__, __func__ );
 	/* GPIOs connected to MOSI with 'white' wire */
 	for (iPdx = 0; iPdx < (NUM_PORTS-1); iPdx++)
-{		MOSI_i_W[iPdx] = GPIO_VALUE_FILES[NUM_PORTS*iPdx + 1];
-printf("<%p> ", MOSI_i_W[iPdx]);
-}
+		MOSI_i_W[iPdx] = GPIO_VALUE_FILES[NUM_PORTS*iPdx + 1];
 
-printf("\n[%s] [%s]  SYNC_i_W : ", __FILE__, __func__ );
 	/* GPIOs connected to SYNC with 'white' wire */
 	for (iPdx = 0; iPdx < (NUM_PORTS-1); iPdx++)
-{		SYNC_i_W[iPdx] = GPIO_VALUE_FILES[NUM_PORTS*iPdx + 2];
-printf("<%p> ", SYNC_i_W[iPdx]);
-}
+		SYNC_i_W[iPdx] = GPIO_VALUE_FILES[NUM_PORTS*iPdx + 2];
 
-printf("\n[%s] [%s]  SCLK_i_G : ", __FILE__, __func__ );
 	/* GPIOs connected to SCKL with 'green' wire */
 	for (iPdx = 0; iPdx < (NUM_PORTS-1); iPdx++)
-{		SCLK_i_G[iPdx] = GPIO_VALUE_FILES[NUM_PORTS*iPdx + 3];
-printf("<%p> ", SCLK_i_G[iPdx]);
-}
+		SCLK_i_G[iPdx] = GPIO_VALUE_FILES[NUM_PORTS*iPdx + 3];
 
-printf("\n[%s] [%s]  MOSI_i_G : ", __FILE__, __func__ );
 	/* GPIOs connected to MOSI with 'green' wire */
 	for (iPdx = 0; iPdx < (NUM_PORTS-1); iPdx++)
-{		MOSI_i_G[iPdx] = GPIO_VALUE_FILES[NUM_PORTS*iPdx + 4];
-printf("<%p> ", MOSI_i_G[iPdx]);
-}
+		MOSI_i_G[iPdx] = GPIO_VALUE_FILES[NUM_PORTS*iPdx + 4];
 
-printf("\n[%s] [%s]  SYNC_i_G : ", __FILE__, __func__ );
 	/* GPIOs connected to SYNC with 'green' wire */
 	for (iPdx = 0; iPdx < (NUM_PORTS-1); iPdx++)
 		SYNC_i_G[iPdx] = GPIO_VALUE_FILES[NUM_PORTS*iPdx + 5];
@@ -300,20 +248,23 @@ printf("\n[%s] [%s]  SYNC_i_G : ", __FILE__, __func__ );
 
 
 // TODO: remove block+
-
-printf("\n[%s] [%s]  Workaround to check data in Osc\n", __FILE__, __func__ );	
+printf("[%s] [%s]  Workaround to check data in Osc\n", __FILE__, __func__ );
 	for (iPdx = 0; iPdx < (NUM_PORTS-1); iPdx++)
 	{
-		__tmp[iPdx] = MOSI_i_W[iPdx];
+		__fpWRKND[iPdx] = MOSI_i_W[iPdx];
 		MOSI_i_W[iPdx] = SYNC_i_G[iPdx];
-		SYNC_i_G[iPdx] = __tmp[iPdx];
+		SYNC_i_G[iPdx] = __fpWRKND[iPdx];
 	}
 // TODO: remove block-
 
-
-fflush(stdout);// TODO: rem.
-
 #endif /* !defined(SH_FOPS) */
+
+} /* void AD5300_Init()  */
+
+
+void AD5300_Test() 
+{
+int iIdx, iPdx;
 
 	while (1) 
 	{
@@ -332,24 +283,27 @@ fflush(stdout);// TODO: rem.
 			OffGPIO( GPIOs[iIdx] );
 		}
 #else		
-		/* Cyclically toggle GPIO ports OFF */
-		//.for (iIdx = 0; iIdx < sizeof(GPIOs)/sizeof(GPIOs[0]);iIdx++ )
-
 		/* For each CPE port except last one (which is going to be USB 3.0, and conseq. requires special handling) */
 		for (iIdx = 0; iIdx < NUM_PORTS - 1 /* skip USB 3.0 Port */;iIdx++ )
 
 		{
 			/* Test */
-			//._1_AD5300_Write_W( 0xAA );
 			_i_AD5300_Write_W(0xAA, iIdx); /* CH1: blue oscilloscope beam */
-			//._1_AD5300_Write_G( 0x55 );
 			_i_AD5300_Write_G(0x88, iIdx); /* CH2: yellow oscilloscope beam*/
 		}
 #endif /* defined(SH_FOPS) */
 
 	} /* while (1) */
 
+} /* void AD5300_Test()  */
+
+/* Closing opened port */
+void AD5300_Deinit() 
+{
+int iIdx;
+
 #if !defined(SH_FOPS)
+
 	/* Open GPIO value files and store file poniters in array <GPIO_VALUE_FILES> */
 	for (iIdx = 0; iIdx < sizeof(GPIO_VALUE_FILES)/sizeof(GPIO_VALUE_FILES[0]);iIdx++ )
 	{
@@ -358,18 +312,10 @@ fflush(stdout);// TODO: rem.
 		/* Try to close value file <pcCmdBuffer> */
 		if ( 0 != fclose ( GPIO_VALUE_FILES[iIdx] ) )
 		{
-			printf("[%s] [%s] can't close GPIO value file <%s> \n", __FILE__, __func__ , pcCmdBuffer);
-
-			continue;
+			printf("[%s] [%s] can't close GPIO value file  <%s>. Nevertheless proceeding with next one\n", __FILE__, __func__ , pcCmdBuffer);
 		}
+
 	}/* for (iIdx = 0; ... */
+
 #endif
-}/* void main () */
-
-
-void main () 
-{
-	// TODO: don't forget to get plainly initialized members of such arrays as SCLK_i_W[] et al. 
-	
-	test () ;
-}
+}/* void AD5300_Deinit() */

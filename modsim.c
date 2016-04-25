@@ -112,8 +112,9 @@ char cArg0[LARGE_BUF_SZ];
 
 #if defined(HW_AD53_TEST)
 
-	printf("[%s] %s: NOTIFICATION: doing test of AD53xx controller. Will hang in this test. \n", __FILE__, __func__ );
+	printf("[%s] %s: NOTIFICATION: doing test of AD53xx controllers. Will hang in this test. \n", __FILE__, __func__ );
 
+#if defined(DUCSIMM)
 	/* Put port D into initial state */
 	PortD_Reset();
 
@@ -132,6 +133,17 @@ char cArg0[LARGE_BUF_SZ];
 		AD5300_Write_W(0xFF);
 			AD5300_Write_G( 0xAA );
 	}
+#endif /* defined(DUCSIMM) */
+
+#if defined(SITARA)
+	/* Open GPIO ports for output */
+	AD5300_Init();
+
+	AD5300_Test();
+
+	/* not reached */
+	AD5300_Deinit();
+#endif /* defined(SITARA) */
 
 #endif /* (defined(HW_DUMB_TEST) ) */
 
@@ -273,6 +285,11 @@ sscanf(cBuf, "%d.%d %d.%d %d.%d",
 	PeriphInit();
 #endif /* (UCSIMM) */
 
+#if defined(SITARA)
+	/* Open GPIO ports for output */
+	AD5300_Init();
+#endif /* defined(SITARA) */
+
 	printf("\n[%s] %s: issuing USB-data on Port 'D'\n", __FILE__, __func__);
 
 	/* Process data stored in dynamic structure pointed by 'pTimeChain' */
@@ -282,6 +299,11 @@ sscanf(cBuf, "%d.%d %d.%d %d.%d",
 
 	/* Free memory occupied by dynamically stored raw data */
 	DeletePoints(&pTimeChain);
+
+#if defined(SITARA)
+	/* Close GPIO-port files, if needed  */
+	AD5300_Deinit();
+#endif /* defined(SITARA) */
 
 	printf("[%s] %s: done (success) \n", __FILE__, __func__); fflush(stdout);
 

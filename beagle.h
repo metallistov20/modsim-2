@@ -27,10 +27,10 @@
 	/* Definitions for shell file operatoins */
 
 	/* CPE#1 */
-	#define _30 "66" // "30"
+	#define _30 "66" // TODO: bring back "30"
 	#define _31 "31"
 	#define _48 "48"
-	#define _5 "67" //"5"
+	#define _5 "67" // TODO: bring back "5"
 	#define _3 "3"
 	#define _49 "49"
 
@@ -47,7 +47,7 @@
 	#define _15 "15"
 	#define _14 "14"
 	#define _112 "112"
-	#define _66 "30" // "66"
+	#define _66 "30" // TODO: bring back "66"
 	#define _69 "69"
 
 	/* CPE#4 */
@@ -56,7 +56,7 @@
 	#define _47 "47"
 	#define _27 "27"
 	#define _22 "22"
-	#define _67 "5" // "67"
+	#define _67 "5" // TODO: bring back "67"
 
 	/* CPE#5*/
 	#define _68 "68"
@@ -111,49 +111,6 @@
 #endif /* (SH_FOPS) */
 
 
-// TODO: remove on nearest Monday
-/* ~Synchronization.  */
-#define SYNC_1_W	 	_30
-/* Clocking.  */
-#define SCLK_1_W	 	_31
-/* Data output. */
-#define MOSI_1_W	 	_66
-/* ~Synchronization. */
-#define SYNC_1_G	 	_5
-/* Clocking. */
-#define SCLK_1_G	 	_3
-/* Data output. */
-#define MOSI_1_G	 	_67
-
-// TODO: remove on nearest Monday
-/* Toggle down SCKL on 'white' converter */
-#define _1_SCLK_LO_W		OffGPIO(SCLK_1_W)
-/* Toggle up SCKL on 'white' converter */
-#define _1_SCLK_HI_W		OnGPIO(SCLK_1_W)
-/* Toggle down MOSI on 'white' converter */
-#define _1_MOSI_LO_W		OffGPIO(MOSI_1_W)
-/* Toggle up MOSI on 'white' converter */
-#define _1_MOSI_HI_W		OnGPIO(MOSI_1_W)
-/* Activate 'white' converter */
-#define _1_AD5300_ACT_W 	OffGPIO(SYNC_1_W)
-/* Deactivate 'white' converter */
-#define _1_AD5300_DEACT_W 	OnGPIO(SYNC_1_W)
-
-// TODO: remove on nearest Monday
-/* Toggle down SCKL on 'green' converter */
-#define _1_SCLK_LO_G		OffGPIO(SCLK_1_G)
-/* Toggle up SCKL on 'green' converter */
-#define _1_SCLK_HI_G		OnGPIO(SCLK_1_G)
-/* Toggle down MOSI on 'green' converter */
-#define _1_MOSI_LO_G		OffGPIO(MOSI_1_G)
-/* Toggle up MOSI on 'green' converter */
-#define _1_MOSI_HI_G		OnGPIO(MOSI_1_G)
-/* Activate 'green' converter */
-#define _1_AD5300_ACT_G 	OffGPIO(SYNC_1_G)
-/* Deactivate 'green' converter */
-#define _1_AD5300_DEACT_G 	OnGPIO(SYNC_1_G)
-
-
 #if defined(SH_FOPS)
 typedef void (*GPIOHandler)(char *);
 typedef char * GPIOTarget;
@@ -195,7 +152,7 @@ GPIOTarget MOSI_i_G[NUM_PORTS];
 GPIOTarget SYNC_i_G[NUM_PORTS];
 
 /* TODO: rem as workaround */
-GPIOTarget __tmp[NUM_PORTS];  
+GPIOTarget __fpWRKND[NUM_PORTS];  
 
 #endif /* defined(SH_FOPS) */
 

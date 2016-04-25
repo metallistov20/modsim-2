@@ -1,14 +1,13 @@
 # SW and HW parts for simulation of 3G-/LTE-modems to test SoHO hadware, ver0.2
 
+Bseides "platform=PC", two hardware platforms:
 
-Both interfaces to be supported : USB 1.1, USB 2.0 are being implemented
+a) 'floatless' MC68EZ328-based uCsimm/uClinux (platform=DRAGONBALL)
 
-on 'floatless' MC68EZ328-based uCsimm/uClinux.
+b) 'normal Linux' AM3358-based Beagle/Linux (platform=SITARA)
 
-Port E is used as output to sumulate CMOS TTL of USB 1.1, and DA-converter 
+On 'a' the <Port E> is used to sumulate levels of USB 2.0 on CPE#1 gate
 
-attached to Port E is used to sumilated TTL levels of of USB 2.0.
-
-
+On 'b' the <GPIOs> is used to simulate levels of USB 2.0 on CPEs CPE#1-CPE#5
 
 STATUS: BEING EVALUATED

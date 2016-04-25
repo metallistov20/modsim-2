@@ -42,9 +42,9 @@ else
 		ifeq ($(strip $(platform)),SITARA)
 			# Prefix for Cortex-8 ARM crosscompiler 
 			PREFIX= #arm-none-linux-gnueabi-
-			CFLAGS=-O3  -DQUASIFLOAT -DSH_FOPS
+			CFLAGS=-O3 -DSITARA -DQUASIFLOAT -DSH_FOPS
 
-			OBJS= beagle.o
+			OBJS= modsim.o datastruct.o beagle.o hal_arm8.o
 			GRBG=*.o *~ m
 		endif
 	endif

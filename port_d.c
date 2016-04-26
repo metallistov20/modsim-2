@@ -75,59 +75,6 @@ void PortD_Up(unsigned char uchBit)
 
 } /* void PortD_Up(unsigned char uchBit) */
 
-#if 0
-// TODO: remove as obsolete
-
-/* Terminal line DOWN - switch off <dIN> wire on CPE#0, bzw CPE#1. Exposed to <ProcessPoint()> */
-void Term_Down()
-{
-	switch (iOperation)
-	{
-		case DO_GATE0_OP:
-			PortD_Down(PD0);
-			break;
-
-		case DO_GATE1_OP:
-#if 0
-			AD5300_Write( USB20_LOGIC_0_UP_CURR_FRACT/1000 )  ;
-#else
-			/* No level processing; only real values processing seems to be effective */
-			none
-#endif /* (0) */
-			break;
-
-		default:
-			printf("__s: bad kind of operatoin (while DOWN), restart the program.\n");
-			exit (-1);
-	}
-} /* void Term_Down() */
-
-/* Terminal line DOWN - switch off <dIN> wire on CPE#0, bzwCPE#1. Exposed to <ProcessPoint()> */
-void Term_Up()
-{
-	switch (iOperation)
-	{
-		case DO_GATE0_OP:
-			PortD_Up(PD0);
-			break;
-
-		case DO_GATE1_OP:
-#if 0
-			AD5300_Write( USB20_LOGIC_1_UP_CURR_FRACT/1000 )  ;
-#else
-			/* No level processing; only real values processing seems to be effective */
-			none
-#endif /* (0) */
-			break;
-
-		default:
-			printf("__s: bad kind of operatoin (while UP), restart the program\n");
-			exit (-1);
-	}
-} /* void Term_Up() */
-
-#endif /* (0) */
-
 void AD5300_Write_W(unsigned char data) 
 {
 unsigned short tmp;

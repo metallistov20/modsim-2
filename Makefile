@@ -74,10 +74,6 @@ LD=$(PREFIX)ld
 
 all:	m
 
-
-P_m:
-	gcc  modsim.c datastruct.c hal_x86.c  
-
 m: $(OBJS)
 	$(CC) $(CFLAGS)  -o m $(OBJS)  -lm 
 	$(EXTRA)

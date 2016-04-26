@@ -29,9 +29,13 @@
 /* <AD5300_DATA_LEN>, <AD5300_DONTCARE_LEN> */
 #include "port_d.h"
 
+/* Longest command line ever required by this app. */
 #define MEDIUM_SIZE 1024
+
+/* Command line buffer */
 char pcCmdBuffer[MEDIUM_SIZE];
 
+#if defined(SH_FOPS)
 // TODO: explore GPIOs "4"/"5", this pair appears to be non working.
 char * GPIOs[] = {
 	 /* P9, left side */
@@ -47,8 +51,10 @@ char * GPIOs[] = {
 	 "67", "68", "44", "26", "46", "65", "61" 
 }; /* char * GPIOs[] */
 
-
+#else
+/* Array of pointers to GPIO files */
 FILE * GPIO_VALUE_FILES[30];
+#endif /* defined(SH_FOPS) */
 
 /* Make GPIO port <pcPortStr>: a) to appear in the system; b) to become output port; */
 static void OpenGPIO(char * pcPortStr)
@@ -289,7 +295,7 @@ int iIdx;
 		{
 			/* Test */
 			_i_AD5300_Write_W(0xAA, /* iIdx*/3); /* CH1: blue oscilloscope beam */
-			_i_AD5300_Write_G(0x88, /*iIdx*/2); /* CH2: yellow oscilloscope beam*/
+			_i_AD5300_Write_G(0x88, /*iIdx*/2); /* CH2: yellow oscilloscope beam */
 		}
 #endif /* defined(SH_FOPS) */
 

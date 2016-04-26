@@ -42,7 +42,7 @@ else
 		ifeq ($(strip $(platform)),SITARA)
 			# Prefix for Cortex-8 ARM crosscompiler 
 			PREFIX= #arm-none-linux-gnueabi-
-			CFLAGS=-O3 -DSITARA -DQUASIFLOAT -DSH_FOPS
+			CFLAGS=-O3 -DSITARA -DQUASIFLOAT #-DSH_FOPS
 
 			OBJS= modsim.o datastruct.o beagle.o hal_arm8.o
 			GRBG=*.o *~ m
@@ -61,7 +61,7 @@ LD=$(PREFIX)ld
 # CFLAGS+= -DHW_PORTD_TEST
 
 # Basic diagnistocs of ADxx Converter. Endless loop, either.
-# CFLAGS+= -DHW_AD53_TEST
+ CFLAGS+= -DHW_AD53_TEST
 
 # Slow output of processed data on UCSIMM which spoil realtime process of data being isseued
 # CFLAGS += -DFAST_UCSIMM

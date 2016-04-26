@@ -188,7 +188,7 @@ unsigned char iCnt;
 
 void AD5300_Init() 
 {
-int iIdx;
+int iIdx, iPdx;
 
 	memset( (void*) GPIO_VALUE_FILES, 0, sizeof (GPIO_VALUE_FILES) );
 
@@ -264,7 +264,7 @@ printf("[%s] [%s]  Workaround to check data in Osc\n", __FILE__, __func__ );
 
 void AD5300_Test() 
 {
-int iIdx, iPdx;
+int iIdx;
 
 	while (1) 
 	{
@@ -288,8 +288,8 @@ int iIdx, iPdx;
 
 		{
 			/* Test */
-			_i_AD5300_Write_W(0xAA, iIdx); /* CH1: blue oscilloscope beam */
-			_i_AD5300_Write_G(0x88, iIdx); /* CH2: yellow oscilloscope beam*/
+			_i_AD5300_Write_W(0xAA, /* iIdx*/3); /* CH1: blue oscilloscope beam */
+			_i_AD5300_Write_G(0x88, /*iIdx*/2); /* CH2: yellow oscilloscope beam*/
 		}
 #endif /* defined(SH_FOPS) */
 

@@ -35,7 +35,7 @@
 /* Command line buffer */
 char pcCmdBuffer[MEDIUM_SIZE];
 
-#if defined(SH_FOPS)
+//.f.o.#if defined(SH_FOPS)
 // TODO: explore GPIOs "4"/"5", this pair appears to be non working.
 char * GPIOs[] = {
 	 /* P9, left side */
@@ -51,10 +51,10 @@ char * GPIOs[] = {
 	 "67", "68", "44", "26", "46", "65", "61" 
 }; /* char * GPIOs[] */
 
-#else
+//.f.o.#else
 /* Array of pointers to GPIO files */
 FILE * GPIO_VALUE_FILES[30];
-#endif /* defined(SH_FOPS) */
+//.f.o.#endif /* defined(SH_FOPS) */
 
 /* Make GPIO port <pcPortStr>: a) to appear in the system; b) to become output port; */
 static void OpenGPIO(char * pcPortStr)

@@ -44,90 +44,6 @@ extern struct timeval starttimePROC;
 /* Var. to check if current second already was 'displayed' */
 int iOldSecPRC;
 
-#if 0
-
-// TODO: remove as obsolete 
-
-/* Check if raw value is USB 1.0 <logical 0> and return '1' if so, return '0' otherwise */
-static  int iChkUsb10Lg0( QuasiFloatType qfltVal )
-{
-	/* USB 1.0 levels. Logical '0'. LOGIC_0_CURR */
-	if (
-		(USB11_LOGIC_0_CURR_INTGR == qfltVal.integer) && (USB11_LOGIC_0_CURR_FRACT >= qfltVal.fraction) 
-
-	) return 1;
-
-	return 0;
-} /* static  int iChkUsb10Lg0( QuasiFloatType qfltVal ) */
-
-/* Check if raw value is USB 1.0 <logical 1> and return '1' if so, return '0' otherwise */
-static int iChkUsb10Lg1( QuasiFloatType qfltVal )
-{
-	/* USB 1.0 levels. Logical '1'.  LOGIC_1_CURR */
-	if (
-		(  (USB11_LOGIC_1_CURR_INTGR == qfltVal.integer) && (USB11_LOGIC_1_CURR_FRACT <= qfltVal.fraction)   ) 
-			||
-		(    USB11_LOGIC_1_CURR_INTGR <= qfltVal.integer   )    
-
-	) return 1;
-
-	return 0;
-} /* static int iChkUsb10Lg1( QuasiFloatType qfltVal ) */
-
-/* Check if raw value is USB 2.0 <logical 0> and return '1' if so, return '0' otherwise */
-static int iChkUsb20Lg0(QuasiFloatType qfltVal)
-{
-	/* USB 2.0 levels. Logical '0'. LOGIC_0_CURR. -10 mV .. 10 mV */
-	if (
-		(  (USB20_LOGIC_0_LO_CURR_INTGR == qfltVal.integer) && (USB20_LOGIC_0_LO_CURR_FRACT >= qfltVal.fraction)   ) 		
-		/* Values from raange -10mV .. 0V are here due inability to keep integer <-0.0> inside <qfltVal.integer> . TODO: resolve */
-
-	)  return 1;
-
-	return 0;
-} /* static int iChkUsb20Lg0(QuasiFloatType qfltVal) */
-
-/* Check if raw value is USB 2.0 <logical 1> and return '1' if so, return '0' otherwise */
-static int iChkUsb20Lg1(QuasiFloatType qfltVal)
-{
-	/* USB 2.0 levels. Logical '1'. LOGIC_1_CURR. 0.36V .. 0.44V */
-	if (
-		(  (USB20_LOGIC_1_LO_CURR_INTGR == qfltVal.integer) && (USB20_LOGIC_1_LO_CURR_FRACT <= qfltVal.fraction)   ) 
-		&& 
-		(  (USB20_LOGIC_1_UP_CURR_INTGR == qfltVal.integer) && (USB20_LOGIC_1_UP_CURR_FRACT >= qfltVal.fraction)   ) 
-
-	) return 1;
-
-	return 0;
-} /* static int iChkUsb20Lg1(QuasiFloatType qfltVal) */
-
-/*  Check if current value is <logical 0> in terms of appropriate USB protocol */
-static int iChkUsbLg0(QuasiFloatType qfltVal)
-{
-	/* it is assumes that here the <iOperation> value is either <DO_GATE0_OP> or <DO_GATE1_OP> */
-
-	if (DO_GATE0_OP == iOperation)
-
-		return iChkUsb10Lg0(qfltVal);
-	else
-
-		return iChkUsb20Lg0(qfltVal);
-} /* static int iChkUsbLg0(QuasiFloatType qfltVal) */
-
-/*  Check if current value is <logical 1> in terms of appropriate USB protocol */
-static int iChkUsbLg1(QuasiFloatType qfltVal)
-{
-	/* it is assumes that here the <iOperation> value is either <DO_GATE0_OP> or <DO_GATE1_OP> */
-
-	if (DO_GATE0_OP == iOperation)
-
-		return iChkUsb10Lg1(qfltVal);
-	else
-
-		return iChkUsb20Lg1(qfltVal);
-} /* static int iChkUsbLg1(QuasiFloatType qfltVal) */
-#endif /* (0) */
-
 int ProcessPoint( pTimepointType pTimepoint )
 {
 
@@ -136,8 +52,7 @@ int _left, _right;
 QuasiFloatType qfltJiffy; 
 qfltJiffy.fraction = 1;
 
-#if 0
-// TODO: to be removed as obsolete
+#if 1
 
 	if (iOldSecPRC!= pTimepoint->qfltAbsTime.integer)
 		{iOldSecPRC=pTimepoint->qfltAbsTime.integer; printf("secPRC: %d; ", iOldSecPRC); fflush(stdout); }
@@ -216,42 +131,11 @@ qfltJiffy.fraction = 1;
 #endif /* (0) */
 
 
-#if 0
-// TODO: to be removed as obsolete
-
-		/* Logical '1'.  LOGIC_1_CURR */
-		if ( iChkUsbLg1(pTimepoint->qfltYval) )
-
-			/* Pull terminal CPE#0/CPE#1 <dIN> line up. */
-			Term_Up( );
-
-		else
-			/* Logical '0'. LOGIC_0_CURR */
-			if ( iChkUsbLg0(pTimepoint->qfltYval) )
-
-				/* Pull terminal CPE#0/CPE#1 <dIN> line down. */
-				Term_Down( );
-#if 1
-			else
-			{
-				/* Over-voltages, under-voltages, and some middle voltage values are marked as <not processed> */
-
-				/* The following three instructionsis realloc(). TODO: impl-nt as FN, or link from UCLIBC if any. */
-				free(pTimepoint->pcMarquee);
-				pTimepoint->pcMarquee = NULL;// TODO: really needed, or can be left for <mman>
-				pTimepoint->pcMarquee = malloc (strlen (UNPROC) +1 );
-
-				strcpy( pTimepoint->pcMarquee, UNPROC);
-			}
-#endif /* (0) */
-
-#else
 		/* Put current value on 'green' wire */
 		AD5300_Write_W(pTimepoint->ushQuadAvgXval);
 
 		/* Put current value on 'white' wire */
 		AD5300_Write_G(pTimepoint->ushQuadAvgYval);
 
-#endif /* (0) */
 
 } /* int ProcessPoint( pTimepointType pTimepoint ) */

@@ -114,16 +114,28 @@ char cArg0[LARGE_BUF_SZ];
 
 	printf("[%s] %s: NOTIFICATION: doing test of AD53xx controllers. Will hang in this test. \n", __FILE__, __func__ );
 
-#if defined(DUCSIMM)
+#if defined(UCSIMM)
 	/* Put port D into initial state */
 	PortD_Reset();
 
 	/* Besides all, it prepares PIOs, so theres no need to do <PortD_Prepare()> */
 	AD5300_Init_W(); AD5300_Init_G();
-
+{
+int iA, iB = 0;
 	/* Checking on values close to limit, on limits, in the middle, and at random valuoes from range, ..  */
 	while (1)
 	{
+#if 0
+		iB++;
+
+		iA = (int)( iB % 31 );
+		if (iA < 16 ) AD5300_Write_W ( iA*iA ); else AD5300_Write_W ( (15-(iA-15)) * (15-(iA-15)) ) ;
+
+		iA = (int)( iB % 32 );
+		if (iA < 16 ) AD5300_Write_G (225 - iA*iA ); else AD5300_Write_G (  256 - (32-iA) * (32-iA)  ) ;
+#endif 
+
+#if 1
 		AD5300_Write_W( 0 );
 			AD5300_Write_G(0xFF);
 		AD5300_Write_W(0x11);
@@ -132,8 +144,10 @@ char cArg0[LARGE_BUF_SZ];
 			AD5300_Write_G( 0x11 );
 		AD5300_Write_W(0xFF);
 			AD5300_Write_G( 0xAA );
+#endif 
 	}
-#endif /* defined(DUCSIMM) */
+}
+#endif /* defined(UCSIMM) */
 
 #if defined(SITARA)
 	/* Open GPIO ports for output */

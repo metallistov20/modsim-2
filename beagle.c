@@ -35,11 +35,10 @@
 /* Command line buffer */
 char pcCmdBuffer[MEDIUM_SIZE];
 
-//.f.o.#if defined(SH_FOPS)
-// TODO: explore GPIOs "4"/"5", this pair appears to be non working.
+// TODO: explore GPIO "4", this one appears to be not working.
 char * GPIOs[] = {
 	 /* P9, left side */
-	 "30", "31", "48" , "5", "3", "49", "117", "115", 
+	 "30", "31", "48" , /*"5"*/"110", "3", "49", "117", "115", 
 
 	 /* P9, right side */
 	 "60", "50", "51" , "4", "2", "15", "14",  "112",
@@ -51,10 +50,8 @@ char * GPIOs[] = {
 	 "67", "68", "44", "26", "46", "65", "61" 
 }; /* char * GPIOs[] */
 
-//.f.o.#else
 /* Array of pointers to GPIO files */
 FILE * GPIO_VALUE_FILES[30];
-//.f.o.#endif /* defined(SH_FOPS) */
 
 /* Make GPIO port <pcPortStr>: a) to appear in the system; b) to become output port; */
 static void OpenGPIO(char * pcPortStr)
@@ -251,18 +248,6 @@ int iIdx, iPdx;
 	for (iPdx = 0; iPdx < (NUM_PORTS-1); iPdx++)
 		SYNC_i_G[iPdx] = GPIO_VALUE_FILES[NUM_PORTS*iPdx + 5];
 
-
-
-// TODO: remove block+
-printf("[%s] [%s]  Workaround to check data in Osc\n", __FILE__, __func__ );
-	for (iPdx = 0; iPdx < (NUM_PORTS-1); iPdx++)
-	{
-		__fpWRKND[iPdx] = MOSI_i_W[iPdx];
-		MOSI_i_W[iPdx] = SYNC_i_G[iPdx];
-		SYNC_i_G[iPdx] = __fpWRKND[iPdx];
-	}
-// TODO: remove block-
-
 #endif /* !defined(SH_FOPS) */
 
 } /* void AD5300_Init()  */
@@ -289,14 +274,30 @@ int iIdx;
 			OffGPIO( GPIOs[iIdx] );
 		}
 #else		
+
+#if 0
 		/* For each CPE port except last one (which is going to be USB 3.0, and conseq. requires special handling) */
 		for (iIdx = 0; iIdx < NUM_PORTS - 1 /* skip USB 3.0 Port */;iIdx++ )
 
 		{
 			/* Test */
-			_i_AD5300_Write_W(0xAA, /* iIdx*/3); /* CH1: blue oscilloscope beam */
-			_i_AD5300_Write_G(0x88, /*iIdx*/2); /* CH2: yellow oscilloscope beam */
+			_i_AD5300_Write_W(0xAA, iIdx); /* CH1: blue oscilloscope beam */
+			_i_AD5300_Write_G(0x88, iIdx); /* CH2: yellow oscilloscope beam */
 		}
+#else
+
+		_i_AD5300_Write_W( 0 , 0);
+			_i_AD5300_Write_G(0xFF, 0);
+		_i_AD5300_Write_W(0x11, 0);
+			_i_AD5300_Write_G( 0, 0);
+		_i_AD5300_Write_W(0xAA, 0);
+			_i_AD5300_Write_G( 0x11, 0);
+		_i_AD5300_Write_W(0xFF, 0);
+			_i_AD5300_Write_G( 0xAA, 0);
+
+#endif /* (0) */
+
+
 #endif /* defined(SH_FOPS) */
 
 	} /* while (1) */

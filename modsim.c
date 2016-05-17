@@ -161,6 +161,7 @@ int iA, iB = 0;
 
 #endif /* (defined(HW_DUMB_TEST) ) */
 
+
 	/* Avoid dafault 0 value */
 	iOperation=DO_NO_OP;
 

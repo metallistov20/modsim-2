@@ -27,10 +27,10 @@
 	/* Definitions for shell file operatoins */
 
 	/* CPE#1 */
-	#define _30 "66" // TODO: bring back "30"
+	#define _30 "30"
 	#define _31 "31"
 	#define _48 "48"
-	#define _5 "67" // TODO: bring back "5"
+	#define _5 "110" // toggled
 	#define _3 "3"
 	#define _49 "49"
 
@@ -40,14 +40,14 @@
 	#define _60 "60"
 	#define _50 "50"
 	#define _51 "51"
-	#define _4 "4"
+	#define _4 "4" //TODO: toggle with working GPIO
 
 	/* CPE#3 */
 	#define _2 "2"
 	#define _15 "15"
 	#define _14 "14"
 	#define _112 "112"
-	#define _66 "30" // TODO: bring back "66"
+	#define _66 "66"
 	#define _69 "69"
 
 	/* CPE#4 */
@@ -56,7 +56,7 @@
 	#define _47 "47"
 	#define _27 "27"
 	#define _22 "22"
-	#define _67 "5" // TODO: bring back "67"
+	#define _67 "67"
 
 	/* CPE#5*/
 	#define _68 "68"
@@ -66,7 +66,7 @@
 	#define _65 "65"
 	#define _61 "61"
 #else
-	/* Definitions for GLIBC API file operatoins */
+	/* Definitions for GLIBC API file operations */
 
 	/* CPE#1 */
 	FILE * _30;

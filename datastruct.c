@@ -267,12 +267,16 @@ pTimepointType pChild, pTempPointChain;
 int _ProcessPoints(const char * caller, pTimepointType pPointChainPar)
 {
 pTimepointType pPointChain = pPointChainPar;
+pTimepointType pPointChainRESERV__2DEL = pPointChainPar;}// TODO: _2_DEL . TESTING REALDATA CURVES on OSCILL. remove!
 float fltAbsTime;
 
 double timeusePROC;
 
 	/* Take initial time. Current time values will be taken in 'ProcRealAndRel()' */
 	gettimeofday(&starttimePROC, 0);
+
+while(1) }// TODO: _2_DEL . TESTING REALDATA CURVES on OSCILL. remove!
+{pPointChain =  pPointChainRESERV__2DEL;}// TODO: _2_DEL . TESTING REALDATA CURVES on OSCILL. remove!
 
 	/* Process each entry of chain */
 	while (NULL != pPointChain)
@@ -343,6 +347,8 @@ double timeusePROC;
 		/* Go to next record of chain */
 		pPointChain = pPointChain->pNext;
 	}
+
+}// TODO: _2_DEL . TESTING REALDATA CURVES on OSCILL. remove!
 
 	return P_SUCCESS;
 
